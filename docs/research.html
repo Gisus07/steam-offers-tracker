@@ -1,0 +1,218 @@
+<title>Steam Offers Tracker v2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Public+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: informe de una columna; la tira de métricas y el "price tag" de Steam son el único acento visual. */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --fg:#17202a; --muted:#566573; --line:#d6dde4;
+  --accent:#2a6f97; --deal-bg:#4c6b22; --deal-fg:#beee11; --ok:#2e7d32; --warn:#a15c00; --no:#9b2c2c;
+  --code-bg:#e9eef2;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171d; --surface:#1a2129; --fg:#e4e9ee; --muted:#9aa8b5; --line:#2c3743;
+  --accent:#66c0f4; --deal-bg:#4c6b22; --deal-fg:#beee11; --ok:#7bc67e; --warn:#e0a54a; --no:#e57373;
+  --code-bg:#222b35; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#12171d; --surface:#1a2129; --fg:#e4e9ee; --muted:#9aa8b5; --line:#2c3743;
+  --accent:#66c0f4; --deal-bg:#4c6b22; --deal-fg:#beee11; --ok:#7bc67e; --warn:#e0a54a; --no:#e57373;
+  --code-bg:#222b35; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.45rem;font-weight:700;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0;max-width:68ch}
+section{display:flex;flex-direction:column;gap:16px}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+pre{font-family:var(--f-mono);font-size:.82rem;background:var(--code-bg);padding:14px 16px;border-radius:6px;overflow-x:auto;margin:0;line-height:1.5}
+pre code{background:none;padding:0}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+li{max-width:68ch}
+
+.hero{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end}
+.hero > div{min-width:0;display:flex;flex-direction:column;gap:12px}
+.lede{font-size:1.1rem;color:var(--muted)}
+.tag{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:10px;width:260px;max-width:100%}
+.tag .name{font-family:var(--f-display);font-weight:700;font-size:.95rem}
+.price{display:flex;align-items:stretch;font-variant-numeric:tabular-nums}
+.price .pct{background:var(--deal-bg);color:var(--deal-fg);font-family:var(--f-display);font-weight:800;font-size:1.4rem;padding:4px 10px;display:flex;align-items:center}
+.price .amt{background:#344654;color:#c6d4df;padding:4px 10px;display:flex;flex-direction:column;justify-content:center;line-height:1.2}
+.price .old{text-decoration:line-through;font-size:.75rem;color:#738895}
+.price .new{color:#beee11;font-weight:600}
+.tag .ends{font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
+@media (max-width:620px){.hero{grid-template-columns:1fr}}
+
+.verdict{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--deal-bg);border-radius:6px;padding:18px 20px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.stat{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--f-display);font-size:1.6rem;font-weight:800;font-variant-numeric:tabular-nums}
+.stat span{font-size:.82rem;color:var(--muted)}
+@media (max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.7rem;padding:1px 7px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.v{color:var(--ok)} .d{color:var(--accent)} .u{color:var(--warn)} .x{color:var(--no)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--muted);align-items:center}
+.rec{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.note{font-size:.88rem;color:var(--muted)}
+footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <span class="eyebrow">Fase de investigación · 31 oct 2026</span>
+      <h1>Steam Offers Tracker v2</h1>
+      <p class="lede">¿Se puede armar un notificador personal de descuentos en Steam que aprenda de mis gustos, sin scraping pesado? Sí. Esto es lo que se probó y lo que falta.</p>
+    </div>
+    <div class="tag" aria-label="Ejemplo real devuelto por la API">
+      <span class="eyebrow">Respuesta real de la API</span>
+      <span class="name">Axe And Claw</span>
+      <div class="price"><span class="pct">-85%</span><span class="amt"><span class="old">$5.99</span><span class="new">$0.89</span></span></div>
+      <span class="ends">discount_end_date 1794502800<br>→ 12 nov 2026, 17:00 UTC</span>
+    </div>
+  </header>
+
+  <div class="legend">
+    <span><span class="chip v">verificado</span> probado en vivo hoy</span>
+    <span><span class="chip d">docs</span> documentación o specs</span>
+    <span><span class="chip u">no verificado</span> fuentes secundarias</span>
+  </div>
+
+  <section>
+    <h2>Veredicto</h2>
+    <div class="verdict"><p>Steam expone un endpoint sin API key, <code>IStoreQueryService/Query</code>, que devuelve <strong>todos los juegos en oferta</strong> con precio original y final, porcentaje, <strong>fecha de fin</strong> y tags ponderadas. Un barrido completo cuesta 15 requests. La v1 necesitaba Puppeteer con scroll infinito; esto lo reemplaza entero.</p></div>
+    <div class="stats">
+      <div class="stat"><b>14 546</b><span>juegos en oferta hoy (US)</span></div>
+      <div class="stat"><b>15</b><span>requests por barrido</span></div>
+      <div class="stat"><b>~30 s</b><span>duración del barrido</span></div>
+      <div class="stat"><b>99,9 %</b><span>traen fecha de fin</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>1. Fuente de datos</h2>
+    <h3>Principal: <code>IStoreQueryService/Query/v1</code> <span class="chip v">verificado</span></h3>
+<pre><code>GET https://api.steampowered.com/IStoreQueryService/Query/v1/?input_json=
+{
+  "query": { "start": 0, "count": 1000,
+    "filters": { "type_filters": { "include_games": true },
+                 "price_filters": { "min_discount_percent": 1 } } },
+  "context": { "language": "spanish", "country_code": "VE" },
+  "data_request": { "include_basic_info": true, "include_all_purchase_options": true,
+                    "include_tag_count": 20, "include_reviews": true }
+}</code></pre>
+    <ul>
+      <li>Precio y descuento: <code>best_purchase_option.original_price_in_cents</code>, <code>final_price_in_cents</code>, <code>discount_pct</code>.</li>
+      <li>Fecha de fin: <code>active_discounts[].discount_end_date</code> (Unix).</li>
+      <li>Gustos: <code>tags[{tagid, weight}]</code>; nombres con <code>IStoreService/GetTagList</code>, también sin key.</li>
+      <li>Calidad: <code>reviews.summary_filtered.percent_positive</code> y <code>review_count</code>.</li>
+      <li>Filtro adulto: <code>content_descriptorids</code>. Hace falta, porque abunda entre las ofertas baratas.</li>
+      <li>Moneda regional con <code>country_code</code> (probado US, AR, VE y MX).</li>
+      <li>Tope real de 1000 ítems por página: si pedís 5000, devuelve 1000. El barrido completo transfiere unos 74 MB; se reduce pidiendo <code>basic_info</code> solo para los appids nuevos.</li>
+    </ul>
+    <p class="note">Riesgo: no está documentado oficialmente, porque es el endpoint que usa la propia tienda. Va en un adaptador aislado, con fallback.</p>
+
+    <h3>Fallbacks y descartes</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Fuente</th><th>Fecha fin</th><th>Auth</th><th>Estado</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td><code>search/results?specials=1</code></td><td>No</td><td>No</td><td><span class="chip v">verificado</span></td><td>Fallback. Devuelve HTML, 100 por página e incluye DLC</td></tr>
+        <tr><td><code>IStoreBrowseService/GetItems</code></td><td>Sí</td><td>No</td><td><span class="chip d">docs</span></td><td>Enriquecer appids sueltos</td></tr>
+        <tr><td><code>api/featuredcategories</code></td><td>Sí</td><td>No</td><td><span class="chip v">verificado</span></td><td>Solo trae 10 ítems; no da cobertura</td></tr>
+        <tr><td><code>api/appdetails</code></td><td>No</td><td>No</td><td><span class="chip v">verificado</span></td><td>Un appid por request; solo para consultas puntuales</td></tr>
+        <tr><td>IsThereAnyDeal v2</td><td>Sí, a veces nula</td><td>Key</td><td><span class="chip v">403 sin key</span></td><td>Histórico de mínimos. Sus ToS piden contactarlos para uso privado</td></tr>
+        <tr><td>CheapShark</td><td>No</td><td>User-Agent</td><td><span class="chip v">verificado</span></td><td>Cross-check en USD</td></tr>
+        <tr><td>SteamDB</td><td>—</td><td>—</td><td><span class="chip x">prohíbe scraping</span></td><td>Descartado</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Detectar ofertas nuevas</h3>
+    <p>Ningún endpoint marca cuándo empezó una oferta. La solución es guardar un snapshot y compararlo con el siguiente por <code>(appid, discount_end_date)</code>: lo que aparece es una oferta nueva, lo que desaparece terminó, y un cambio de <code>discount_pct</code> significa que bajó más. Con un barrido cada 6 h alcanza.</p>
+
+    <h3>Señales iniciales de gustos</h3>
+    <ul>
+      <li><code>IPlayerService/GetOwnedGames</code> (biblioteca y horas jugadas) pide key: sin ella devuelve 401 <span class="chip v">verificado</span>. Para tener key, la cuenta tiene que haber gastado al menos 5 USD, y el tope es de 100 k llamadas por día <span class="chip d">docs</span>.</li>
+      <li><code>IWishlistService/GetWishlist</code> no pediría key en perfiles públicos <span class="chip u">no verificado</span>. Hay que probarlo con tu SteamID.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2. Canal y cliente</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Opción</th><th>Push</th><th>Esfuerzo</th><th>Señales para el recomendador</th><th>Depende de</th></tr></thead>
+      <tbody>
+        <tr><td>Bot de Telegram</td><td>Gratis</td><td>Bajo</td><td>Solo clicks</td><td>Telegram</td></tr>
+        <tr><td>Bot + Mini App (React)</td><td>Gratis vía bot</td><td>Medio</td><td>Completas</td><td>Telegram</td></tr>
+        <tr><td>React PWA</td><td>Web Push</td><td>Medio</td><td>Completas</td><td>—</td></tr>
+        <tr><td>React + Capacitor (APK)</td><td>FCM o ntfy</td><td>Medio-alto</td><td>Completas, más SQLite offline</td><td>Firebase si usa FCM</td></tr>
+        <tr><td>React Native + Expo 56</td><td>FCM</td><td>Alto</td><td>Completas</td><td>Expo y FCM</td></tr>
+      </tbody>
+    </table></div>
+    <div class="rec">
+      <span class="eyebrow">Recomendación</span>
+      <p>Un solo front en React (Vite) que se publica como PWA y se empaqueta como APK con Capacitor, con push por FCM. Usa tu stack, no depende de Telegram y le da al recomendador todas las señales.</p>
+      <p class="note">Alternativa que compite: bot de Telegram con Mini App. Usa la misma UI en React y no requiere infraestructura de push ni build de APK. El costo es depender de Telegram.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Recomendador</h2>
+    <p>Para un solo usuario, el filtrado basado en contenido es suficiente; el colaborativo no aplica. Cada juego se representa como un vector de tags de Steam ponderadas (TF-IDF sobre unas 450 tags). El perfil es la suma ponderada de los juegos con los que interactuaste, con decaimiento <code>w·e^(−edad/τ)</code> y τ entre 60 y 90 días. El ranking combina la similitud coseno con el descuento, las reseñas y la cercanía de la fecha de fin.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Señal implícita</th><th>Peso inicial</th></tr></thead>
+      <tbody>
+        <tr><td>Visto en el feed sin tocar</td><td>−0.1</td></tr>
+        <tr><td>Abrió el detalle</td><td>+0.5</td></tr>
+        <tr><td>Tiempo en el detalle</td><td>+min(log s / 3, 1)</td></tr>
+        <tr><td>Click en "Ir a Steam"</td><td>+1.5</td></tr>
+        <tr><td>Guardado en la wishlist de la app</td><td>+3</td></tr>
+        <tr><td>Descartado</td><td>−2</td></tr>
+        <tr><td>Comprado o en biblioteca</td><td>+4</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>Exploración: entre el 10 y el 20 % del feed queda fuera del perfil (epsilon-greedy o Thompson sampling por cluster de tags), para no encerrarte en una burbuja.</li>
+      <li>Arranque en frío: biblioteca con horas jugadas más la wishlist de Steam.</li>
+      <li>Infraestructura: unos 15 k juegos entran en memoria o en SQL plano. pgvector solo tendría sentido con embeddings de las descripciones.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4. Stack</h2>
+    <ul>
+      <li><strong>TypeScript 7.1 sí tiene content mappers</strong> (beta del 20 de octubre de 2026) <span class="chip d">docs</span>. Yo había dudado de que existieran y me equivoqué. Pero no mapean datos: son un punto de extensión para que <code>tsc</code> type-checkee archivos <code>.vue</code>, <code>.svelte</code>, Astro o MDX. No reemplazan a Prisma, Drizzle, Kysely ni a Zod o Valibot.</li>
+      <li>Consumo estimado de Postgres, API y worker: entre 400 y 700 MB de RAM. Lo más pesado es la transferencia del barrido, no la CPU.</li>
+      <li>VPS: Hetzner CX23 (2 vCPU y 4 GB) cuesta unos 5,49 €/mes después de las subidas de 2026 <span class="chip u">no verificado</span>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>5. Pendiente</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Qué</th><th>Cómo se comprueba</th></tr></thead>
+      <tbody>
+        <tr><td>Wishlist pública sin key</td><td><code>GetWishlist/v1/?steamid=&lt;TU_STEAMID64&gt;</code></td></tr>
+        <tr><td>Rate limit real de Query</td><td>Medirlo en el worker, con backoff ante 429</td></tr>
+        <tr><td>FCM con un APK sideloaded</td><td>Prototipo mínimo con Capacitor</td></tr>
+        <tr><td>Precios de VPS</td><td>Revisar los sitios oficiales al contratar</td></tr>
+        <tr><td>Datos que me faltan</td><td>El país de tu cuenta de Steam y tu SteamID64</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <footer>La fuente de este documento es <code>docs/research.md</code> en el branch <code>claude/awesome-ritchie-eexchg</code> de gisus07/steam-offers-tracker.</footer>
+</div>
