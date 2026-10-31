@@ -1,6 +1,6 @@
 # Fase de investigación — Steam Offers Tracker v2
 
-Última actualización: 2026-10-31 (revisión 4).
+Última actualización: 2026-10-31 (revisión 5).
 Objetivo: confirmar si es viable un sistema que notifique descuentos de Steam (nombre, % de descuento, precio antes/después, fecha de fin, link a la tienda) y aprenda de los gustos de cada usuario, sin scraping pesado.
 
 Leyenda: **[verificado]** = probado en vivo desde un contenedor en esta fecha. **[docs]** = documentación oficial, specs o metadatos de npm. **[no verificado]** = fuentes secundarias, falta comprobar. **[Gisus]** = dato aportado por Gisus (capturas o decisión).
@@ -25,6 +25,8 @@ Es viable y más barato que la v1. Steam expone un endpoint sin API key (`IStore
 | ORM | **Drizzle 1.0 RC** (comparado con TypeORM en §4.5) | Confirmado [Gisus] |
 | VPS | **Hostgator**, VPS con Ubuntu; Docker comprobado. Plan inicial recomendado: Snappy 1000 – NVMe 2 | Proveedor confirmado [Gisus]; plan a decidir |
 | iOS | Sin Mac por ahora: builds en la nube con EAS. Mac cuando iOS sea un canal real (§2.2 y §2.3) | Recomendación |
+| Nombre público | Sin "Steam" en el nombre (§6.2) | Recomendación |
+| Cuenta | Cuenta propia con Steam vinculada, modo invitado y borrado de cuenta desde la app (§6.3) | Recomendación |
 
 ## Correcciones respecto a revisiones anteriores
 
@@ -479,7 +481,50 @@ Antes de pagar, verificar:
 
 ---
 
-## 6. Pendiente de verificar
+## 6. Requisitos y riesgos detectados al cierre de la investigación
+
+Ninguno impide arrancar la planificación, pero varios cambian el diseño desde el día uno.
+
+### 6.1 Términos de la Steam Web API [verificado: steamcommunity.com/dev/apiterms, última actualización julio 2010]
+
+- No se puede presentar la app ni los datos de forma que parezca que Valve o Steam la respaldan, ni afirmar una relación con Valve sin su aprobación por escrito.
+- Los datos de un usuario de Steam solo se piden cuando ese usuario lo solicita. Hay que informarle qué datos de Steam se guardan y guardarlos en el país que indique la política de privacidad.
+- Los datos se entregan "tal cual", con descargos equivalentes a las secciones 7 y 8 de esos términos.
+- Prohibido usar los datos para comunicaciones de marketing no solicitadas: las notificaciones tienen que ser opt-in.
+- Tope de 100 000 llamadas por día por key.
+
+Mitigación propuesta: registrar una Web API key y usarla también en las llamadas a `Query`, para que todo el tráfico quede bajo estos términos.
+
+### 6.2 Nombre y marca [verificado: App Review Guidelines, actualizadas el 2026-10-16]
+
+- La App Store prohíbe usar marcas de terceros sin permiso en el nombre o los metadatos de la app (5.2.1) y puede pedir que demuestres que los términos de un servicio de terceros te permiten usar o mostrar su contenido (5.2.2).
+- Recomendación: el nombre público no lleva "Steam". La relación se explica en la descripción, con un aviso de que la app no está afiliada a Valve. El repo puede seguir llamándose `steam-offers-tracker`.
+
+### 6.3 Requisitos de las tiendas que cambian el diseño [verificado: App Review Guidelines]
+
+- **Borrado de cuenta dentro de la app** (5.1.1(v)): si la app crea cuentas, tiene que permitir borrarlas desde la app. Va en el modelo de datos desde el inicio (borrado en cascada de eventos, perfil y dispositivos).
+- **Uso sin login** (5.1.1(v)): Apple pide dejar usar la app sin cuenta cuando la función principal no depende de ella. Recomendación: modo invitado que muestra las ofertas de una región elegida; la cuenta de Steam suma personalización, wishlist y notificaciones.
+- **Login con terceros** (4.8): si la cuenta principal se crea con un login de terceros, hay que ofrecer además una opción equivalente que limite los datos a nombre y email. Hay una excepción para apps cliente de un servicio de terceros, pero no está claro que cubra una app de ofertas. Recomendación: separar la cuenta de la app de la cuenta de Steam vinculada (identidades por proveedor), así sumar Sign in with Apple más adelante no obliga a reestructurar.
+- **Clasificación por edad:** las ofertas baratas traen mucho contenido adulto. Excluirlo por defecto (`content_descriptorids`) evita una clasificación +18 o un rechazo.
+- **Política de privacidad pública:** la piden las tiendas y los términos de Steam (país de almacenamiento).
+
+### 6.4 Distribución en Android [verificado: developer.android.com/developer-verification]
+
+- Desde el 2026-09-30, en Brasil, Indonesia, Singapur y Tailandia, las apps instaladas desde tiendas participantes en dispositivos certificados tienen que estar registradas por un desarrollador verificado. **En 2027 se extiende a todo el mundo y a todas las apps en dispositivos certificados**, incluido un APK instalado a mano.
+- Para uso personal y amigos alcanza una cuenta de distribución limitada: hasta 20 dispositivos, sin documento de identidad ni costo (disponible desde agosto de 2026).
+- Para usuarios avanzados existe un flujo para instalar apps no verificadas.
+- Google Play, cuentas personales creadas después del 2023-11-13: antes de pasar a producción hace falta una prueba cerrada con al menos 12 testers durante 14 días seguidos; las cuentas de organización con D-U-N-S están exentas [no verificado: fuentes secundarias].
+
+### 6.5 Para la planificación (decisiones de ingeniería)
+
+- **Historial de precios como cambios, no como snapshots:** guardar intervalos `(appid, country, desde, hasta, precio, descuento)`. Con snapshots completos serían ~21 M de filas por país y año (14 500 × 4 barridos × 365).
+- **Monitoreo de la fuente no documentada:** validar el schema de cada respuesta (Zod) y comparar el total con el barrido anterior; si falla o cae mucho, alertar y pasar al fallback. Sin esto, un cambio de Steam deja la app sin ofertas en silencio.
+- **Backups de Postgres fuera del VPS.**
+- **Dominio con TLS:** lo necesitan el callback del login de Steam, la landing, los links de la app y la URL de la política de privacidad.
+- **Modelo de negocio:** sin anuncios invasivos, falta definir cómo se sostiene (por ejemplo, funciones premium). Define qué se construye y si hace falta cobro dentro de la app.
+- **Idiomas y zonas horarias:** `Query` acepta `language`; las fechas de fin se guardan en UTC y se muestran en la zona del usuario.
+
+## 7. Pendiente de verificar
 
 | Qué | Cómo comprobarlo |
 |---|---|
@@ -490,3 +535,5 @@ Antes de pagar, verificar:
 | FCM en tu teléfono con APK sideloaded | Development build mínima con Expo |
 | Rate limit real de `Query` | Medir en el worker con backoff ante 429 |
 | `.run()` de Reylo sobre una instancia de Drizzle | Extender el spike en la planificación |
+| Regla de 12 testers × 14 días y costo de la cuenta de Google Play | support.google.com/googleplay/android-developer |
+| Nombre público libre de conflictos de marca | Buscarlo en las tiendas y en registros de marcas antes de elegirlo |

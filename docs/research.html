@@ -80,7 +80,7 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
 <div class="wrap">
   <header class="hero">
     <div>
-      <span class="eyebrow">Fase de investigación · revisión 4 · 31 oct 2026</span>
+      <span class="eyebrow">Fase de investigación · revisión 5 · 31 oct 2026</span>
       <h1>Steam Offers Tracker v2</h1>
       <p class="lede">Un notificador de descuentos en Steam, multiusuario, que muestra a cada persona las ofertas de su región y aprende sus gustos. Esto es lo que se probó, lo que se decidió y lo que falta.</p>
     </div>
@@ -124,6 +124,8 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
         <tr><td>ORM</td><td>Drizzle 1.0 RC</td><td><span class="chip g">confirmado</span></td></tr>
         <tr><td>VPS</td><td>Hostgator con Ubuntu; Docker comprobado. Plan inicial: Snappy 1000 – NVMe 2</td><td><span class="chip g">proveedor confirmado</span></td></tr>
         <tr><td>iOS</td><td>Sin Mac por ahora: builds en la nube con EAS</td><td><span class="chip d">recomendado</span></td></tr>
+        <tr><td>Nombre público</td><td>Sin "Steam" en el nombre</td><td><span class="chip d">recomendado</span></td></tr>
+        <tr><td>Cuenta</td><td>Cuenta propia con Steam vinculada, modo invitado y borrado de cuenta desde la app</td><td><span class="chip d">recomendado</span></td></tr>
       </tbody>
     </table></div>
     <div class="rec fix">
@@ -414,7 +416,50 @@ await db.$client.end();</code></pre>
   </section>
 
   <section>
-    <h2>6. Pendiente</h2>
+    <h2>6. Requisitos y riesgos</h2>
+    <p>Ninguno impide empezar la planificación, pero varios cambian el diseño desde el primer día.</p>
+
+    <h3>Términos de la Steam Web API <span class="chip v">verificado</span></h3>
+    <ul>
+      <li>La app no puede dar a entender que Valve o Steam la respaldan.</li>
+      <li>Los datos de un usuario de Steam se piden solo cuando él lo solicita. Hay que avisarle qué se guarda y en qué país, según la política de privacidad.</li>
+      <li>Los datos se muestran tal cual, con descargos de garantía.</li>
+      <li>Nada de marketing no solicitado: las notificaciones son opt-in.</li>
+      <li>Tope de 100 000 llamadas por día. Conviene usar una key propia también en las llamadas a <code>Query</code>.</li>
+    </ul>
+
+    <h3>Nombre y marca <span class="chip v">App Review Guidelines</span></h3>
+    <p>Apple prohíbe usar marcas de terceros sin permiso en el nombre de la app y puede pedir que demuestres que los términos de un servicio de terceros te permiten mostrar su contenido. El nombre público no debería llevar "Steam"; la relación se explica en la descripción, con un aviso de que no hay afiliación con Valve.</p>
+
+    <h3>Requisitos de las tiendas que cambian el diseño <span class="chip v">App Review Guidelines</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Requisito</th><th>Qué implica</th></tr></thead>
+      <tbody>
+        <tr><td>Borrar la cuenta desde la app</td><td>Borrado en cascada de eventos, perfil y dispositivos, desde el inicio</td></tr>
+        <tr><td>Uso sin cuenta cuando sea posible</td><td>Modo invitado con las ofertas de una región; Steam suma personalización y notificaciones</td></tr>
+        <tr><td>Login de terceros con alternativa equivalente</td><td>Cuenta propia con Steam vinculada, así sumar Sign in with Apple no obliga a reestructurar</td></tr>
+        <tr><td>Clasificación por edad</td><td>Excluir el contenido adulto por defecto</td></tr>
+        <tr><td>Política de privacidad pública</td><td>La piden las tiendas y los términos de Steam</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Distribución en Android <span class="chip v">developer.android.com</span></h3>
+    <p>Desde el 30 de septiembre de 2026, en Brasil, Indonesia, Singapur y Tailandia, las apps instaladas desde tiendas participantes tienen que venir de un desarrollador verificado. En 2027 eso se extiende a todo el mundo y a todas las apps en teléfonos certificados, incluido un APK instalado a mano. Para uso personal y amigos alcanza una cuenta de distribución limitada: hasta 20 dispositivos, gratis y sin documento.</p>
+    <p class="note">Google Play: las cuentas personales nuevas necesitan una prueba cerrada con 12 testers durante 14 días antes de publicar <span class="chip u">no verificado</span>.</p>
+
+    <h3>Para la planificación</h3>
+    <ul>
+      <li><strong>Historial de precios como cambios:</strong> guardar intervalos de precio, no snapshots completos, que serían unos 21 millones de filas por país y año.</li>
+      <li><strong>Monitoreo de la fuente:</strong> validar cada respuesta de Steam y compararla con el barrido anterior; si algo cambia, alertar y pasar al fallback.</li>
+      <li><strong>Backups</strong> de Postgres fuera del VPS.</li>
+      <li><strong>Dominio con TLS</strong> para el login de Steam, la landing, los links de la app y la política de privacidad.</li>
+      <li><strong>Modelo de negocio</strong> sin anuncios invasivos: define qué se construye y si hace falta cobrar dentro de la app.</li>
+      <li><strong>Idiomas y zonas horarias</strong> para las fechas de fin.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>7. Pendiente</h2>
     <div class="tbl"><table>
       <thead><tr><th>Qué</th><th>Cómo se comprueba</th></tr></thead>
       <tbody>
@@ -425,6 +470,8 @@ await db.$client.end();</code></pre>
         <tr><td>FCM con un APK sideloaded</td><td>Development build mínima con Expo</td></tr>
         <tr><td>Rate limit real de Query</td><td>Medirlo en el worker, con backoff ante 429</td></tr>
         <tr><td>Reylo sobre una instancia de Drizzle</td><td>Extender el spike en la planificación</td></tr>
+        <tr><td>Regla de 12 testers y costo de Google Play</td><td>Centro de ayuda de Google Play Console</td></tr>
+        <tr><td>Nombre público sin conflicto de marca</td><td>Buscarlo en las tiendas y en registros de marcas</td></tr>
       </tbody>
     </table></div>
   </section>
