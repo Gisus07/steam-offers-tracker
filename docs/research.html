@@ -33,10 +33,14 @@ section{display:flex;flex-direction:column;gap:16px}
 a{color:var(--accent)}
 a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
-pre{font-family:var(--f-mono);font-size:.82rem;background:var(--code-bg);padding:14px 16px;border-radius:6px;overflow-x:auto;margin:0;line-height:1.5}
-pre code{background:none;padding:0}
-ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+pre{font-family:var(--f-mono);font-size:.8rem;background:var(--code-bg);padding:14px 16px;border-radius:6px;overflow-x:auto;margin:0;line-height:1.5}
+pre code{background:none;padding:0;overflow-wrap:normal}
+ul,ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 li{max-width:68ch}
+details{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 16px}
+details[open]{display:flex;flex-direction:column;gap:12px}
+summary{cursor:pointer;font-family:var(--f-display);font-weight:700}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 .hero{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end}
 .hero > div{min-width:0;display:flex;flex-direction:column;gap:12px}
@@ -65,7 +69,7 @@ th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transfor
 tr:last-child td{border-bottom:none}
 td.num{text-align:right;white-space:nowrap}
 .chip{display:inline-block;font-family:var(--f-mono);font-size:.7rem;padding:1px 7px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
-.v{color:var(--ok)} .d{color:var(--accent)} .u{color:var(--warn)} .x{color:var(--no)}
+.v{color:var(--ok)} .d{color:var(--accent)} .u{color:var(--warn)} .x{color:var(--no)} .g{color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--muted);align-items:center}
 .rec{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
 .fix{border-left:4px solid var(--warn)}
@@ -76,9 +80,9 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
 <div class="wrap">
   <header class="hero">
     <div>
-      <span class="eyebrow">Fase de investigación · revisión 2 · 31 oct 2026</span>
+      <span class="eyebrow">Fase de investigación · revisión 3 · 31 oct 2026</span>
       <h1>Steam Offers Tracker v2</h1>
-      <p class="lede">¿Se puede armar un notificador de descuentos en Steam, multiusuario, que aprenda los gustos de cada persona y no dependa de scraping pesado? Sí. Esto es lo que se probó, lo que se decidió y lo que falta.</p>
+      <p class="lede">Un notificador de descuentos en Steam, multiusuario, que muestra a cada persona las ofertas de su región y aprende sus gustos. Esto es lo que se probó, lo que se decidió y lo que falta.</p>
     </div>
     <div class="tag" aria-label="Ejemplo real devuelto por la API">
       <span class="eyebrow">Respuesta real de la API</span>
@@ -92,6 +96,7 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
     <span><span class="chip v">verificado</span> probado en vivo hoy</span>
     <span><span class="chip d">docs</span> documentación, specs o npm</span>
     <span><span class="chip u">no verificado</span> fuentes secundarias</span>
+    <span><span class="chip g">Gisus</span> dato o decisión tuya</span>
   </div>
 
   <section>
@@ -106,19 +111,28 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
   </section>
 
   <section>
-    <h2>Decisiones tomadas</h2>
+    <h2>Decisiones</h2>
     <div class="tbl"><table>
-      <thead><tr><th>Tema</th><th>Decisión</th></tr></thead>
+      <thead><tr><th>Tema</th><th>Decisión</th><th>Estado</th></tr></thead>
       <tbody>
-        <tr><td>Cliente</td><td>App nativa; PWA descartada. Recomendación: Expo SDK 58</td></tr>
-        <tr><td>Usuarios</td><td>Multiusuario desde el diseño, aunque al inicio la use una sola persona</td></tr>
-        <tr><td>Criterio</td><td>El esfuerzo no pesa; el aprendizaje suma</td></tr>
-        <tr><td>VPS</td><td>Hostgator entra como candidato junto a Hetzner</td></tr>
+        <tr><td>Cliente</td><td>Expo (React Native); PWA descartada</td><td><span class="chip g">confirmado</span></td></tr>
+        <tr><td>Usuarios</td><td>Multiusuario desde el diseño</td><td><span class="chip g">confirmado</span></td></tr>
+        <tr><td>Región</td><td>Cada usuario ve las ofertas de su región, según su cuenta de Steam</td><td><span class="chip g">confirmado</span></td></tr>
+        <tr><td>Login</td><td>Con cuenta de Steam</td><td><span class="chip g">confirmado</span></td></tr>
+        <tr><td>Web</td><td>Web de presentación propia, con lógica compartida con la app</td><td><span class="chip g">confirmado</span></td></tr>
+        <tr><td>Compartir y grupos</td><td>A futuro, fuera del alcance inicial</td><td><span class="chip g">confirmado</span></td></tr>
+        <tr><td>ORM</td><td>Drizzle 1.0 RC</td><td><span class="chip d">recomendado</span></td></tr>
+        <tr><td>VPS</td><td>Hostgator Snappy 1000 – NVMe 2</td><td><span class="chip d">recomendado</span></td></tr>
       </tbody>
     </table></div>
     <div class="rec fix">
-      <span class="eyebrow">Correcciones a la revisión 1</span>
-      <p>Expo no está en el SDK 56: el actual es el <strong>SDK 58</strong> (29 de septiembre, React Native 0.88). Los content mappers de TS 7.1 ya tienen un uso concreto, Reylo, que está en la sección 4.</p>
+      <span class="eyebrow">Correcciones</span>
+      <ul>
+        <li>Expo: el SDK actual es el 58 (29 de septiembre, RN 0.88), no el 56.</li>
+        <li>Hetzner: la línea barata (CX) figura como no disponible y la CPX arranca en 6,49 € con 1 GB. Mi estimación anterior estaba desactualizada.</li>
+        <li>Hostgator: antes usé el sitio de México. Tus capturas, del sitio de EE. UU., confirman las specs de cada plan.</li>
+        <li>Drizzle: antes recomendaba la 0.45; ahora la 1.0 RC, porque la 1.0 elimina la API relacional v1 y cambia las migraciones.</li>
+      </ul>
     </div>
   </section>
 
@@ -144,8 +158,22 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
     </ul>
     <p class="note">Riesgo: es el endpoint que usa la propia tienda y no está documentado oficialmente. Va en un adaptador aislado, con fallback.</p>
 
-    <h3>Con varios usuarios, el costo crece por país</h3>
-    <p><code>country_code</code> cambia moneda, precio y hasta el catálogo en oferta: el mismo día dio 14 546 juegos en US, 14 541 en AR, 14 474 en VE y 14 544 en MX <span class="chip v">verificado</span>. Las ofertas se guardan por <code>(appid, country)</code> y el worker barre una vez por país con usuarios. Con 10 países son unas 150 requests por barrido, y sumar usuarios de un mismo país no agrega ninguna.</p>
+    <h3>Región por usuario, barrido por país</h3>
+    <p><code>country_code</code> cambia moneda, precio y hasta el catálogo en oferta: el mismo día dio 14 546 juegos en US, 14 541 en AR, 14 474 en VE y 14 544 en MX <span class="chip v">verificado</span>. Cada usuario ve su región, pero por dentro las ofertas se guardan por <code>(appid, country)</code> y el worker barre una vez por país con usuarios. Sumar usuarios de un mismo país no agrega requests.</p>
+
+    <h3>Datos de cada usuario</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Qué</th><th>Cómo</th><th>Key</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td>Login</td><td>Steam OpenID 2.0, que devuelve el SteamID64</td><td>No</td><td><span class="chip v">endpoint activo</span></td></tr>
+        <tr><td>País del perfil</td><td><code>GetPlayerSummaries</code> → <code>loccountrycode</code>, si el usuario lo cargó</td><td>Sí</td><td><span class="chip d">docs</span></td></tr>
+        <tr><td>Ubicación (texto libre)</td><td>XML público del perfil → <code>&lt;location&gt;</code></td><td>No</td><td><span class="chip v">verificado</span></td></tr>
+        <tr><td>Biblioteca y horas</td><td><code>IPlayerService/GetOwnedGames</code></td><td>Sí, una del servidor</td><td><span class="chip v">401 sin key</span></td></tr>
+        <tr><td>Wishlist</td><td><code>IWishlistService/GetWishlist</code></td><td>No, si es pública</td><td><span class="chip u">inconcluso</span></td></tr>
+      </tbody>
+    </table></div>
+    <p>No encontré un endpoint público con la región de tienda de la cuenta. El país se precarga con <code>loccountrycode</code> (o con el idioma y la región del teléfono), el usuario lo confirma en el onboarding y puede cambiarlo en ajustes.</p>
+    <p class="note">Login desde Expo: Steam usa OpenID 2.0, no OAuth2, así que el flujo pasa por el backend. La app abre el login de Steam en el navegador, Steam vuelve al backend, el backend verifica la firma y devuelve la sesión a la app por deep link.</p>
 
     <h3>Fallbacks y descartes</h3>
     <div class="tbl"><table>
@@ -153,47 +181,47 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
       <tbody>
         <tr><td><code>search/results?specials=1</code></td><td>No</td><td>No</td><td><span class="chip v">verificado</span></td><td>Fallback. Devuelve HTML, 100 por página e incluye DLC</td></tr>
         <tr><td><code>IStoreBrowseService/GetItems</code></td><td>Sí</td><td>No</td><td><span class="chip d">docs</span></td><td>Enriquecer appids sueltos</td></tr>
-        <tr><td><code>api/featuredcategories</code></td><td>Sí</td><td>No</td><td><span class="chip v">verificado</span></td><td>Solo trae 10 ítems; no da cobertura</td></tr>
         <tr><td><code>api/appdetails</code></td><td>No</td><td>No</td><td><span class="chip v">verificado</span></td><td>Un appid por request; solo consultas puntuales</td></tr>
         <tr><td>IsThereAnyDeal v2</td><td>Sí, a veces nula</td><td>Key</td><td><span class="chip v">403 sin key</span></td><td>Mínimos históricos. Sus ToS piden contactarlos para uso privado</td></tr>
         <tr><td>CheapShark</td><td>No</td><td>User-Agent</td><td><span class="chip v">verificado</span></td><td>Cross-check en USD</td></tr>
         <tr><td>SteamDB</td><td>—</td><td>—</td><td><span class="chip x">prohíbe scraping</span></td><td>Descartado</td></tr>
       </tbody>
     </table></div>
-
-    <h3>Detectar ofertas nuevas</h3>
-    <p>Ningún endpoint marca cuándo empezó una oferta. Se guarda un snapshot y se compara con el siguiente por <code>(appid, country, discount_end_date)</code>: lo que aparece es nuevo, lo que desaparece terminó, y un cambio de <code>discount_pct</code> significa que bajó más. Con un barrido cada 6 h alcanza.</p>
-
-    <h3>Datos de cada usuario</h3>
-    <div class="tbl"><table>
-      <thead><tr><th>Qué</th><th>Cómo</th><th>Key</th><th>Estado</th></tr></thead>
-      <tbody>
-        <tr><td>Login</td><td>Steam OpenID 2.0, que devuelve el SteamID64</td><td>No</td><td><span class="chip v">endpoint activo</span></td></tr>
-        <tr><td>Biblioteca y horas jugadas</td><td><code>IPlayerService/GetOwnedGames</code></td><td>Sí, una del servidor</td><td><span class="chip v">401 sin key</span></td></tr>
-        <tr><td>Wishlist</td><td><code>IWishlistService/GetWishlist</code></td><td>No, si es pública</td><td><span class="chip u">inconcluso</span></td></tr>
-      </tbody>
-    </table></div>
-    <p class="note">La key de la Web API exige una cuenta que haya gastado al menos 5 USD y tiene un tope de 100 k llamadas por día. Con una consulta de biblioteca por usuario y día, el tope no molesta hasta decenas de miles de usuarios.</p>
+    <p>Las ofertas nuevas se detectan comparando snapshots por <code>(appid, country, discount_end_date)</code>: lo que aparece es nuevo, lo que desaparece terminó, y un cambio de <code>discount_pct</code> significa que bajó más. Con un barrido cada 6 h alcanza.</p>
   </section>
 
   <section>
-    <h2>2. Cliente móvil: Expo vs Capacitor</h2>
+    <h2>2. Cliente: Expo</h2>
     <div class="tbl"><table>
       <thead><tr><th></th><th>Expo (React Native)</th><th>Capacitor</th></tr></thead>
       <tbody>
         <tr><td>Versión</td><td>SDK 58, RN 0.88, React 19.2</td><td>8.6.0; la 9 está en beta</td></tr>
-        <tr><td>Cadencia 2026</td><td>SDK 56 (may), 57 (jun), 58 (sep)</td><td>Una major por año, aprox.</td></tr>
-        <tr><td>Render</td><td>Componentes nativos (Fabric, Hermes)</td><td>WebView con React DOM adentro</td></tr>
-        <tr><td>Push</td><td><code>expo-notifications</code> → FCM</td><td><code>@capacitor-firebase/messaging</code> → FCM</td></tr>
-        <tr><td>SQLite local</td><td><code>expo-sqlite</code> (oficial); Drizzle tiene driver para él</td><td>Plugin de la comunidad</td></tr>
-        <tr><td>Señales</td><td><code>onViewableItemsChanged</code> + <code>AppState</code></td><td><code>IntersectionObserver</code> + Visibility API</td></tr>
-        <tr><td>Aprendizaje nuevo</td><td>Alto: paradigma nativo, módulos en Kotlin/Swift, expo-router</td><td>Bajo: casi todo React DOM</td></tr>
+        <tr><td>Render</td><td>Componentes nativos</td><td>WebView con React DOM</td></tr>
+        <tr><td>SQLite local</td><td><code>expo-sqlite</code> (oficial); Drizzle tiene driver</td><td>Plugin de la comunidad</td></tr>
+        <tr><td>Build de iOS</td><td>EAS en la nube, sin Mac</td><td>Xcode en una Mac</td></tr>
+        <tr><td>Aprendizaje nuevo</td><td>Alto</td><td>Bajo</td></tr>
       </tbody>
     </table></div>
+
+    <h3>iOS</h3>
+    <p>Las dos opciones generan apps para iPhone, así que tu suposición es correcta en parte. Las ventajas reales de Expo para iOS son tres:</p>
+    <ul>
+      <li>EAS compila iOS en la nube sin una Mac. El plan gratis da 15 builds de iOS por mes, en cola de baja prioridad <span class="chip u">no verificado</span>.</li>
+      <li>La UI es nativa también en iPhone.</li>
+      <li>La guideline 4.2 de la App Store pide que la app vaya más allá de un sitio web reempaquetado. Una app hecha con Capacitor tiene que demostrarlo con funciones nativas; una con UI nativa no carga con esa sospecha.</li>
+    </ul>
+    <p class="note">Con cualquiera de las dos, publicar en iOS cuesta 99 USD por año (Apple Developer Program) y hace falta un iPhone para probar. La Mac solo es necesaria para builds locales o para usar el simulador.</p>
+
+    <h3>Web: separada o integrada</h3>
+    <p>La web de presentación es una pieza aparte con cualquier opción: también con Capacitor, las pantallas de la app no son una landing. Lo que cambia es cuánto se comparte, y con Expo hay tres niveles:</p>
+    <ol>
+      <li><strong>Lógica compartida:</strong> un monorepo con la app móvil, la API, la web y un paquete compartido con tipos, schemas Zod, el cliente de la API y las reglas de negocio.</li>
+      <li><strong>Componentes compartidos:</strong> con los DOM components (<code>'use dom'</code>), un componente React DOM se usa dentro de la app nativa y en la web tal cual <span class="chip d">docs</span>.</li>
+      <li><strong>La app entera en web:</strong> Expo Router compila la misma app a web, con HTML estático por ruta <span class="chip d">docs</span>.</li>
+    </ol>
     <div class="rec">
       <span class="eyebrow">Recomendación</span>
-      <p><strong>Expo SDK 58.</strong> Cumple el objetivo de aprender otro paradigma, renderiza UI nativa en lugar de una WebView (Capacitor se parece a una PWA en sensación y rendimiento) y los módulos que hacen falta son oficiales. Con Drizzle sobre <code>expo-sqlite</code>, el móvil y el backend usan el mismo ORM.</p>
-      <p class="note">Costo: un upgrade de SDK cada 1 a 3 meses si querés estar al día, y Metro en lugar de Vite. Capacitor solo ganaría si quisieras compartir código con un panel web.</p>
+      <p>Landing separada dentro del monorepo: una web de presentación necesita CSS libre, animaciones y SEO, y react-native-web es más rígido para eso. La lógica se comparte por el paquete común. Si más adelante querés la app completa en web, sale de Expo Router sin reescribirla.</p>
     </div>
   </section>
 
@@ -209,77 +237,162 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
       </tbody>
     </table></div>
     <ul>
-      <li><strong>Desde el día 1:</strong> filtrado por contenido para cada usuario. Cada juego es un vector de tags ponderadas (TF-IDF) más precio, descuento y reviews. El perfil decae con <code>w·e^(−edad/τ)</code>, con τ entre 60 y 90 días.</li>
-      <li><strong>Con varios usuarios:</strong> se agrega filtrado colaborativo item-item y se arma un híbrido que pondera cada parte según cuánto historial tenga cada persona.</li>
+      <li><strong>Desde el día 1:</strong> filtrado por contenido para cada usuario, con tags ponderadas (TF-IDF), precio, descuento y reviews. El perfil decae con <code>w·e^(−edad/τ)</code>, con τ entre 60 y 90 días.</li>
+      <li><strong>Con varios usuarios:</strong> se agrega filtrado colaborativo item-item, en un híbrido que pondera cada parte según el historial de cada persona.</li>
       <li><strong>Exploración:</strong> entre el 10 y el 20 % del feed queda fuera del perfil.</li>
       <li><strong>Arranque en frío:</strong> biblioteca, wishlist y tags elegidas en el onboarding.</li>
-      <li><strong>Pulirlo:</strong> registrar impresiones permite medir CTR, precision@k y NDCG, y comparar variantes por cohortes (A/B).</li>
-      <li><strong>Dónde corre:</strong> en el backend. El móvil guarda los eventos en una cola SQLite y los sube en lotes, así funciona offline.</li>
-      <li><strong>Notificaciones:</strong> en cada barrido, las ofertas nuevas de un país se cruzan con los usuarios de ese país, se puntúan con su perfil, se filtran por sus umbrales, se descartan las ya enviadas y salen por FCM en lote.</li>
+      <li><strong>Pulirlo:</strong> registrar impresiones permite medir CTR, precision@k y NDCG, y comparar variantes por cohortes.</li>
+      <li><strong>Notificaciones:</strong> ofertas nuevas por país, cruzadas con los usuarios de ese país, puntuadas, filtradas por sus umbrales, sin repetir lo ya enviado y por FCM en lote.</li>
     </ul>
-    <div class="tbl"><table>
-      <thead><tr><th>Señal implícita</th><th>Peso inicial</th></tr></thead>
-      <tbody>
-        <tr><td>Visto en el feed sin tocar</td><td class="num">−0.1</td></tr>
-        <tr><td>Abrió el detalle</td><td class="num">+0.5</td></tr>
-        <tr><td>Tiempo en el detalle</td><td class="num">+min(log s / 3, 1)</td></tr>
-        <tr><td>Click en "Ir a Steam"</td><td class="num">+1.5</td></tr>
-        <tr><td>Guardado en la wishlist de la app</td><td class="num">+3</td></tr>
-        <tr><td>Descartado</td><td class="num">−2</td></tr>
-        <tr><td>Comprado o en biblioteca</td><td class="num">+4</td></tr>
-      </tbody>
-    </table></div>
+    <p class="note">A futuro: compartir una oferta a WhatsApp, Telegram o Discord desde el menú de compartir del teléfono, y grupos de amigos dentro de la app.</p>
   </section>
 
   <section>
-    <h2>4. Capa de datos y stack</h2>
-    <h3>NestJS con TypeScript 7 <span class="chip v">verificado</span></h3>
-    <p>NestJS 12.3.2 compila con TS 7.0.2 usando <code>experimentalDecorators</code> y <code>emitDecoratorMetadata</code>, y la inyección de dependencias resuelve bien. TS 7.0.2 es el estable desde julio; la 7.1 está en beta.</p>
+    <h2>4. Capa de datos</h2>
+    <p>NestJS 12.3.2 compila y resuelve la inyección de dependencias con TS 7.0.2 <span class="chip v">verificado</span>. Reylo funcionó de punta a punta con TS 7.1 beta, Nest, <code>pg</code> y Postgres 16 <span class="chip v">verificado</span>, aunque tiene 4 semanas de vida, exige Node 24, necesita la base levantada para typecheckear y no hace migraciones. Prisma 8 es una reescritura completa en TypeScript que sigue en release candidate y todavía no tiene varias funciones; hoy no conviene.</p>
 
-    <h3>Reylo <span class="chip v">probado con un spike</span></h3>
-    <p>Permite importar archivos <code>.sql</code> desde TypeScript con tipos inferidos desde la base de datos real, usando los content mappers de TS 7.1, sin codegen. Lo probé con Reylo 0.6.0, TS 7.1 beta, NestJS 12, <code>pg</code>, Postgres 16 y Node 24.</p>
+    <h3>TypeORM vs Drizzle <span class="chip v">probado con un spike</span></h3>
+    <p>Comparé TypeORM 1.1.2 y Drizzle 1.0.0-rc.5 con TS 7.0.2, contra el mismo Postgres y con la misma consulta. Las dos compilan y corren. La diferencia que más importa: en TypeORM, <code>select</code> no achica el tipo, así que un campo no pedido compila como <code>number</code> y llega <code>undefined</code>. En Drizzle, ese mismo acceso es un error de compilación.</p>
     <div class="tbl"><table>
-      <thead><tr><th>Prueba</th><th>Resultado</th></tr></thead>
+      <thead><tr><th></th><th>TypeORM 1.1.2</th><th>Drizzle 1.0 RC</th></tr></thead>
       <tbody>
-        <tr><td>Inferencia de filas</td><td>Correcta: <code>{ appid: number; name: string; ... }</code></td></tr>
-        <tr><td>Cardinalidad</td><td>Query por PK → <code>Row | null</code>; listado → <code>Row[]</code></td></tr>
-        <tr><td>Columna mal escrita</td><td>Error de tipos dentro del propio <code>.sql</code></td></tr>
-        <tr><td><code>timestamptz</code></td><td>Tipado como <code>string</code> ISO, no <code>Date</code>; el typecheck me marcó el supuesto equivocado</td></tr>
-        <tr><td>Dentro de un servicio Nest con DI</td><td>Funciona, compilando con <code>tsc</code> y corriendo con <code>--import reylo/register</code></td></tr>
-        <tr><td>Tiempo de typecheck</td><td>~12 s en frío, ~0,2 s sin cambios, ~4,7 s tras editar un <code>.sql</code></td></tr>
+        <tr><td>Modelo</td><td>Clases con decoradores</td><td>Tablas como objetos TS, sin decoradores</td></tr>
+        <tr><td>Queries</td><td><code>find({ where, relations, select })</code> + QueryBuilder</td><td>Builder estilo SQL + API relacional <code>findMany({ with })</code></td></tr>
+        <tr><td>Tipo del resultado</td><td>Siempre la entidad completa</td><td>Lo que pediste, ni más ni menos</td></tr>
+        <tr><td>Migraciones</td><td>Diff desde las entidades; <code>synchronize</code> en desarrollo</td><td>drizzle-kit <code>generate</code> / <code>migrate</code> / <code>push</code></td></tr>
+        <tr><td>NestJS</td><td><code>@nestjs/typeorm</code> 12, oficial y maduro</td><td><code>@nestjs/drizzle</code> 0.0.2, oficial pero nuevo</td></tr>
+        <tr><td>Expo</td><td>Driver para <code>expo-sqlite</code>; necesita plugins de Babel para decoradores</td><td>Driver <code>expo-sqlite</code>, sin configuración extra</td></tr>
+        <tr><td>Con Reylo</td><td>Sin integración directa</td><td>Reylo acepta una instancia de Drizzle <span class="chip d">docs</span></td></tr>
+        <tr><td>Estado</td><td>1.0 desde mayo de 2026, con mantenimiento activo otra vez</td><td>1.0 en RC; 0.45.4 estable</td></tr>
+        <tr><td>Para vos</td><td>Ya lo conocés</td><td>Nuevo; si sabés SQL se lee directo</td></tr>
       </tbody>
     </table></div>
-    <p class="note">Límites: es la versión 0.6, con 4 semanas de vida, y depende de TS 7.1 beta. Exige Node 24, necesita la base levantada para typecheckear (también en CI) y no hace migraciones. Tampoco sirve en el cliente móvil, porque no tiene plugin para Metro.</p>
+    <details>
+      <summary>Código probado: TypeORM</summary>
+<pre><code>import 'reflect-metadata';
+import { Column, DataSource, Entity, JoinColumn, ManyToOne, MoreThanOrEqual, PrimaryColumn } from 'typeorm';
 
-    <h3>Prisma: lo reescribieron <span class="chip d">docs</span></h3>
-    <p>Prisma 8 es una reescritura completa en TypeScript y sigue en release candidate; desde agosto, <code>npm install prisma</code> sin versión instala el RC. Cambia el esquema (ahora es un "contract"), la CLI y la forma de las queries. Todavía le faltan <code>$extends</code>, el incremento atómico, la mayoría de los nested writes y los niveles de aislamiento. Prisma 7 queda en mantenimiento por 18 meses. Hoy no conviene para este proyecto.</p>
+@Entity('games')
+export class Game {
+  @PrimaryColumn('int') appid!: number;
+  @Column('text') name!: string;
+}
 
+@Entity('offers')
+export class Offer {
+  @PrimaryColumn('int') appid!: number;
+  @PrimaryColumn('char', { length: 2 }) country!: string;
+  @Column('smallint', { name: 'discount_pct' }) discountPct!: number;
+  @Column('int', { name: 'final_cents' }) finalCents!: number;
+  @Column('int', { name: 'original_cents' }) originalCents!: number;
+  @Column('timestamptz', { name: 'ends_at', nullable: true }) endsAt!: Date | null;
+
+  @ManyToOne(() => Game)
+  @JoinColumn({ name: 'appid' })
+  game!: Game;
+}
+
+const ds = new DataSource({ type: 'postgres', url: process.env.DATABASE_URL, entities: [Game, Offer] });
+await ds.initialize();
+
+const offers = await ds.getRepository(Offer).find({
+  where: { country: 'US', discountPct: MoreThanOrEqual(50) },
+  relations: { game: true },
+  select: { appid: true, discountPct: true, game: { appid: true, name: true } },
+  order: { discountPct: 'DESC' },
+});
+
+// El tipo es Offer[]: `select` no achica el tipo. Esto compila...
+const finalCents: number = offers[0]!.finalCents;
+// ...pero en runtime vale undefined.
+console.log('TypeORM', JSON.stringify(offers), '| finalCents =', finalCents);
+await ds.destroy();</code></pre>
+    </details>
+    <details>
+      <summary>Código probado: Drizzle</summary>
+<pre><code>import { and, defineRelations, desc, eq, gte } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { char, integer, pgTable, primaryKey, smallint, text, timestamp } from 'drizzle-orm/pg-core';
+
+export const games = pgTable('games', {
+  appid: integer('appid').primaryKey(),
+  name: text('name').notNull(),
+});
+
+export const offers = pgTable('offers', {
+  appid: integer('appid').notNull().references(() => games.appid),
+  country: char('country', { length: 2 }).notNull(),
+  discountPct: smallint('discount_pct').notNull(),
+  finalCents: integer('final_cents').notNull(),
+  originalCents: integer('original_cents').notNull(),
+  endsAt: timestamp('ends_at', { withTimezone: true }),
+}, (t) => [primaryKey({ columns: [t.appid, t.country] })]);
+
+export const relations = defineRelations({ games, offers }, (r) => ({
+  offers: { game: r.one.games({ from: r.offers.appid, to: r.games.appid }) },
+}));
+
+const db = drizzle({ connection: process.env.DATABASE_URL!, relations });
+
+// 1) Query builder estilo SQL: el tipo sale de lo que seleccionás.
+const rows = await db
+  .select({ appid: offers.appid, discountPct: offers.discountPct, name: games.name })
+  .from(offers)
+  .innerJoin(games, eq(games.appid, offers.appid))
+  .where(and(eq(offers.country, 'US'), gte(offers.discountPct, 50)))
+  .orderBy(desc(offers.discountPct));
+
+// @ts-expect-error finalCents no se seleccionó, así que no existe en el tipo.
+console.log(rows[0]!.finalCents);
+
+// 2) API relacional (equivalente a find + relations de TypeORM).
+const list = await db.query.offers.findMany({
+  where: { country: 'US', discountPct: { gte: 50 } },
+  orderBy: { discountPct: 'desc' },
+  columns: { appid: true, discountPct: true, endsAt: true },
+  with: { game: { columns: { name: true } } },
+});
+const ends: Date | null = list[0]!.endsAt;
+
+console.log('Drizzle select', JSON.stringify(rows));
+console.log('Drizzle query ', JSON.stringify(list), '| endsAt es Date:', ends instanceof Date);
+await db.$client.end();</code></pre>
+    </details>
     <div class="rec">
-      <span class="eyebrow">Recomendación preliminar</span>
-      <p><strong>Drizzle como base y Reylo para las queries pesadas del backend.</strong> Drizzle se encarga del esquema, las migraciones y el CRUD, y es el mismo ORM en el móvil sobre <code>expo-sqlite</code>. Reylo cubre el SQL complejo del recomendador, tipado contra la base real. Si Reylo cambia de API, esas queries pasan al <code>sql</code> de Drizzle sin tocar el resto.</p>
-      <p class="note">Alternativa: todo SQL-first con Reylo y migraciones SQL planas. Es más puro, pero no resuelve el ORM del móvil.</p>
+      <span class="eyebrow">Recomendación</span>
+      <p><strong>Drizzle 1.0 RC, con la versión fijada, y Reylo para las queries pesadas del backend.</strong> El tipo sigue a la consulta, es el mismo ORM en Nest y en Expo sin decoradores, y se integra con Reylo. Arrancar en la 1.0 evita migrar la API relacional y las migraciones cuando salga la versión final.</p>
+      <p class="note">Costo: es un RC, el módulo de Nest está en 0.0.2 y dejás lo conocido. Alternativa que compite: TypeORM 1.x, si preferís lo conocido y el módulo de Nest maduro.</p>
     </div>
   </section>
 
   <section>
     <h2>5. VPS</h2>
-    <p>Postgres, la API y el worker consumen entre 400 y 700 MB de RAM al inicio. Con 2 GB alcanza para arrancar; 4 GB da margen para varios usuarios.</p>
-    <h3>Hostgator México, VPS NVMe <span class="chip v">hostgator.mx</span></h3>
+    <p>Postgres, la API y el worker consumen entre 400 y 700 MB de RAM al inicio.</p>
+    <h3>Hostgator <span class="chip g">tus capturas, USD/mes</span></h3>
     <div class="tbl"><table>
-      <thead><tr><th>Plan</th><th>Promo (pago 1–3 años)</th><th>Regular / renovación</th></tr></thead>
+      <thead><tr><th>Plan</th><th>vCPU</th><th>RAM</th><th>NVMe</th><th>Promo</th><th>Renovación</th></tr></thead>
       <tbody>
-        <tr><td>VPS NVMe 2</td><td class="num">desde 76,25 MXN/mes</td><td class="num">150,75 MXN/mes</td></tr>
-        <tr><td>VPS NVMe 4</td><td class="num">desde 134,00 MXN/mes</td><td class="num">350,50 MXN/mes</td></tr>
-        <tr><td>VPS NVMe 8</td><td class="num">desde 229,75 MXN/mes</td><td class="num">517,50 MXN/mes</td></tr>
+        <tr><td>Snappy 1000 – NVMe 2</td><td class="num">1</td><td class="num">2 GB</td><td class="num">50 GB</td><td class="num">3,59</td><td class="num">4,95</td></tr>
+        <tr><td>Snappy 2000 – NVMe 4</td><td class="num">2</td><td class="num">4 GB</td><td class="num">100 GB</td><td class="num">8,49</td><td class="num">9,35</td></tr>
+        <tr><td>Snappy 4000 – NVMe 8</td><td class="num">4</td><td class="num">8 GB</td><td class="num">200 GB</td><td class="num">12,49</td><td class="num">18,70</td></tr>
+        <tr><td>Snappy 8000 – NVMe 16</td><td class="num">8</td><td class="num">16 GB</td><td class="num">450 GB</td><td class="num">25,99</td><td class="num">39,53</td></tr>
       </tbody>
     </table></div>
-    <ul>
-      <li>Corre sobre infraestructura de Oracle Cloud, con acceso root y servidores en LatAm.</li>
-      <li>El precio promocional exige pagar 1, 2 o 3 años por adelantado. La renovación se cobra al precio regular.</li>
-      <li>La CPU, la RAM y el disco de cada plan no figuran en la página <span class="chip u">no verificado</span>. Según una review del equivalente en EE. UU., el NVMe 2 trae 1 vCPU, 2 GB de RAM y 50 GB.</li>
-    </ul>
-    <h3>Hetzner CX23 <span class="chip u">no verificado</span></h3>
-    <p>2 vCPU y 4 GB por entre 3,49 y 5,49 €/mes después de las subidas de 2026, más 0,50 € por la IPv4. No tiene región en LatAm, pero para esta app la latencia importa poco. A precio regular, Hostgator NVMe 2 sale más caro y trae la mitad de RAM. A precio promo quedan parejos, pero Hostgator te ata a pagar años por adelantado.</p>
+    <h3>Hetzner <span class="chip g">tus capturas, EUR/mes sin IVA</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Plan</th><th>vCPU</th><th>RAM</th><th>NVMe</th><th>Precio</th></tr></thead>
+      <tbody>
+        <tr><td>Cost-Optimized (CX)</td><td colspan="3">No disponible</td><td class="num">desde 5,99</td></tr>
+        <tr><td>CPX02</td><td class="num">1</td><td class="num">1 GB</td><td class="num">20 GB</td><td class="num">6,49</td></tr>
+        <tr><td>CPX12</td><td class="num">1</td><td class="num">2 GB</td><td class="num">40 GB</td><td class="num">11,99</td></tr>
+        <tr><td>CPX22</td><td class="num">2</td><td class="num">4 GB</td><td class="num">80 GB</td><td class="num">19,99</td></tr>
+      </tbody>
+    </table></div>
+    <div class="rec">
+      <span class="eyebrow">Recomendación</span>
+      <p><strong>Hostgator, con el Snappy 1000 – NVMe 2 para arrancar.</strong> A specs iguales cuesta menos de la mitad que Hetzner: 4,95 USD contra 11,99 € con 2 GB, y 9,35 USD contra 19,99 € con 4 GB. Además ya lo conocés. Los 2 GB alcanzan si las imágenes Docker se construyen en CI y en el VPS solo se ejecutan. Conviene pasar al Snappy 2000 (4,40 USD más por mes) cuando la RAM quede por encima del 70 % de forma sostenida, aparezca swap o se sumen colas.</p>
+      <p class="note">Antes de pagar: confirmar que permita Docker (ninguna fuente oficial lo dice), que el cambio de plan a mitad de período se prorratee y qué plazo exige el precio promocional.</p>
+    </div>
   </section>
 
   <section>
@@ -287,13 +400,14 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
     <div class="tbl"><table>
       <thead><tr><th>Qué</th><th>Cómo se comprueba</th></tr></thead>
       <tbody>
+        <tr><td>Docker en Hostgator Snappy</td><td>Soporte de Hostgator, o <code>docker run hello-world</code> el primer día</td></tr>
+        <tr><td>Prorrateo de upgrade y plazo de la promo</td><td>Términos del checkout de Hostgator</td></tr>
         <tr><td>Wishlist sin key</td><td><code>GetWishlist/v1/?steamid=&lt;TU_STEAMID64&gt;</code>, con la wishlist pública</td></tr>
-        <tr><td>Specs de los VPS NVMe de Hostgator</td><td>Paso 2 del configurador en hostgator.mx</td></tr>
-        <tr><td>Precio actual de Hetzner</td><td>hetzner.com/cloud</td></tr>
+        <tr><td><code>loccountrycode</code></td><td>Con la Web API key, sobre tu propio perfil</td></tr>
+        <tr><td>Plan gratis de EAS y precio de Apple</td><td>expo.dev/pricing y developer.apple.com/programs</td></tr>
         <tr><td>FCM con un APK sideloaded</td><td>Development build mínima con Expo</td></tr>
         <tr><td>Rate limit real de Query</td><td>Medirlo en el worker, con backoff ante 429</td></tr>
         <tr><td>Reylo sobre una instancia de Drizzle</td><td>Extender el spike en la planificación</td></tr>
-        <tr><td>Datos que me faltan</td><td>El país de tu cuenta de Steam y tu SteamID64</td></tr>
       </tbody>
     </table></div>
   </section>
