@@ -1,6 +1,6 @@
 # Fase de investigación — Steam Offers Tracker v2
 
-Última actualización: 2026-10-31 (revisión 3).
+Última actualización: 2026-10-31 (revisión 4).
 Objetivo: confirmar si es viable un sistema que notifique descuentos de Steam (nombre, % de descuento, precio antes/después, fecha de fin, link a la tienda) y aprenda de los gustos de cada usuario, sin scraping pesado.
 
 Leyenda: **[verificado]** = probado en vivo desde un contenedor en esta fecha. **[docs]** = documentación oficial, specs o metadatos de npm. **[no verificado]** = fuentes secundarias, falta comprobar. **[Gisus]** = dato aportado por Gisus (capturas o decisión).
@@ -19,11 +19,12 @@ Es viable y más barato que la v1. Steam expone un endpoint sin API key (`IStore
 | Usuarios | Multiusuario desde el diseño | Confirmado [Gisus] |
 | Región | **Cada usuario ve las ofertas de su región**, según su cuenta de Steam | Confirmado [Gisus] |
 | Login | Con cuenta de Steam; es la pieza clave | Confirmado [Gisus] |
-| Web | Web propia de presentación + lógica compartida con la app | Confirmado [Gisus]; arquitectura en §2.3 |
+| Web | Web propia de presentación + lógica compartida con la app | Confirmado [Gisus]; arquitectura en §2.4 |
 | Compartir / grupos de amigos | A futuro, fuera del alcance inicial | Confirmado [Gisus] |
 | Criterio | El esfuerzo no pesa; el aprendizaje suma | Confirmado [Gisus] |
-| ORM | Recomendación: Drizzle 1.0 RC (comparado con TypeORM en §4.5) | A decidir en planificación |
-| VPS | Recomendación: Hostgator Snappy 1000 – NVMe 2 | A decidir en planificación |
+| ORM | **Drizzle 1.0 RC** (comparado con TypeORM en §4.5) | Confirmado [Gisus] |
+| VPS | **Hostgator**, VPS con Ubuntu; Docker comprobado. Plan inicial recomendado: Snappy 1000 – NVMe 2 | Proveedor confirmado [Gisus]; plan a decidir |
+| iOS | Sin Mac por ahora: builds en la nube con EAS. Mac cuando iOS sea un canal real (§2.2 y §2.3) | Recomendación |
 
 ## Correcciones respecto a revisiones anteriores
 
@@ -157,13 +158,53 @@ Costo concreto de Expo: un upgrade de SDK cada 1–3 meses si querés estar al d
 
 Las dos opciones generan apps iOS. Expo tiene tres ventajas concretas:
 
-- **Builds de iOS sin Mac:** EAS Build compila en la nube. Plan gratis: 15 builds de iOS por mes, cola de baja prioridad y timeout de 45 min [no verificado: fuentes secundarias de oct-2026; confirmar en expo.dev/pricing]. Con Capacitor el build de iOS exige Xcode en una Mac o un runner macOS de CI.
+- **Builds de iOS sin Mac** (detalle abajo). Con Capacitor el build de iOS exige Xcode en una Mac o un runner macOS de CI.
 - **UI nativa en iOS** en lugar de una WebView.
 - **Revisión de la App Store:** la guideline 4.2 pide que la app vaya "más allá de un sitio web reempaquetado". Una app Capacitor tiene que demostrarlo con funciones nativas; una app con UI nativa no carga con esa sospecha.
 
-Costos de iOS con cualquiera de las dos: Apple Developer Program 99 USD/año [no verificado en apple.com], un iPhone para probar y una Mac solo si querés builds locales o el simulador. En iOS el push va por APNs; `expo-notifications` lo maneja.
+**Qué hace EAS Build para iOS** [docs]:
 
-### 2.3 Web: separada o integrada
+1. Desde Linux o Windows corrés `eas build --platform ios`. El proyecto se sube a los servidores de Expo.
+2. Una máquina macOS de Expo compila con Xcode y firma con tus credenciales de Apple. EAS puede generar y guardar por vos el certificado de distribución y los provisioning profiles.
+3. Sale un `.ipa`:
+   - Para tu iPhone durante el desarrollo: distribución interna con provisioning ad hoc. Registrás el UDID del teléfono con `eas device:create` (un link o QR que abrís en el iPhone) y la build solo se instala en los dispositivos registrados, con un tope de 100.
+   - Para publicar: `eas submit` lo sube a App Store Connect / TestFlight.
+
+Planes de EAS [verificado en expo.dev/pricing]:
+
+| Plan | Builds | Cola | Timeout | Updates OTA |
+|---|---|---|---|---|
+| Free · 0 USD | 15 iOS + 15 Android por mes | Baja prioridad | 45 min | hasta 1000 usuarios activos/mes |
+| Starter · 19 USD/mes + uso | 45 USD de crédito de builds | Prioritaria | 2 h | hasta 3000 usuarios activos/mes |
+
+Las 15 builds mensuales alcanzan de sobra: solo hace falta una build nueva cuando cambia código o configuración nativa. Los cambios de TS/JS llegan a la development build desde el dev server de tu PC, y en producción se pueden enviar como update OTA.
+
+**Qué necesitás igual sin Mac:**
+- Apple Developer Program (99 USD/año [no verificado en apple.com]). Sin la membresía paga no hay provisioning ad hoc, TestFlight ni App Store.
+- Un iPhone para probar: el simulador de iOS solo corre en macOS.
+
+**Qué solo se puede hacer con una Mac:**
+- Simulador de iOS.
+- Xcode: depuración nativa, Instruments (profiling) y builds locales de iOS (`eas build --local` necesita Xcode).
+- Safari Web Inspector para depurar WebViews en iOS (relevante si se usan DOM components).
+- Iterar cómodo sobre módulos nativos en Swift.
+
+En iOS el push va por APNs; `expo-notifications` lo maneja.
+
+### 2.3 ¿Vale la pena comprar una Mac?
+
+Precio de referencia: Mac mini con M6 desde 899 USD en la tienda de Apple de EE. UU. [verificado en apple.com, 2026-10-31]. Base de 16 GB / 256 GB y 799 USD con precio educativo [no verificado: fuentes secundarias]. Fuera de EE. UU. el precio cambia por impuestos de importación.
+
+Solo para compilar no se paga: el plan gratis de EAS cubre este proyecto, y aun contra el Starter (19 USD/mes) la Mac mini base tarda unos 47 meses en amortizarse. Lo que la justifica es lo que EAS no hace: simulador, depuración nativa, módulos en Swift y tus proyectos personales para Apple.
+
+**Recomendación:** no comprarla ahora. Comprarla cuando se cumpla alguna de estas:
+- iOS se vuelve un canal real: usuarios que pagan o demanda validada, así la paga el propio proyecto.
+- Aparece un bug nativo de iOS que no se resuelve con EAS y los logs del dispositivo, o hace falta un módulo en Swift.
+- Coincide con tu próximo cambio de computadora, y la Mac lo reemplaza en lugar de sumarse.
+
+Si llega el momento: Mac mini base (la Apple Silicon más barata; usa tu monitor y teclado actuales). Con 256 GB el disco queda justo para Xcode y los simuladores; un SSD externo por USB-C para proyectos y caches sale más barato que la mejora de almacenamiento de Apple.
+
+### 2.4 Web: separada o integrada
 
 La web de presentación es una pieza aparte con cualquier opción: también con Capacitor, las pantallas de la app no son una landing. Lo que cambia es cuánto se comparte. Con Expo hay tres niveles:
 
@@ -430,8 +471,9 @@ A specs iguales, Hostgator cuesta menos de la mitad: 2 vCPU / 4 GB a 9,35 USD (r
 - Renueva a 4,95 USD/mes, y coincide con tu familiaridad con Hostgator.
 - Pasar a Snappy 2000 (+4,40 USD/mes a precio de renovación) cuando la RAM quede sostenida por encima del 70 %, aparezca swap o se sumen Redis/colas.
 
+Docker: comprobado por Gisus en un VPS de Hostgator con Ubuntu [Gisus].
+
 Antes de pagar, verificar:
-- Que permita Docker: fuentes secundarias dicen KVM con root, pero no lo confirmó ninguna fuente oficial [no verificado].
 - Que el upgrade a mitad de período se prorratee.
 - Qué plazo exige el precio promocional (el asterisco de la tarjeta).
 
@@ -441,11 +483,9 @@ Antes de pagar, verificar:
 
 | Qué | Cómo comprobarlo |
 |---|---|
-| Docker en Hostgator Snappy | Soporte de Hostgator o probarlo el primer día (`docker run hello-world`) |
 | Prorrateo de upgrade y plazo de la promo | Términos del checkout de Hostgator |
 | Wishlist sin key | `curl "https://api.steampowered.com/IWishlistService/GetWishlist/v1/?steamid=<TU_STEAMID64>"` con la wishlist pública |
 | `loccountrycode` en GetPlayerSummaries | Con la Web API key, sobre tu propio perfil |
-| Límites del plan gratis de EAS | expo.dev/pricing |
 | Precio del Apple Developer Program | developer.apple.com/programs |
 | FCM en tu teléfono con APK sideloaded | Development build mínima con Expo |
 | Rate limit real de `Query` | Medir en el worker con backoff ante 429 |

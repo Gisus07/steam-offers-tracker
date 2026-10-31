@@ -80,7 +80,7 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
 <div class="wrap">
   <header class="hero">
     <div>
-      <span class="eyebrow">Fase de investigación · revisión 3 · 31 oct 2026</span>
+      <span class="eyebrow">Fase de investigación · revisión 4 · 31 oct 2026</span>
       <h1>Steam Offers Tracker v2</h1>
       <p class="lede">Un notificador de descuentos en Steam, multiusuario, que muestra a cada persona las ofertas de su región y aprende sus gustos. Esto es lo que se probó, lo que se decidió y lo que falta.</p>
     </div>
@@ -121,8 +121,9 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
         <tr><td>Login</td><td>Con cuenta de Steam</td><td><span class="chip g">confirmado</span></td></tr>
         <tr><td>Web</td><td>Web de presentación propia, con lógica compartida con la app</td><td><span class="chip g">confirmado</span></td></tr>
         <tr><td>Compartir y grupos</td><td>A futuro, fuera del alcance inicial</td><td><span class="chip g">confirmado</span></td></tr>
-        <tr><td>ORM</td><td>Drizzle 1.0 RC</td><td><span class="chip d">recomendado</span></td></tr>
-        <tr><td>VPS</td><td>Hostgator Snappy 1000 – NVMe 2</td><td><span class="chip d">recomendado</span></td></tr>
+        <tr><td>ORM</td><td>Drizzle 1.0 RC</td><td><span class="chip g">confirmado</span></td></tr>
+        <tr><td>VPS</td><td>Hostgator con Ubuntu; Docker comprobado. Plan inicial: Snappy 1000 – NVMe 2</td><td><span class="chip g">proveedor confirmado</span></td></tr>
+        <tr><td>iOS</td><td>Sin Mac por ahora: builds en la nube con EAS</td><td><span class="chip d">recomendado</span></td></tr>
       </tbody>
     </table></div>
     <div class="rec fix">
@@ -204,13 +205,30 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
     </table></div>
 
     <h3>iOS</h3>
-    <p>Las dos opciones generan apps para iPhone, así que tu suposición es correcta en parte. Las ventajas reales de Expo para iOS son tres:</p>
+    <p>Las dos opciones generan apps para iPhone. Lo que suma Expo: builds de iOS sin Mac, UI nativa también en iPhone, y menos riesgo con la guideline 4.2 de la App Store, que rechaza apps que parecen un sitio web reempaquetado.</p>
+    <p><strong>Qué hace EAS Build para iOS</strong> <span class="chip d">docs</span></p>
+    <ol>
+      <li>Desde Linux o Windows corrés <code>eas build --platform ios</code> y el proyecto se sube a Expo.</li>
+      <li>Una máquina macOS de Expo compila con Xcode y firma con tus credenciales de Apple. EAS puede generar y guardar el certificado y los provisioning profiles.</li>
+      <li>Sale un <code>.ipa</code>. Para tu iPhone en desarrollo, registrás el teléfono con <code>eas device:create</code> y la build solo se instala en los dispositivos registrados. Para publicar, <code>eas submit</code> lo sube a TestFlight y la App Store.</li>
+    </ol>
+    <div class="tbl"><table>
+      <thead><tr><th>Plan de EAS</th><th>Builds</th><th>Cola</th><th>Timeout</th><th>Updates OTA</th></tr></thead>
+      <tbody>
+        <tr><td>Free · 0 USD</td><td>15 iOS + 15 Android por mes</td><td>Baja prioridad</td><td>45 min</td><td>1000 usuarios/mes</td></tr>
+        <tr><td>Starter · 19 USD/mes + uso</td><td>45 USD de crédito</td><td>Prioritaria</td><td>2 h</td><td>3000 usuarios/mes</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Verificado en expo.dev/pricing. Solo hace falta una build nueva cuando cambia código o configuración nativa; los cambios de TypeScript llegan a la app desde el servidor de desarrollo de tu PC.</p>
     <ul>
-      <li>EAS compila iOS en la nube sin una Mac. El plan gratis da 15 builds de iOS por mes, en cola de baja prioridad <span class="chip u">no verificado</span>.</li>
-      <li>La UI es nativa también en iPhone.</li>
-      <li>La guideline 4.2 de la App Store pide que la app vaya más allá de un sitio web reempaquetado. Una app hecha con Capacitor tiene que demostrarlo con funciones nativas; una con UI nativa no carga con esa sospecha.</li>
+      <li><strong>Necesitás igual, sin Mac:</strong> el Apple Developer Program (99 USD por año, sin verificar en apple.com) y un iPhone para probar.</li>
+      <li><strong>Solo con una Mac:</strong> el simulador de iOS, la depuración nativa y el profiling en Xcode, las builds locales de iOS y el inspector de Safari para depurar WebViews.</li>
     </ul>
-    <p class="note">Con cualquiera de las dos, publicar en iOS cuesta 99 USD por año (Apple Developer Program) y hace falta un iPhone para probar. La Mac solo es necesaria para builds locales o para usar el simulador.</p>
+    <div class="rec">
+      <span class="eyebrow">¿Comprar una Mac?</span>
+      <p><strong>Todavía no.</strong> La Mac mini con M6 arranca en 899 USD en la tienda de EE. UU. <span class="chip v">apple.com</span>. Solo para compilar no se paga: el plan gratis de EAS alcanza, y aun contra el Starter tarda unos 47 meses en amortizarse. Lo que la justifica es lo que EAS no hace.</p>
+      <p>Conviene comprarla cuando iOS sea un canal real (usuarios que pagan o demanda validada), cuando aparezca un problema nativo que EAS no resuelve, o cuando coincida con tu próximo cambio de computadora. En ese caso, la Mac mini base con un SSD externo para proyectos y caches.</p>
+    </div>
 
     <h3>Web: separada o integrada</h3>
     <p>La web de presentación es una pieza aparte con cualquier opción: también con Capacitor, las pantallas de la app no son una landing. Lo que cambia es cuánto se comparte, y con Expo hay tres niveles:</p>
@@ -391,7 +409,7 @@ await db.$client.end();</code></pre>
     <div class="rec">
       <span class="eyebrow">Recomendación</span>
       <p><strong>Hostgator, con el Snappy 1000 – NVMe 2 para arrancar.</strong> A specs iguales cuesta menos de la mitad que Hetzner: 4,95 USD contra 11,99 € con 2 GB, y 9,35 USD contra 19,99 € con 4 GB. Además ya lo conocés. Los 2 GB alcanzan si las imágenes Docker se construyen en CI y en el VPS solo se ejecutan. Conviene pasar al Snappy 2000 (4,40 USD más por mes) cuando la RAM quede por encima del 70 % de forma sostenida, aparezca swap o se sumen colas.</p>
-      <p class="note">Antes de pagar: confirmar que permita Docker (ninguna fuente oficial lo dice), que el cambio de plan a mitad de período se prorratee y qué plazo exige el precio promocional.</p>
+      <p class="note">Docker ya lo comprobaste en Hostgator con Ubuntu. Antes de pagar: confirmar que el cambio de plan a mitad de período se prorratee y qué plazo exige el precio promocional.</p>
     </div>
   </section>
 
@@ -400,11 +418,10 @@ await db.$client.end();</code></pre>
     <div class="tbl"><table>
       <thead><tr><th>Qué</th><th>Cómo se comprueba</th></tr></thead>
       <tbody>
-        <tr><td>Docker en Hostgator Snappy</td><td>Soporte de Hostgator, o <code>docker run hello-world</code> el primer día</td></tr>
         <tr><td>Prorrateo de upgrade y plazo de la promo</td><td>Términos del checkout de Hostgator</td></tr>
         <tr><td>Wishlist sin key</td><td><code>GetWishlist/v1/?steamid=&lt;TU_STEAMID64&gt;</code>, con la wishlist pública</td></tr>
         <tr><td><code>loccountrycode</code></td><td>Con la Web API key, sobre tu propio perfil</td></tr>
-        <tr><td>Plan gratis de EAS y precio de Apple</td><td>expo.dev/pricing y developer.apple.com/programs</td></tr>
+        <tr><td>Precio del Apple Developer Program</td><td>developer.apple.com/programs</td></tr>
         <tr><td>FCM con un APK sideloaded</td><td>Development build mínima con Expo</td></tr>
         <tr><td>Rate limit real de Query</td><td>Medirlo en el worker, con backoff ante 429</td></tr>
         <tr><td>Reylo sobre una instancia de Drizzle</td><td>Extender el spike en la planificación</td></tr>
