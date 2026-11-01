@@ -148,21 +148,55 @@ td.n{font-family:var(--f-mono);color:var(--muted);white-space:nowrap}
     <h3>Cómo se financian</h3>
     <p>Afiliados (ITAD, GG.deals, los canales de Telegram), donaciones (ITAD, SteamDB), anuncios (casi todas las apps chicas) y suscripción (GameTrack cobra las alertas). Steam no tiene un programa de afiliados público <span class="chip d">secundaria</span>, así que una app que solo enlaza a Steam no cobra comisión. La evidencia de que la gente paga solo por alertas de ofertas es débil: por eso el pago (H4) se prueba al final.</p>
 
+    <h3>Tamaño del mercado <span class="chip v">verificado</span></h3>
+    <p>Steam tuvo un pico de 42 millones de usuarios simultáneos en 2025. Valve no publica usuarios por país; el mejor proxy oficial es el tráfico de descargas de la última semana.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>País</th><th>% del tráfico mundial</th><th>Puesto</th></tr></thead>
+      <tbody>
+        <tr><td>Brasil</td><td>4,03 %</td><td>4</td></tr>
+        <tr><td>Argentina</td><td>0,80 %</td><td>17</td></tr>
+        <tr><td>México</td><td>0,79 %</td><td>18</td></tr>
+        <tr><td>Chile</td><td>0,50 %</td><td>29</td></tr>
+        <tr><td>Colombia</td><td>0,35 %</td><td>39</td></tr>
+        <tr><td>Perú</td><td>0,31 %</td><td>43</td></tr>
+        <tr><td>Venezuela</td><td>0,09 %</td><td>63</td></tr>
+        <tr><td><strong>LatAm hispana (suma)</strong></td><td><strong>~3,3 %</strong></td><td>—</td></tr>
+        <tr><td>España</td><td>1,19 %</td><td>15</td></tr>
+      </tbody>
+    </table></div>
+    <p>El tráfico no equivale a usuarios, pero la proporción orienta: Venezuela sola es un mercado muy chico, y LatAm hispana es unas 37 veces más grande.</p>
+
+    <h3>Precios y pagos <span class="chip v">verificado</span></h3>
+    <ul>
+      <li>Venezuela está en la región LATAM-USD de Steam y paga en dólares.</li>
+      <li>Cómo pagan Steam los venezolanos no tiene datos oficiales. Revendedores y el foro de Steam mencionan gift cards compradas con Pago Móvil, Binance, AirTM o Zinli, porque las tarjetas venezolanas fallan <span class="chip d">secundaria</span>.</li>
+      <li><strong>Para la fase de negocio:</strong> Google Play acepta desarrolladores y comerciantes con sede en Venezuela y les paga en dólares. Cobrar dentro de la app en Android es viable; la pasarela web es la parte incierta.</li>
+    </ul>
+
+    <h3>Benchmarks de suscripción <span class="chip d">RevenueCat 2026</span></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Métrica</th><th>Global</th><th>LatAm</th></tr></thead>
+      <tbody>
+        <tr><td>Trial → pago (mediana)</td><td>~32–33 %</td><td>~20–23 %</td></tr>
+        <tr><td>Descarga → pago a 35 días</td><td>2 %</td><td>1,5 % (desarrolladores de LatAm)</td></tr>
+        <tr><td>Descarga → trial a 30 días</td><td>—</td><td>3–3,7 %</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Los trials de 5 a 9 días convierten 37 %; los de 4 días o menos, 25 %. Los precios más comunes son 5 USD por semana, 10 USD por mes y 30 USD por año. El "LatAm" de RevenueCat es Brasil, México, Argentina, Chile, Colombia y Perú. Confirmé las definiciones en su página, no cada cifra.</p>
+    <p><strong>Test de Sean Ellis:</strong> si al menos el 40 % responde "muy decepcionado" a "¿cómo te sentirías si ya no pudieras usar el producto?", hay señal de product-market fit. Se pregunta solo a quien lo usó al menos dos veces en las últimas dos semanas <span class="chip d">secundaria</span>.</p>
+
     <h3>Qué cambia en la validación</h3>
     <ul>
+      <li><strong>Validar en LatAm hispana, no solo en Venezuela,</strong> con una cuota de venezolanos para no perder ese contexto.</li>
       <li>En las entrevistas, además de "me enteré tarde", explorar el ruido: qué hacen con los avisos que ya les llegan. Puede que el dolor real sea la relevancia y no la cobertura.</li>
       <li>Preguntar si usan las notificaciones de la app de Steam: si ya les alcanzan, el problema es menor.</li>
-      <li>Reclutar en comunidades de LatAm, donde no hay un competidor fuerte.</li>
+      <li>Medir cuánto tarda en llegar la primera alerta útil: si tarda días, una prueba gratis corta no alcanza para convencer.</li>
+      <li>Distinguir "quiere pagar" de "puede pagar": en la lista de precio fundador, preguntar con qué medio pagaría cada persona.</li>
     </ul>
   </section>
 
-  <section id="contexto">
-    <h2>3. Contexto y benchmarks</h2>
-    <p class="note">Pendiente.</p>
-  </section>
-
   <section>
-    <h2>4. Entrevistas</h2>
+    <h2>3. Entrevistas</h2>
     <h3>Las cinco reglas</h3>
     <p class="note">Basadas en <em>The Mom Test</em>, de Rob Fitzpatrick, el libro de referencia para esto.</p>
     <ol class="rules">
@@ -175,7 +209,8 @@ td.n{font-family:var(--f-mono);color:var(--muted);white-space:nowrap}
     <p><strong>Errores típicos de la primera vez:</strong> presentar la idea al principio, hacer preguntas que inducen la respuesta ("¿no te molesta perderte ofertas?"), preguntar "¿pagarías?" y entrevistar solo a amigos cercanos, que te quieren y van a ser amables.</p>
 
     <h3>A quién y cuántos</h3>
-    <p>Entre 6 y 8 personas que compraron al menos un juego en Steam en los últimos 6 meses. Con 5 o 6 ya suelen repetirse los patrones. Mezclá perfiles: quien compra seguido y quien compra poco, quien usa la wishlist y quien no. Buscalas entre compañeros de la universidad, amigos de amigos y comunidades de jugadores en español.</p>
+    <p>Entre 6 y 8 personas que compraron al menos un juego en Steam en los últimos 6 meses. Con 5 o 6 ya suelen repetirse los patrones. Mezclá perfiles: quien compra seguido y quien compra poco, quien usa la wishlist y quien no. Que no sean todos de Venezuela: sumá gente de otros países de LatAm.</p>
+    <p>Dónde encontrarlas: compañeros de la universidad, amigos de amigos y comunidades de jugadores en español. Por ejemplo, el servidor de Discord SOCIAL GAMING (83 mil miembros) y los grupos de Steam de Argentina (70 mil), Chile (23 mil) y Perú (13 mil) <span class="chip v">verificado</span>, o r/argentina, r/VideojuegosMX y r/vzla en Reddit. Revisá las reglas de cada comunidad antes de publicar la encuesta.</p>
 
     <div class="block">
       <div class="block-head"><strong>Mensaje de invitación</strong><button class="copy" type="button" data-copy="invite">Copiar</button></div>
@@ -265,7 +300,7 @@ Sorpresas:</pre>
   </section>
 
   <section>
-    <h2>5. Encuesta</h2>
+    <h2>4. Encuesta</h2>
     <p>Suma volumen, pero no reemplaza las entrevistas. Con menos de unas 30 respuestas es solo exploratoria; para cuantificar con confianza hacen falta 100 o más.</p>
     <div class="block">
       <div class="block-head"><strong>Preguntas para Google Forms</strong><button class="copy" type="button" data-copy="survey">Copiar preguntas</button></div>
@@ -291,7 +326,7 @@ Sorpresas:</pre>
   </section>
 
   <section>
-    <h2>6. Piloto con la versión personal</h2>
+    <h2>5. Piloto con la versión personal</h2>
     <p>La versión personal se construye igual, porque la necesitás. El piloto es dársela a entre 10 y 20 personas que se anotaron, durante 4 semanas. La cuenta de distribución limitada de Android permite instalarla en hasta 20 dispositivos, gratis y sin documento <span class="chip v">verificado</span>. Las métricas salen de los mismos eventos que ya registra el recomendador.</p>
     <div class="tbl"><table>
       <thead><tr><th>Métrica</th><th>Qué mide</th></tr></thead>
@@ -301,13 +336,14 @@ Sorpresas:</pre>
         <tr><td>Clicks a "Ir a Steam" por persona y semana</td><td>Intención de compra</td></tr>
         <tr><td>Compras declaradas (botón "Lo compré" o encuesta final)</td><td>Valor real</td></tr>
         <tr><td>Test de Sean Ellis: "¿Cómo te sentirías si mañana ya no pudieras usar la app?"</td><td>Qué tan necesaria es</td></tr>
-        <tr><td>Anotados a una lista de "precio fundador"</td><td>Primera señal de pago (H4)</td></tr>
+        <tr><td>Horas hasta la primera alerta útil</td><td>Si el valor llega dentro de una prueba gratis corta</td></tr>
+        <tr><td>Anotados a una lista de "precio fundador", con el medio con el que pagarían</td><td>Primera señal de pago (H4): quiere y puede pagar</td></tr>
       </tbody>
     </table></div>
   </section>
 
   <section>
-    <h2>7. Regla de decisión</h2>
+    <h2>6. Regla de decisión</h2>
     <p>Se fija antes de ver los datos, para no acomodar los umbrales a los resultados. Todos son criterio propio <span class="chip u">ajustable</span>.</p>
     <div class="card go" id="decision">
       <span class="eyebrow">Pasar a diseñar la monetización si se cumplen las tres</span>
@@ -316,7 +352,7 @@ Sorpresas:</pre>
         <li>Piloto: en la semana 4, al menos el 40 % de los participantes sigue activo.</li>
         <li>Test de Sean Ellis: al menos el 40 % responde "muy decepcionado".</li>
       </ol>
-      <p class="note">Como el grupo del piloto es cercano y tiende a ser amable, estos umbrales son más exigentes de lo que serían con desconocidos.</p>
+      <p class="note">Como el grupo del piloto es cercano y tiende a ser amable, estos umbrales son más exigentes de lo que serían con desconocidos. Con 10 a 20 participantes, el test de Sean Ellis es orientativo, porque la referencia pide unas 40 respuestas.</p>
     </div>
     <ul>
       <li><strong>Ajustar y repetir el piloto una vez</strong> si el problema aparece en las entrevistas pero el piloto no retiene: el problema existe, pero la solución no convence.</li>
@@ -325,7 +361,7 @@ Sorpresas:</pre>
   </section>
 
   <section>
-    <h2>8. Calendario</h2>
+    <h2>7. Calendario</h2>
     <div class="tbl"><table>
       <thead><tr><th>Semanas</th><th>Qué</th></tr></thead>
       <tbody>

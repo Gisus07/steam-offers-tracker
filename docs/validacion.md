@@ -73,11 +73,48 @@ Indicativo: Google Play muestra pocas reseñas por ficha.
 - **Suscripción o compras en la app:** GameTrack+ cobra las alertas; otras apps chicas venden de 0,99 a 16,99 USD.
 - **Evidencia de que la gente paga solo por alertas de ofertas: débil.** Ninguno publica ingresos y hay alternativas gratis sin anuncios. Por eso H4 es la hipótesis más riesgosa, y se prueba al final.
 
-### 2.6 Qué cambia en la validación
+### 2.6 Contexto y benchmarks
 
-- En las entrevistas, además del "me enteré tarde", hay que explorar el **ruido**: qué hacen con los avisos que les llegan hoy y cuáles ignoran. Puede que el dolor real sea la relevancia y no la cobertura.
+**Tamaño** [verificado en las estadísticas oficiales de Steam, salvo donde se indica]:
+- Pico de 42 M de usuarios simultáneos en 2025 (Steam Year in Review) y 41,98 M en el pico reciente de los charts oficiales. Valve no publica usuarios mensuales globales desde 2021, cuando eran 132 M [fuente secundaria].
+- Valve no publica usuarios por país. El mejor proxy oficial es el tráfico de descargas de la última semana:
+
+| País | % del tráfico mundial | Puesto |
+|---|---|---|
+| Brasil | 4,03 % | 4 |
+| Argentina | 0,80 % | 17 |
+| México | 0,79 % | 18 |
+| Chile | 0,50 % | 29 |
+| Colombia | 0,35 % | 39 |
+| Perú | 0,31 % | 43 |
+| Venezuela | 0,09 % | 63 |
+| LatAm hispana (suma) | ~3,3 % | — |
+| España | 1,19 % | 15 |
+
+El tráfico en bytes no equivale a usuarios, pero la proporción orienta: **Venezuela sola es un mercado muy chico**; LatAm hispana es unas 37 veces más grande.
+
+**Precios y pagos** [verificado]:
+- Venezuela está en la región de precios LATAM-USD de Steam (paga en dólares), junto con Argentina, Bolivia y Ecuador, entre otros. Brasil, México, Chile, Colombia, Perú, Costa Rica y Uruguay tienen moneda local.
+- Cómo pagan Steam los venezolanos: no hay datos oficiales. Revendedores y el foro de Steam mencionan gift cards compradas con Pago Móvil, Binance, AirTM o Zinli, porque las tarjetas venezolanas fallan [fuente secundaria].
+- **Para la fase de negocio:** Google Play acepta desarrolladores y comerciantes con sede en Venezuela y les paga en USD [verificado en la ayuda de Play Console]. Desde Venezuela, cobrar dentro de la app en Android es viable; la pasarela web es la parte incierta.
+
+**Benchmarks de suscripción** (RevenueCat, *State of Subscription Apps 2026*, más de 115 000 apps; su "LatAm" es Brasil, México, Argentina, Chile, Colombia y Perú):
+- Trial → pago, mediana: ~32–33 % global; ~20–23 % en LatAm. Los trials de 5 a 9 días convierten 37 %; los de 4 días o menos, 25 %.
+- Descarga → pago a 35 días: 2 % global; 1,5 % en apps de desarrolladores de LatAm.
+- Descarga → trial a 30 días: 3–3,7 % en LatAm.
+- Precios más comunes: 5 USD semanal, 10 USD mensual, 30 USD anual.
+
+Confirmé las definiciones y la composición de "LatAm" en la página de RevenueCat, pero no cada cifra [fuente secundaria parcial].
+
+**Test de Sean Ellis:** si al menos el 40 % responde "muy decepcionado" a "¿cómo te sentirías si ya no pudieras usar el producto?", hay señal de product-market fit. Se pregunta solo a quien lo usó al menos dos veces en las últimas dos semanas, y con unas 40 respuestas ya hay una señal orientativa [fuente secundaria: First Round Review].
+
+### 2.7 Qué cambia en la validación
+
+- **Validar en LatAm hispana, no solo en Venezuela,** con una cuota de venezolanos para no perder ese contexto.
+- En las entrevistas, además del "me enteré tarde", explorar el **ruido**: qué hacen con los avisos que les llegan hoy y cuáles ignoran. Puede que el dolor real sea la relevancia y no la cobertura.
 - Preguntar si usan las notificaciones de la app de Steam: si ya les alcanzan, el problema es menor.
-- Reclutar en comunidades de LatAm, donde no hay un competidor fuerte.
+- El valor llega cuando aparece una oferta relevante. En el piloto hay que medir **cuánto tarda en llegar la primera alerta útil**; si tarda días, una prueba gratis corta no alcanza para convencer.
+- Distinguir **"quiere pagar" de "puede pagar"**: en la lista de precio fundador, preguntar con qué medio pagaría cada persona.
 
 ---
 
@@ -102,8 +139,12 @@ Errores típicos de la primera vez:
 ### 3.2 A quién y cuántos
 
 - **Cuántos:** 6 a 8 entrevistas. Con 5 o 6 ya suelen repetirse los patrones.
-- **Quiénes:** personas que compraron al menos un juego en Steam en los últimos 6 meses. Mezclá perfiles: quien compra seguido y quien compra poco, quien usa la wishlist y quien no.
-- **Dónde encontrarlas:** compañeros de la universidad, amigos de amigos y comunidades de jugadores en español (sección 2).
+- **Quiénes:** personas que compraron al menos un juego en Steam en los últimos 6 meses. Mezclá perfiles: quien compra seguido y quien compra poco, quien usa la wishlist y quien no. Que no sean todos de Venezuela: sumá gente de otros países de LatAm (sección 2.7).
+- **Dónde encontrarlas:** compañeros de la universidad, amigos de amigos y comunidades de jugadores en español:
+  - Discord: SOCIAL GAMING, servidor hispano con 83 K miembros [verificado].
+  - Grupos de Steam por país: Argentina 70 K, Chile 23 K y Perú 13 K miembros; el de Venezuela tiene 324 [verificado].
+  - Reddit: r/argentina 1,6 M, r/VideojuegosMX 1 M, r/vzla 204 K [fuente secundaria].
+  - Revisá las reglas de cada comunidad antes de publicar la encuesta.
 
 Mensaje de invitación listo para copiar:
 
@@ -220,7 +261,8 @@ La versión personal se construye igual, porque la necesitás. El piloto es dár
 | Clicks a "Ir a Steam" por persona y semana | Intención de compra |
 | Compras declaradas (botón "Lo compré" o encuesta final) | Valor real |
 | Test de Sean Ellis al final: "¿Cómo te sentirías si mañana ya no pudieras usar la app?" (muy / algo / nada decepcionado) | Qué tan necesaria es |
-| Anotados a una lista de "precio fundador" | H4, primera señal de pago |
+| Horas hasta la primera alerta útil (abierta o con click a Steam) | Si el valor llega dentro de una prueba gratis corta |
+| Anotados a una lista de "precio fundador", con el medio con el que pagarían | H4: quiere pagar y puede pagar |
 
 ---
 
@@ -234,6 +276,8 @@ Se fija **antes** de ver los datos, para no acomodar los umbrales a los resultad
 3. Test de Sean Ellis: al menos el 40 % responde "muy decepcionado".
 
 Como el grupo del piloto es cercano y tiende a ser amable, estos umbrales son más exigentes de lo que serían con desconocidos.
+
+Con 10 a 20 participantes, el test de Sean Ellis es orientativo: la referencia pide unas 40 respuestas. Se pregunta solo a quienes usaron la app al menos dos veces en las últimas dos semanas.
 
 **Ajustar la propuesta y repetir el piloto una vez** si el problema aparece en las entrevistas pero el piloto no retiene: el problema existe, pero la solución no convence.
 
