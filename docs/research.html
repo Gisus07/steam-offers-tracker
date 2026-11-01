@@ -144,7 +144,7 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
     <h3>Principal: <code>IStoreQueryService/Query/v1</code> <span class="chip v">verificado</span></h3>
 <pre><code>GET https://api.steampowered.com/IStoreQueryService/Query/v1/?input_json=
 {
-  "query": { "start": 0, "count": 1000,
+  "query": { "start": 0, "count": 1000, "sort": 2,
     "filters": { "type_filters": { "include_games": true },
                  "price_filters": { "min_discount_percent": 1 } } },
   "context": { "language": "spanish", "country_code": "MX" },
@@ -160,6 +160,7 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
       <li>Tope real de 1000 ítems por página. El barrido transfiere unos 74 MB; baja mucho si se pide <code>basic_info</code> solo para los appids nuevos.</li>
     </ul>
     <p class="note">Riesgo: es el endpoint que usa la propia tienda y no está documentado oficialmente. Va en un adaptador aislado, con fallback.</p>
+    <p class="note"><strong>Orden obligatorio:</strong> sin <code>"sort": 2</code> (por appid), la paginación repite y saltea juegos: llegaban 10 879 distintos de 14 599. Con ese orden llegan todos <span class="chip v">verificado</span>.</p>
 
     <h3>Región por usuario, barrido por país</h3>
     <p><code>country_code</code> cambia moneda, precio y hasta el catálogo en oferta: el mismo día dio 14 546 juegos en US, 14 541 en AR, 14 474 en VE y 14 544 en MX <span class="chip v">verificado</span>. Cada usuario ve su región, pero por dentro las ofertas se guardan por <code>(appid, country)</code> y el worker barre una vez por país con usuarios. Sumar usuarios de un mismo país no agrega requests.</p>

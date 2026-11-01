@@ -1,0 +1,1099 @@
+<title>Modelo de datos Offers Tracker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Public+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: documento técnico de una columna; diagramas y tablas en su propio contenedor con scroll; el SQL completo al final. */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --fg:#17202a; --muted:#566573; --line:#d6dde4;
+  --accent:#2a6f97; --deal-bg:#4c6b22; --ok:#2e7d32; --warn:#a15c00; --no:#9b2c2c; --code-bg:#e9eef2;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171d; --surface:#1a2129; --fg:#e4e9ee; --muted:#9aa8b5; --line:#2c3743;
+  --accent:#66c0f4; --deal-bg:#5f8a2a; --ok:#7bc67e; --warn:#e0a54a; --no:#e57373; --code-bg:#222b35; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#12171d; --surface:#1a2129; --fg:#e4e9ee; --muted:#9aa8b5; --line:#2c3743;
+  --accent:#66c0f4; --deal-bg:#5f8a2a; --ok:#7bc67e; --warn:#e0a54a; --no:#e57373; --code-bg:#222b35; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.45rem;font-weight:700;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0;max-width:70ch}
+section{display:flex;flex-direction:column;gap:16px}
+header{display:flex;flex-direction:column;gap:12px}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.1rem;color:var(--muted)}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+pre{font-family:var(--f-mono);font-size:.78rem;background:var(--code-bg);padding:14px 16px;border-radius:6px;overflow-x:auto;margin:0;line-height:1.5}
+pre code{background:none;padding:0;overflow-wrap:normal}
+ul,ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+li{max-width:70ch}
+.note{font-size:.88rem;color:var(--muted)}
+
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.stat{background:var(--surface);padding:14px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font-family:var(--f-display);font-size:1.45rem;font-weight:800;font-variant-numeric:tabular-nums}
+.stat span{font-size:.8rem;color:var(--muted)}
+@media (max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.num{text-align:right;white-space:nowrap}
+td code{white-space:nowrap}
+
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.68rem;padding:1px 7px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.yes{color:var(--ok)} .no{color:var(--no)} .later{color:var(--warn)} .v{color:var(--ok)}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
+.diagram pre.mermaid{background:transparent;padding:0;font-size:inherit}
+
+.groups{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.group{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.group h3{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.group h3 small{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);font-weight:400}
+.group ul{padding-left:18px;font-size:.9rem}
+@media (max-width:700px){.groups{grid-template-columns:1fr}}
+
+.decisions{display:flex;flex-direction:column;gap:12px}
+.dec{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.dec-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dec-head h3{margin:0}
+
+.finding{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:baseline}
+.finding b{font-family:var(--f-mono);font-size:.75rem;color:var(--warn);white-space:nowrap}
+
+details.sql{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 16px}
+details.sql[open]{display:flex;flex-direction:column;gap:12px}
+details.sql summary{cursor:pointer;font-family:var(--f-display);font-weight:700}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.copy{font-family:var(--f-mono);font-size:.75rem;background:var(--surface);color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:4px 10px;cursor:pointer}
+.copy:hover{background:var(--code-bg)}
+pre.sqlcode{max-height:70vh;overflow:auto}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Diseño del software · Probado en PostgreSQL 18.6 con datos reales de Steam</span>
+    <h1>Modelo de datos</h1>
+    <p class="lede">Qué se guarda, cómo se relaciona, cómo se consulta rápido y qué herramientas de Postgres usamos (y cuáles no). Todo lo de esta página se probó con un barrido real de las 14 594 ofertas de Venezuela y con 1000 usuarios sintéticos.</p>
+  </header>
+
+  <div class="stats" aria-label="Resultados medidos">
+    <div class="stat"><b>0,9 s</b><span>aplicar un barrido diario (3015 cambios)</span></div>
+    <div class="stat"><b>~100 ms</b><span>feed personalizado de un usuario</span></div>
+    <div class="stat"><b>1,3 s</b><span>candidatos a notificación, 1000 usuarios</span></div>
+    <div class="stat"><b>+20 ms</b><span>costo del trigger por lote de 1000 eventos</span></div>
+    <div class="stat"><b>~170 B</b><span>por evento guardado, con índices</span></div>
+  </div>
+
+  <section>
+    <h2>Qué se guarda</h2>
+    <div class="groups">
+      <div class="group">
+        <h3>Catálogo global <small>compartido por todos</small></h3>
+        <ul>
+          <li><code>games</code>: datos del juego, reseñas, descriptores de contenido.</li>
+          <li><code>tags</code> y <code>game_tags</code>: los tags de Steam con su peso. Son el vector de cada juego.</li>
+          <li><code>offers</code>: ofertas vigentes, una por juego y país.</li>
+          <li><code>price_history</code>: historial como intervalos de tiempo.</li>
+        </ul>
+        <p class="note">Medido: 14 594 juegos, 245 982 filas en <code>game_tags</code> y 446 tags, unos 75 MB por país en el primer barrido.</p>
+      </div>
+      <div class="group">
+        <h3>Usuarios e identidad <small>por usuario</small></h3>
+        <ul>
+          <li><code>users</code> y <code>auth_identities</code>: la cuenta propia y las cuentas vinculadas (hoy Steam).</li>
+          <li><code>user_settings</code>: país, umbrales, contenido excluido, horario de silencio.</li>
+          <li><code>devices</code> y <code>sessions</code>: tokens de push y sesiones (refresh token hasheado).</li>
+          <li><code>user_library</code> y <code>user_steam_wishlist</code>: importados de Steam.</li>
+        </ul>
+      </div>
+      <div class="group">
+        <h3>Comportamiento <small>lo que más crece</small></h3>
+        <ul>
+          <li><code>events</code>: vistas, tiempo de lectura, guardados, descartes. Particionada por mes.</li>
+          <li><code>user_game_state</code>: resumen por usuario y juego, mantenido por trigger.</li>
+          <li><code>user_tag_profile</code> y <code>user_profiles</code>: el perfil de gustos.</li>
+          <li><code>notifications</code>: avisos enviados, sin repetir la misma oferta.</li>
+        </ul>
+        <p class="note">Medido: ~170 bytes por evento. Con 200 eventos por usuario y día, 1000 usuarios suman ~1 GB por mes; vos solo, unos 12 MB por año.</p>
+      </div>
+      <div class="group">
+        <h3>Operación <small>monitoreo y carga</small></h3>
+        <ul>
+          <li><code>sweeps</code>: cada barrido, con conteos y estado (incluido "anomalía").</li>
+          <li><code>sweep_items</code>: staging <code>UNLOGGED</code> donde el worker vuelca la respuesta de Steam antes de aplicarla.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Diagrama entidad-relación</h2>
+    <div class="diagram">
+<pre class="mermaid">
+erDiagram
+  GAMES ||--o{ GAME_TAGS : "tiene"
+  TAGS ||--o{ GAME_TAGS : "clasifica"
+  GAMES ||--o{ OFFERS : "en oferta por país"
+  GAMES ||--o{ PRICE_HISTORY : "historial"
+  SWEEPS ||--o{ SWEEP_ITEMS : "carga"
+  USERS ||--o{ AUTH_IDENTITIES : "se identifica con"
+  USERS ||--|| USER_SETTINGS : "configura"
+  USERS ||--o{ DEVICES : "usa"
+  USERS ||--o{ SESSIONS : "abre"
+  DEVICES |o--o{ SESSIONS : "desde"
+  USERS ||--o{ USER_LIBRARY : "tiene en Steam"
+  USERS ||--o{ USER_STEAM_WISHLIST : "desea en Steam"
+  USERS ||--o{ EVENTS : "genera"
+  USERS ||--o{ USER_GAME_STATE : "resume"
+  USERS ||--o{ USER_TAG_PROFILE : "perfil"
+  TAGS ||--o{ USER_TAG_PROFILE : "pondera"
+  USERS ||--|| USER_PROFILES : "norma"
+  USERS ||--o{ NOTIFICATIONS : "recibe"
+  GAMES ||--o{ NOTIFICATIONS : "sobre"
+
+  GAMES {
+    int appid PK
+    text name
+    smallint_arr content_descriptor_ids
+    bool is_adult "generada"
+    smallint review_percent
+    real tag_norm
+  }
+  OFFERS {
+    char country PK
+    int appid PK
+    smallint discount_pct
+    int original_cents
+    int final_cents
+    timestamptz discount_end_at
+  }
+  PRICE_HISTORY {
+    int appid PK
+    char country PK
+    tstzrange valid PK "sin solapes"
+    smallint discount_pct
+    int final_cents
+  }
+  USERS {
+    uuid id PK "uuidv7"
+    text display_name
+  }
+  EVENTS {
+    bigint id PK
+    timestamptz occurred_at PK "clave de partición"
+    uuid user_id FK
+    int appid
+    event_type type
+    int value
+  }
+  USER_GAME_STATE {
+    uuid user_id PK
+    int appid PK
+    timestamptz saved_at
+    timestamptz dismissed_at
+    int views
+  }
+  USER_TAG_PROFILE {
+    uuid user_id PK
+    int tag_id PK
+    real score
+  }
+</pre>
+    </div>
+    <p class="note"><code>user_library</code> y <code>user_steam_wishlist</code> no tienen FK a <code>games</code>: la biblioteca trae juegos que nunca estuvieron en oferta. Para que cuenten en el perfil, el worker tiene que traer sus tags (pendiente, abajo).</p>
+  </section>
+
+  <section>
+    <h2>Cómo fluyen los datos</h2>
+    <div class="diagram">
+<pre class="mermaid">
+flowchart LR
+  A["Steam Query<br/>sort: 2, 1000 por página"] --> B["sweep_items<br/>(UNLOGGED)"]
+  B --> C{"apply_sweep()"}
+  C -- "incompleto" --> X["sweeps: anomaly<br/>no toca nada"]
+  C -- "ok" --> D["games + game_tags"]
+  C -- "ok" --> E["offers"]
+  C -- "ok" --> F["price_history"]
+  F --> G["notification_candidates()"]
+  P["user_tag_profile"] --> G
+  G --> H["notifications<br/>FCM"]
+  APP["App: lotes de eventos"] --> EV["events<br/>(partición del mes)"]
+  EV -- "trigger por sentencia" --> ST["user_game_state"]
+  EV --> R["recompute_profile()<br/>run_maintenance()"]
+  R --> P
+  E --> FEED["feed_for_user()"]
+  P --> FEED
+  ST --> FEED
+</pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>Consultas principales</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Consulta</th><th>Cómo se resuelve</th><th>Medido</th></tr></thead>
+      <tbody>
+        <tr><td>Feed personalizado</td><td><code>feed_for_user()</code>: ofertas del país filtradas por ajustes, sin lo que ya tenés ni lo descartado; similitud coseno con tu perfil (70 %), descuento (15 %) y reseñas (15 %). Cursor por <code>(score, appid)</code>.</td><td class="num">80–105 ms</td></tr>
+        <tr><td>Aplicar un barrido</td><td><code>apply_sweep()</code>: todo en conjuntos, sin bucles por fila. Primero verifica que el barrido esté completo.</td><td class="num">6 s el primero; 0,9 s el diario</td></tr>
+        <tr><td>Candidatos a notificación</td><td><code>notification_candidates()</code>: parte de los tags de las ofertas nuevas y busca usuarios por tag, con <code>user_tag_profile_tag</code>.</td><td class="num">1,3 s con 1000 usuarios</td></tr>
+        <tr><td>Recalcular perfiles</td><td><code>CALL run_maintenance()</code>: particiones, perfiles con decaimiento de 75 días, limpieza de meses viejos.</td><td class="num">8,5 s para 1001 perfiles</td></tr>
+        <tr><td>Guardar eventos</td><td>Un <code>INSERT</code> por lote; el trigger actualiza <code>user_game_state</code> una vez por lote.</td><td class="num">27–35 ms por 1000</td></tr>
+        <tr><td>Detalle y mínimo histórico</td><td><code>price_history</code> por <code>(appid, country)</code>, con el índice GiST de la PK temporal.</td><td class="num">sin medir</td></tr>
+        <tr><td>Terminan pronto</td><td><code>offers_country_end</code> sobre <code>(country, discount_end_at)</code>.</td><td class="num">sin medir</td></tr>
+        <tr><td>Buscar por nombre</td><td><code>games_name_trgm</code> (GIN trigram).</td><td class="num">sin medir</td></tr>
+        <tr><td>Guardados</td><td>Índice parcial <code>user_game_state_saved</code>, solo filas guardadas.</td><td class="num">sin medir</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Medido en este contenedor, sin tunear Postgres. "Sin medir" son consultas simples por índice; se miden cuando exista la API.</p>
+  </section>
+
+  <section>
+    <h2>Decisiones sobre Postgres</h2>
+    <div class="decisions">
+      <div class="dec">
+        <div class="dec-head"><h3>Particionado</h3><span class="chip yes">solo events</span></div>
+        <p><strong>Sí en <code>events</code>, por mes.</strong> Es la única tabla que crece con los usuarios y el tiempo. Borrar un mes viejo es un <code>DROP</code> de su partición, no un <code>DELETE</code> de millones de filas, y las consultas por fecha solo leen los meses que tocan.</p>
+        <p><strong>No en el resto.</strong> <code>offers</code> tiene ~15 mil filas por país; <code>price_history</code> crece con los cambios, no con los barridos. Particionar tablas chicas agrega costo sin ganancia. Si <code>notifications</code> crece mucho, es la siguiente candidata.</p>
+        <p class="note">Particiones de un mes atrás a dos adelante, creadas por <code>ensure_event_partitions()</code> todos los días. Sin partición <code>DEFAULT</code>: la API acota la hora del dispositivo a los últimos 7 días.</p>
+      </div>
+      <div class="dec">
+        <div class="dec-head"><h3>Índices</h3><span class="chip yes">uno por consulta</span></div>
+        <ul>
+          <li>PK de <code>offers</code> como <code>(country, appid)</code>: casi todo filtra por país primero.</li>
+          <li><code>game_tags_tag</code> con <code>INCLUDE (appid, weight)</code> y <code>user_tag_profile_tag</code>: cruces por tag sin leer la tabla.</li>
+          <li><code>events</code>: B-tree <code>(user_id, occurred_at desc)</code> para el perfil y BRIN en <code>occurred_at</code>, que pesa casi nada en tablas que solo crecen en orden.</li>
+          <li>Parciales: guardados (<code>where saved_at is not null</code>), cola de notificaciones (<code>where status = 'queued'</code>) y usuarios con avisos activos.</li>
+          <li><code>price_history_country_start</code> sobre <code>lower(valid)</code>: encuentra lo que cambió en un barrido.</li>
+          <li>GIN trigram para buscar por nombre.</li>
+        </ul>
+      </div>
+      <div class="dec">
+        <div class="dec-head"><h3>Triggers</h3><span class="chip yes">dos</span></div>
+        <p><strong>Sí:</strong> <code>updated_at</code>, y <code>events → user_game_state</code> a nivel sentencia con tabla de transición: corre una vez por lote, no por fila, y funciona sobre la tabla particionada. El resumen queda siempre consistente con el log, venga de la API o de un script.</p>
+        <p><strong>No:</strong> mantener el historial de precios con triggers. Esa lógica vive en <code>apply_sweep()</code>, explícita y testeable; un trigger escondería efectos laterales en cada <code>UPDATE</code> de <code>offers</code>.</p>
+      </div>
+      <div class="dec">
+        <div class="dec-head"><h3>Funciones</h3><span class="chip yes">seis</span></div>
+        <p><code>apply_sweep</code>, <code>feed_for_user</code>, <code>notification_candidates</code>, <code>recompute_profile</code>, <code>ensure_event_partitions</code> y <code>drop_old_event_partitions</code>. La lógica que trabaja sobre muchas filas queda en SQL, cerca de los datos; NestJS orquesta y expone.</p>
+      </div>
+      <div class="dec">
+        <div class="dec-head"><h3>Procedimientos</h3><span class="chip yes">uno</span></div>
+        <p><code>run_maintenance()</code> es un <code>PROCEDURE</code> y no una función porque hace <code>COMMIT</code> entre pasos: si falla el perfil de un usuario, no se pierden los anteriores ni las particiones creadas. Probado con <code>CALL</code> sobre 1001 usuarios.</p>
+      </div>
+      <div class="dec">
+        <div class="dec-head"><h3>Vistas</h3><span class="chip yes">una simple</span><span class="chip no">sin materializadas</span></div>
+        <p><code>v_offers</code> une oferta y juego para la API. Nada de vistas materializadas: se refrescan enteras para todos, y el feed depende de cada usuario. Si hace falta escalar, se precalcula el feed por usuario en una tabla.</p>
+      </div>
+      <div class="dec">
+        <div class="dec-head"><h3>Funciones nuevas de Postgres 18</h3><span class="chip v">verificado</span></div>
+        <ul>
+          <li><code>uuidv7()</code> nativo para los ids de usuario: ordenados por tiempo, sin extensión.</li>
+          <li>PK temporal <code>WITHOUT OVERLAPS</code> en <code>price_history</code>: la base rechaza dos precios vigentes al mismo tiempo para el mismo juego y país. Probado: el intento de solapar dio error.</li>
+          <li>Columna generada <code>is_adult</code> a partir de los descriptores de contenido.</li>
+        </ul>
+      </div>
+      <div class="dec">
+        <div class="dec-head"><h3>Considerado y descartado</h3><span class="chip no">por ahora</span></div>
+        <ul>
+          <li><strong>Row Level Security:</strong> agrega aislamiento por usuario en la base, pero obliga a fijar el usuario en cada transacción. Con una sola API que filtra por <code>user_id</code>, no compensa todavía.</li>
+          <li><strong>pg_partman:</strong> no viene en la imagen oficial de Postgres; una función de 20 líneas hace lo mismo.</li>
+          <li><strong>pgvector:</strong> los vectores son de ~450 tags dispersos; el producto punto en SQL alcanza.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lo que cambió al probar</h2>
+    <div class="finding"><b>Steam</b><span>Sin <code>sort</code>, la paginación de <code>Query</code> repite juegos y se saltea otros: llegaban 10 879 distintos de 14 599. Con <code>sort: 2</code> (por appid) llegan los 14 599. Corrige la investigación.</span></div>
+    <div class="finding"><b>Defensa</b><span>Un barrido incompleto o vacío se marca como anomalía y no toca las ofertas. Sin esto, terminaría miles de ofertas y al barrido siguiente avisaría que "volvieron".</span></div>
+    <div class="finding"><b>Particiones</b><span>Solo existían este mes y los próximos; un evento atrasado de octubre no tenía dónde entrar. Ahora se crea también el mes anterior.</span></div>
+    <div class="finding"><b>Rendimiento</b><span>La primera versión de <code>notification_candidates</code> cruzaba usuarios por ofertas y tardó más de 10 minutos con 1000 usuarios. Arrancando por los tags de las ofertas nuevas, 1,3 s.</span></div>
+    <div class="finding"><b>Codificación</b><span>La base tiene que ser UTF-8: hay nombres de juegos en japonés y chino.</span></div>
+  </section>
+
+  <section>
+    <h2>Drizzle y migraciones</h2>
+    <ul>
+      <li>Drizzle no maneja particionado: lo verifiqué en el paquete. <code>events</code>, la PK temporal, funciones, triggers y el procedimiento van en migraciones SQL escritas a mano (<code>drizzle-kit generate --custom</code>).</li>
+      <li>Las tablas igual se declaran en el schema de Drizzle para tener consultas tipadas, aunque su DDL venga del SQL a mano.</li>
+      <li>Las funciones se llaman desde Drizzle con <code>sql</code>, o con Reylo si conviene tipar el resultado.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Pendiente</h2>
+    <ul>
+      <li><strong>Tags de la biblioteca y la wishlist:</strong> esos juegos pueden no estar en <code>games</code>. El worker tiene que traer sus tags con <code>IStoreBrowseService/GetItems</code> para que cuenten en el perfil.</li>
+      <li><strong>Moneda por país:</strong> la respuesta de <code>Query</code> no trae el código de moneda; va una tabla chica país → moneda.</li>
+      <li><strong>Backups:</strong> <code>pg_dump</code> diario comprimido a Backblaze B2 con rclone; WAL-G si algún día hace falta recuperación a un minuto exacto.</li>
+      <li><strong>Exploración del feed:</strong> el 10–20 % fuera del perfil se mezcla en la API, no en SQL.</li>
+    </ul>
+  </section>
+
+  <details class="sql">
+    <summary>SQL completo, probado en PostgreSQL 18.6</summary>
+    <div class="bar"><span class="note">Fuente: <code>docs/modelo-datos.sql</code> en el branch <code>claude/awesome-ritchie-eexchg</code>.</span><button class="copy" type="button" id="copy-sql">Copiar SQL</button></div>
+    <pre class="sqlcode"><code id="sql">-- =====================================================================
+-- Modelo de datos — Steam Offers Tracker v2
+-- Borrador de diseño probado en PostgreSQL 18.6 con datos reales de Steam.
+-- No es una migración final: Drizzle generará las tablas simples; lo que
+-- Drizzle no modela (particionado, PK temporal, funciones, triggers,
+-- procedimientos) irá en migraciones SQL escritas a mano.
+-- =====================================================================
+
+create extension if not exists pg_trgm;     -- búsqueda por nombre (GIN trigram)
+create extension if not exists btree_gist;  -- PK temporal WITHOUT OVERLAPS con columnas escalares
+
+-- ---------------------------------------------------------------------
+-- Tipos
+-- ---------------------------------------------------------------------
+create type event_type as enum (
+  'impression', 'open_detail', 'dwell', 'click_store',
+  'save', 'unsave', 'dismiss', 'undismiss', 'purchase_mark', 'notification_open'
+);
+create type sweep_status as enum ('running', 'ok', 'failed', 'anomaly');
+create type notification_status as enum ('queued', 'sent', 'failed', 'opened', 'skipped');
+
+-- Trigger genérico para updated_at
+create function set_updated_at() returns trigger
+language plpgsql as $$
+begin
+  new.updated_at := now();
+  return new;
+end $$;
+
+-- =====================================================================
+-- Catálogo global (compartido por todos los usuarios)
+-- =====================================================================
+
+create table games (
+  appid                  integer primary key,
+  name                   text not null,
+  content_descriptor_ids smallint[] not null default '{}',
+  -- 3 = contenido sexual solo para adultos, 4 = desnudez o contenido sexual frecuente
+  is_adult               boolean generated always as (content_descriptor_ids &amp;&amp; '{3,4}'::smallint[]) stored,
+  review_percent         smallint,
+  review_count           integer,
+  short_description      text,
+  developers             text[] not null default '{}',
+  publishers             text[] not null default '{}',
+  tag_norm               real,          -- norma L2 del vector de tags, para la similitud coseno
+  tags_refreshed_at      timestamptz,
+  first_seen_at          timestamptz not null default now(),
+  updated_at             timestamptz not null default now()
+);
+create index games_name_trgm on games using gin (name gin_trgm_ops);
+create trigger games_updated_at before update on games
+  for each row execute function set_updated_at();
+
+create table tags (
+  tag_id  integer primary key,
+  name_es text not null,
+  name_en text not null
+);
+
+create table game_tags (
+  appid  integer not null references games on delete cascade,
+  tag_id integer not null references tags,
+  weight real not null check (weight &gt; 0 and weight &lt;= 1),  -- votos del tag / votos del tag más votado del juego
+  primary key (appid, tag_id)
+);
+create index game_tags_tag on game_tags (tag_id) include (appid, weight);
+
+-- Ofertas vigentes: una fila por juego y país
+create table offers (
+  country         char(2)  not null,
+  appid           integer  not null references games on delete cascade,
+  currency        char(3)  not null,
+  discount_pct    smallint not null check (discount_pct between 1 and 100),
+  original_cents  integer  not null,
+  final_cents     integer  not null,
+  discount_end_at timestamptz,
+  first_seen_at   timestamptz not null default now(),
+  last_seen_at    timestamptz not null default now(),
+  primary key (country, appid)
+);
+create index offers_country_end on offers (country, discount_end_at);
+create index offers_country_pct on offers (country, discount_pct desc);
+
+-- Historial de precios como intervalos [desde, hasta). PK temporal de PG 18:
+-- impide que dos intervalos del mismo juego y país se solapen.
+create table price_history (
+  appid           integer  not null references games on delete cascade,
+  country         char(2)  not null,
+  currency        char(3)  not null,
+  discount_pct    smallint not null,
+  original_cents  integer  not null,
+  final_cents     integer  not null,
+  discount_end_at timestamptz,
+  valid           tstzrange not null,
+  primary key (appid, country, valid without overlaps)
+);
+create index price_history_country_start on price_history (country, lower(valid));
+
+-- Registro de cada barrido (sirve de monitoreo)
+create table sweeps (
+  id             bigint generated always as identity primary key,
+  country        char(2) not null,
+  started_at     timestamptz not null default now(),
+  finished_at    timestamptz,
+  status         sweep_status not null default 'running',
+  total_reported integer,   -- total_matching_records que informó Steam
+  items_seen     integer,
+  new_offers     integer,
+  changed_offers integer,
+  ended_offers   integer,
+  error          text
+);
+create index sweeps_country_started on sweeps (country, started_at desc);
+
+-- Staging del barrido: UNLOGGED (sin WAL), se vacía después de aplicar
+create unlogged table sweep_items (
+  sweep_id               bigint  not null,
+  appid                  integer not null,
+  name                   text    not null,
+  currency               char(3) not null,
+  discount_pct           smallint not null,
+  original_cents         integer not null,
+  final_cents            integer not null,
+  discount_end_at        timestamptz,
+  review_percent         smallint,
+  review_count           integer,
+  content_descriptor_ids jsonb,
+  short_description      text,
+  developers             jsonb,
+  publishers             jsonb,
+  tags                   jsonb      -- [{"tagid": n, "weight": n}, ...]
+);
+create index sweep_items_sweep on sweep_items (sweep_id);
+
+-- =====================================================================
+-- Usuarios e identidad
+-- =====================================================================
+
+create table users (
+  id           uuid primary key default uuidv7(),   -- uuidv7(): nativo en PG 18, ordenable por tiempo
+  display_name text,
+  avatar_url   text,
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now()
+);
+create trigger users_updated_at before update on users
+  for each row execute function set_updated_at();
+
+-- Cuentas vinculadas: hoy solo Steam; mañana Apple o Google sin reestructurar
+create table auth_identities (
+  id               uuid primary key default uuidv7(),
+  user_id          uuid not null references users on delete cascade,
+  provider         text not null check (provider in ('steam', 'apple', 'google')),
+  provider_user_id text not null,             -- SteamID64 para Steam
+  created_at       timestamptz not null default now(),
+  last_login_at    timestamptz,
+  unique (provider, provider_user_id)
+);
+create index auth_identities_user on auth_identities (user_id);
+
+create table devices (
+  id           uuid primary key default uuidv7(),
+  user_id      uuid not null references users on delete cascade,
+  platform     text not null check (platform in ('android', 'ios', 'web')),
+  push_token   text not null unique,
+  created_at   timestamptz not null default now(),
+  last_seen_at timestamptz not null default now(),
+  disabled_at  timestamptz
+);
+create index devices_user on devices (user_id);
+
+create table sessions (
+  id           uuid primary key default uuidv7(),
+  user_id      uuid not null references users on delete cascade,
+  device_id    uuid references devices on delete set null,
+  refresh_hash bytea not null unique,         -- SHA-256 del refresh token; nunca el token en claro
+  created_at   timestamptz not null default now(),
+  expires_at   timestamptz not null,
+  revoked_at   timestamptz
+);
+create index sessions_user on sessions (user_id);
+
+create table user_settings (
+  user_id          uuid primary key references users on delete cascade,
+  country          char(2)  not null,
+  language         text     not null default 'es',
+  timezone         text     not null default 'America/Caracas',
+  min_discount_pct smallint not null default 50 check (min_discount_pct between 1 and 100),
+  max_price_cents  integer,
+  exclude_adult    boolean  not null default true,
+  notify_enabled   boolean  not null default true,
+  daily_cap        smallint not null default 5,
+  quiet_start      time     not null default '23:00',
+  quiet_end        time     not null default '08:00',
+  updated_at       timestamptz not null default now()
+);
+create index user_settings_country on user_settings (country) where notify_enabled;
+create trigger user_settings_updated_at before update on user_settings
+  for each row execute function set_updated_at();
+
+-- Importado de Steam (sin FK a games: la biblioteca trae juegos que nunca estuvieron en oferta)
+create table user_library (
+  user_id          uuid    not null references users on delete cascade,
+  appid            integer not null,
+  playtime_minutes integer not null default 0,
+  last_played_at   timestamptz,
+  imported_at      timestamptz not null default now(),
+  primary key (user_id, appid)
+);
+
+create table user_steam_wishlist (
+  user_id     uuid    not null references users on delete cascade,
+  appid       integer not null,
+  priority    integer,
+  added_at    timestamptz,
+  imported_at timestamptz not null default now(),
+  primary key (user_id, appid)
+);
+
+-- =====================================================================
+-- Comportamiento: eventos (crece con los usuarios) y su resumen
+-- =====================================================================
+
+-- Particionada por mes: borrar meses viejos es un DROP, no un DELETE masivo
+create table events (
+  id          bigint generated always as identity,
+  user_id     uuid not null references users on delete cascade,
+  appid       integer,
+  type        event_type not null,
+  value       integer,                -- ms de lectura en 'dwell', posición en el feed en 'impression'
+  occurred_at timestamptz not null,   -- hora del dispositivo, acotada al ingresar
+  received_at timestamptz not null default now(),
+  device_id   uuid,
+  context     jsonb,
+  primary key (id, occurred_at)
+) partition by range (occurred_at);
+create index events_user_time on events (user_id, occurred_at desc);
+create index events_time_brin on events using brin (occurred_at);
+
+-- Estado por usuario y juego, mantenido por trigger desde events
+create table user_game_state (
+  user_id       uuid    not null references users on delete cascade,
+  appid         integer not null,
+  saved_at      timestamptz,
+  dismissed_at  timestamptz,
+  purchased_at  timestamptz,
+  views         integer not null default 0,
+  dwell_ms      bigint  not null default 0,
+  store_clicks  integer not null default 0,
+  last_event_at timestamptz not null,
+  primary key (user_id, appid)
+);
+create index user_game_state_saved on user_game_state (user_id, saved_at desc)
+  where saved_at is not null;
+
+-- Perfil de gustos: vector disperso de tags por usuario
+create table user_tag_profile (
+  user_id uuid    not null references users on delete cascade,
+  tag_id  integer not null references tags,
+  score   real    not null,
+  primary key (user_id, tag_id)
+);
+
+create index user_tag_profile_tag on user_tag_profile (tag_id) include (user_id, score);
+
+create table user_profiles (
+  user_id     uuid primary key references users on delete cascade,
+  norm        real not null,
+  computed_at timestamptz not null default now()
+);
+
+create table notifications (
+  id              uuid primary key default uuidv7(),
+  user_id         uuid not null references users on delete cascade,
+  appid           integer not null references games on delete cascade,
+  country         char(2) not null,
+  discount_pct    smallint not null,
+  final_cents     integer not null,
+  discount_end_at timestamptz,
+  score           real not null,
+  status          notification_status not null default 'queued',
+  created_at      timestamptz not null default now(),
+  send_after      timestamptz not null default now(),  -- corrida por el horario de silencio
+  sent_at         timestamptz,
+  opened_at       timestamptz,
+  unique nulls not distinct (user_id, appid, discount_end_at)  -- no avisar dos veces la misma oferta
+);
+create index notifications_queue on notifications (send_after) where status = 'queued';
+create index notifications_user_time on notifications (user_id, created_at desc);
+
+-- =====================================================================
+-- Trigger: events -&gt; user_game_state (a nivel sentencia, con tabla de transición)
+-- Un lote de 200 eventos dispara el trigger una sola vez.
+-- =====================================================================
+create function events_to_state() returns trigger
+language plpgsql as $$
+begin
+  -- 1) contadores
+  insert into user_game_state as s (user_id, appid, views, dwell_ms, store_clicks, last_event_at)
+  select user_id, appid,
+         count(*) filter (where type = 'open_detail'),
+         coalesce(sum(value) filter (where type = 'dwell'), 0),
+         count(*) filter (where type = 'click_store'),
+         max(occurred_at)
+  from new_events
+  where appid is not null
+  group by user_id, appid
+  on conflict (user_id, appid) do update set
+    views         = s.views + excluded.views,
+    dwell_ms      = s.dwell_ms + excluded.dwell_ms,
+    store_clicks  = s.store_clicks + excluded.store_clicks,
+    last_event_at = greatest(s.last_event_at, excluded.last_event_at);
+
+  -- 2) estados: gana el evento más reciente (guardar/quitar, descartar/restaurar)
+  update user_game_state s set
+    saved_at = case
+      when a.last_save is not null and (a.last_unsave is null or a.last_save &gt; a.last_unsave) then a.last_save
+      when a.last_unsave is not null then null
+      else s.saved_at end,
+    dismissed_at = case
+      when a.last_dismiss is not null and (a.last_undismiss is null or a.last_dismiss &gt; a.last_undismiss) then a.last_dismiss
+      when a.last_undismiss is not null then null
+      else s.dismissed_at end,
+    purchased_at = coalesce(a.last_purchase, s.purchased_at)
+  from (
+    select user_id, appid,
+           max(occurred_at) filter (where type = 'save')          as last_save,
+           max(occurred_at) filter (where type = 'unsave')        as last_unsave,
+           max(occurred_at) filter (where type = 'dismiss')       as last_dismiss,
+           max(occurred_at) filter (where type = 'undismiss')     as last_undismiss,
+           max(occurred_at) filter (where type = 'purchase_mark') as last_purchase
+    from new_events
+    where appid is not null
+      and type in ('save', 'unsave', 'dismiss', 'undismiss', 'purchase_mark')
+    group by user_id, appid
+  ) a
+  where s.user_id = a.user_id and s.appid = a.appid;
+
+  return null;
+end $$;
+
+create trigger events_state after insert on events
+  referencing new table as new_events
+  for each statement execute function events_to_state();
+
+-- =====================================================================
+-- Funciones
+-- =====================================================================
+
+-- Crea las particiones mensuales que falten (la llama el worker todos los días).
+-- Incluye meses anteriores: un teléfono que estuvo sin conexión sube eventos atrasados.
+create function ensure_event_partitions(months_ahead int default 2, months_back int default 1)
+returns int
+language plpgsql as $$
+declare
+  base    date := date_trunc('month', now())::date;
+  created int  := 0;
+  part    text;
+  m       date;
+begin
+  for i in -months_back..months_ahead loop
+    m := (base + make_interval(months =&gt; i))::date;
+    part := format('events_%s', to_char(m, 'YYYY_MM'));
+    if to_regclass(part) is null then
+      execute format('create table %I partition of events for values from (%L) to (%L)',
+                     part, m, (m + interval '1 month')::date);
+      created := created + 1;
+    end if;
+  end loop;
+  return created;
+end $$;
+
+-- Borra las particiones de meses más viejos que keep_months
+create function drop_old_event_partitions(keep_months int default 12)
+returns int
+language plpgsql as $$
+declare
+  cutoff  date := (date_trunc('month', now()) - make_interval(months =&gt; keep_months))::date;
+  dropped int  := 0;
+  r       record;
+begin
+  for r in
+    select c.relname
+    from pg_inherits i
+    join pg_class c on c.oid = i.inhrelid
+    where i.inhparent = 'events'::regclass
+      and c.relname ~ '^events_\d{4}_\d{2}$'
+      and to_date(substr(c.relname, 8), 'YYYY_MM') &lt; cutoff
+  loop
+    execute format('drop table %I', r.relname);
+    dropped := dropped + 1;
+  end loop;
+  return dropped;
+end $$;
+
+-- Aplica un barrido: detecta ofertas nuevas, cambiadas y terminadas, mantiene el
+-- historial y las ofertas vigentes. Si el barrido vino incompleto, no toca nada.
+create function apply_sweep(p_sweep_id bigint)
+returns table (status sweep_status, new_offers int, changed_offers int, ended_offers int, items int)
+language plpgsql as $$
+declare
+  v_country  char(2);
+  v_reported integer;
+  v_now      timestamptz := now();
+  v_prev     integer;
+  v_items    integer;
+  v_new      integer;
+  v_changed  integer;
+  v_ended    integer;
+begin
+  select s.country, s.total_reported into v_country, v_reported
+  from sweeps s where s.id = p_sweep_id for update;
+
+  create temp table cur on commit drop as
+    select distinct on (appid) *
+    from sweep_items si
+    where si.sweep_id = p_sweep_id
+    order by appid;
+  get diagnostics v_items = row_count;
+
+  -- Defensa contra respuestas incompletas de Steam
+  select s.items_seen into v_prev
+  from sweeps s
+  where s.country = v_country and s.status = 'ok' and s.id &lt;&gt; p_sweep_id
+  order by s.started_at desc limit 1;
+
+  if v_items &lt; 0.9 * coalesce(v_reported, v_items) or v_items &lt; 0.5 * coalesce(v_prev, v_items) then
+    update sweeps s set status = 'anomaly', items_seen = v_items, finished_at = v_now
+    where s.id = p_sweep_id;
+    delete from sweep_items si where si.sweep_id = p_sweep_id;
+    return query select 'anomaly'::sweep_status, 0, 0, 0, v_items;
+    return;
+  end if;
+
+  -- 1) Juegos
+  insert into games as g (appid, name, content_descriptor_ids, review_percent, review_count,
+                          short_description, developers, publishers)
+  select c.appid, c.name,
+         coalesce(array(select jsonb_array_elements_text(c.content_descriptor_ids))::smallint[], '{}'),
+         c.review_percent, c.review_count, c.short_description,
+         coalesce(array(select jsonb_array_elements_text(c.developers)), '{}'),
+         coalesce(array(select jsonb_array_elements_text(c.publishers)), '{}')
+  from cur c
+  on conflict (appid) do update set
+    name = excluded.name,
+    content_descriptor_ids = excluded.content_descriptor_ids,
+    review_percent = excluded.review_percent,
+    review_count = excluded.review_count,
+    short_description = coalesce(excluded.short_description, g.short_description);
+
+  -- 2) Tags: solo de juegos nuevos o con tags de más de 7 días
+  create temp table refresh on commit drop as
+    select c.appid, c.tags
+    from cur c join games g using (appid)
+    where c.tags is not null
+      and (g.tags_refreshed_at is null or g.tags_refreshed_at &lt; v_now - interval '7 days');
+
+  insert into tags (tag_id, name_es, name_en)
+  select distinct (t -&gt;&gt; 'tagid')::int, '#' || (t -&gt;&gt; 'tagid'), '#' || (t -&gt;&gt; 'tagid')
+  from refresh r, jsonb_array_elements(r.tags) t
+  on conflict do nothing;
+
+  delete from game_tags gt using refresh r where gt.appid = r.appid;
+
+  insert into game_tags (appid, tag_id, weight)
+  select x.appid, x.tag_id, x.w / max(x.w) over (partition by x.appid)
+  from (
+    select r.appid, (t -&gt;&gt; 'tagid')::int as tag_id, (t -&gt;&gt; 'weight')::real as w
+    from refresh r, jsonb_array_elements(r.tags) t
+  ) x
+  where x.w &gt; 0;
+
+  update games g set
+    tag_norm = n.norm,
+    tags_refreshed_at = v_now
+  from (
+    select gt.appid, sqrt(sum(gt.weight * gt.weight))::real as norm
+    from game_tags gt join refresh r using (appid)
+    group by gt.appid
+  ) n
+  where g.appid = n.appid;
+
+  -- 3) Diferencias contra las ofertas vigentes
+  select count(*) into v_new
+  from cur c
+  where not exists (select 1 from offers o where o.country = v_country and o.appid = c.appid);
+
+  select count(*) into v_changed
+  from cur c join offers o on o.country = v_country and o.appid = c.appid
+  where (c.discount_pct, c.final_cents, c.discount_end_at)
+        is distinct from (o.discount_pct, o.final_cents, o.discount_end_at);
+
+  select count(*) into v_ended
+  from offers o
+  where o.country = v_country
+    and not exists (select 1 from cur c where c.appid = o.appid);
+
+  -- 4) Historial: cerrar intervalos de ofertas terminadas o cambiadas
+  update price_history ph set valid = tstzrange(lower(ph.valid), v_now)
+  from offers o
+  left join cur c on c.appid = o.appid
+  where o.country = v_country
+    and ph.appid = o.appid and ph.country = v_country
+    and upper_inf(ph.valid)
+    and (c.appid is null
+         or (c.discount_pct, c.final_cents, c.discount_end_at)
+            is distinct from (o.discount_pct, o.final_cents, o.discount_end_at));
+
+  --    y abrir intervalos para ofertas nuevas o cambiadas
+  insert into price_history (appid, country, currency, discount_pct, original_cents, final_cents,
+                             discount_end_at, valid)
+  select c.appid, v_country, c.currency, c.discount_pct, c.original_cents, c.final_cents,
+         c.discount_end_at, tstzrange(v_now, null)
+  from cur c
+  left join offers o on o.country = v_country and o.appid = c.appid
+  where o.appid is null
+     or (c.discount_pct, c.final_cents, c.discount_end_at)
+        is distinct from (o.discount_pct, o.final_cents, o.discount_end_at);
+
+  -- 5) Ofertas vigentes
+  delete from offers o
+  where o.country = v_country
+    and not exists (select 1 from cur c where c.appid = o.appid);
+
+  insert into offers as o (country, appid, currency, discount_pct, original_cents, final_cents,
+                           discount_end_at, first_seen_at, last_seen_at)
+  select v_country, c.appid, c.currency, c.discount_pct, c.original_cents, c.final_cents,
+         c.discount_end_at, v_now, v_now
+  from cur c
+  on conflict (country, appid) do update set
+    currency = excluded.currency,
+    discount_pct = excluded.discount_pct,
+    original_cents = excluded.original_cents,
+    final_cents = excluded.final_cents,
+    discount_end_at = excluded.discount_end_at,
+    last_seen_at = v_now;
+
+  update sweeps s set
+    status = 'ok', items_seen = v_items, new_offers = v_new,
+    changed_offers = v_changed, ended_offers = v_ended, finished_at = clock_timestamp()
+  where s.id = p_sweep_id;
+
+  delete from sweep_items si where si.sweep_id = p_sweep_id;
+
+  return query select 'ok'::sweep_status, v_new, v_changed, v_ended, v_items;
+end $$;
+
+-- Recalcula el perfil de gustos de un usuario con decaimiento temporal (tau = 75 días)
+create function recompute_profile(p_user uuid)
+returns int
+language plpgsql as $$
+declare
+  v_tags int;
+begin
+  delete from user_tag_profile where user_id = p_user;
+
+  insert into user_tag_profile (user_id, tag_id, score)
+  select p_user, gt.tag_id, sum(s.w * gt.weight)
+  from (
+    select x.appid, sum(x.w) as w
+    from (
+      select e.appid,
+             case e.type
+               when 'impression'    then -0.1
+               when 'open_detail'   then 0.5
+               when 'dwell'         then least(ln(1 + e.value / 1000.0) / 3, 1)
+               when 'click_store'   then 1.5
+               when 'save'          then 3
+               when 'unsave'        then -3
+               when 'dismiss'       then -2
+               when 'undismiss'     then 2
+               when 'purchase_mark' then 4
+               else 0
+             end * exp(-extract(epoch from now() - e.occurred_at) / (75 * 86400.0)) as w
+      from events e
+      where e.user_id = p_user
+        and e.appid is not null
+        and e.occurred_at &gt; now() - interval '365 days'
+      union all
+      select l.appid, ln(1 + l.playtime_minutes / 60.0)
+      from user_library l where l.user_id = p_user
+      union all
+      select w.appid, 2.0
+      from user_steam_wishlist w where w.user_id = p_user
+    ) x
+    group by x.appid
+  ) s
+  join game_tags gt using (appid)
+  group by gt.tag_id
+  having sum(s.w * gt.weight) &lt;&gt; 0;
+  get diagnostics v_tags = row_count;
+
+  insert into user_profiles (user_id, norm, computed_at)
+  select p_user, coalesce(sqrt(sum(score * score)), 0), now()
+  from user_tag_profile where user_id = p_user
+  on conflict (user_id) do update set norm = excluded.norm, computed_at = excluded.computed_at;
+
+  return v_tags;
+end $$;
+
+-- Feed personalizado: ofertas del país del usuario, filtradas por sus ajustes y
+-- ordenadas por similitud coseno (70 %), descuento (15 %) y reseñas (15 %).
+-- Paginación por cursor (score, appid).
+create function feed_for_user(
+  p_user        uuid,
+  p_limit       int  default 30,
+  p_after_score real default null,
+  p_after_appid int  default null
+)
+returns table (
+  appid int, name text, discount_pct smallint, original_cents int, final_cents int,
+  currency char(3), discount_end_at timestamptz, review_percent smallint, score real
+)
+language sql stable as $$
+  with s as (
+    select * from user_settings where user_id = p_user
+  ),
+  cand as (
+    select o.appid, g.name, o.discount_pct, o.original_cents, o.final_cents, o.currency,
+           o.discount_end_at, g.review_percent, g.tag_norm
+    from s
+    join offers o on o.country = s.country
+    join games g on g.appid = o.appid
+    where o.discount_pct &gt;= s.min_discount_pct
+      and (s.max_price_cents is null or o.final_cents &lt;= s.max_price_cents)
+      and not (s.exclude_adult and g.is_adult)
+      and not exists (select 1 from user_library l
+                      where l.user_id = p_user and l.appid = o.appid)
+      and not exists (select 1 from user_game_state st
+                      where st.user_id = p_user and st.appid = o.appid
+                        and (st.dismissed_at is not null or st.purchased_at is not null))
+  ),
+  sim as (
+    select gt.appid, sum(p.score * gt.weight) as dot
+    from cand c
+    join game_tags gt on gt.appid = c.appid
+    join user_tag_profile p on p.user_id = p_user and p.tag_id = gt.tag_id
+    group by gt.appid
+  ),
+  scored as (
+    select c.*,
+           (0.70 * coalesce(si.dot / nullif(c.tag_norm * up.norm, 0), 0)
+          + 0.15 * c.discount_pct / 100.0
+          + 0.15 * coalesce(c.review_percent, 50) / 100.0)::real as score
+    from cand c
+    left join sim si on si.appid = c.appid
+    left join user_profiles up on up.user_id = p_user
+  )
+  select appid, name, discount_pct, original_cents, final_cents, currency,
+         discount_end_at, review_percent, score
+  from scored
+  where p_after_score is null or (score, appid) &lt; (p_after_score, p_after_appid)
+  order by score desc, appid desc
+  limit p_limit;
+$$;
+
+-- Candidatos a notificación tras un barrido: ofertas nuevas o con 10+ puntos más de
+-- descuento, cruzadas con los usuarios de ese país que superan el umbral de afinidad.
+-- Parte de los tags de las ofertas nuevas y busca los usuarios por tag; la versión que
+-- cruzaba usuarios x ofertas primero tardaba más de 10 min con 1000 usuarios (ahora ~1,3 s).
+create function notification_candidates(p_sweep_id bigint, p_min_affinity real default 0.35)
+returns table (user_id uuid, appid int, discount_pct smallint, final_cents int,
+               discount_end_at timestamptz, affinity real)
+language sql stable as $$
+  with sw as materialized (
+    select country, started_at from sweeps where id = p_sweep_id
+  ),
+  -- ofertas nuevas o con 10+ puntos más de descuento en este barrido (decenas o cientos)
+  fresh as materialized (
+    select n.appid, n.discount_pct, n.final_cents, n.discount_end_at
+    from sw
+    join price_history n on n.country = sw.country and lower(n.valid) &gt;= sw.started_at
+    left join price_history p
+      on p.appid = n.appid and p.country = n.country and upper(p.valid) = lower(n.valid)
+    where p.appid is null or n.discount_pct &gt;= p.discount_pct + 10
+  ),
+  fresh_tags as materialized (
+    select f.appid, gt.tag_id, gt.weight from fresh f join game_tags gt using (appid)
+  ),
+  -- se parte de los tags de las ofertas nuevas y se buscan los usuarios por tag
+  dots as (
+    select p.user_id, ft.appid, sum(p.score * ft.weight) as dot
+    from fresh_tags ft
+    join user_tag_profile p on p.tag_id = ft.tag_id
+    group by p.user_id, ft.appid
+  )
+  select d.user_id, f.appid, f.discount_pct, f.final_cents, f.discount_end_at,
+         (d.dot / nullif(g.tag_norm * up.norm, 0))::real as affinity
+  from dots d
+  join fresh f using (appid)
+  join games g on g.appid = f.appid
+  join user_profiles up on up.user_id = d.user_id
+  join user_settings s on s.user_id = d.user_id
+  join sw on s.country = sw.country
+  where s.notify_enabled
+    and f.discount_pct &gt;= s.min_discount_pct
+    and not (s.exclude_adult and g.is_adult)
+    and d.dot / nullif(g.tag_norm * up.norm, 0) &gt;= p_min_affinity
+    and not exists (select 1 from user_library l where l.user_id = d.user_id and l.appid = f.appid)
+    and not exists (select 1 from user_game_state st
+                    where st.user_id = d.user_id and st.appid = f.appid and st.dismissed_at is not null)
+    and not exists (select 1 from notifications nt
+                    where nt.user_id = d.user_id and nt.appid = f.appid
+                      and nt.discount_end_at is not distinct from f.discount_end_at)
+  order by d.user_id, affinity desc;
+$$;
+
+-- =====================================================================
+-- Procedimiento: mantenimiento diario con COMMIT entre pasos, para que un
+-- fallo en un paso no deshaga los anteriores. Se llama con CALL.
+-- =====================================================================
+create procedure run_maintenance(keep_months int default 12)
+language plpgsql as $$
+declare
+  u record;
+begin
+  perform ensure_event_partitions(2);
+  commit;
+
+  for u in select id from users loop
+    perform recompute_profile(u.id);
+    commit;
+  end loop;
+
+  perform drop_old_event_partitions(keep_months);
+  commit;
+end $$;
+
+-- Vista para la API: oferta vigente con datos del juego
+create view v_offers as
+select o.country, o.appid, g.name, o.currency, o.discount_pct, o.original_cents, o.final_cents,
+       o.discount_end_at, g.review_percent, g.review_count, g.is_adult, o.first_seen_at
+from offers o
+join games g using (appid);
+</code></pre>
+  </details>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('copy-sql');
+  var label = btn.textContent;
+  btn.addEventListener('click', function(){
+    var text = document.getElementById('sql').textContent;
+    function done(msg){ btn.textContent = msg; setTimeout(function(){ btn.textContent = label; }, 2000); }
+    try {
+      navigator.clipboard.writeText(text).then(function(){ done('Copiado'); }, function(){ done('Seleccioná y copiá a mano'); });
+    } catch (e) { done('Seleccioná y copiá a mano'); }
+  });
+})();
+</script>

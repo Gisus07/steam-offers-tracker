@@ -48,7 +48,7 @@ GET https://api.steampowered.com/IStoreQueryService/Query/v1/?input_json=<json>
 ```json
 {
   "query": {
-    "start": 0, "count": 1000,
+    "start": 0, "count": 1000, "sort": 2,
     "filters": {
       "type_filters": { "include_games": true },
       "price_filters": { "min_discount_percent": 1 }
@@ -89,6 +89,7 @@ Nombres de tags: `IStoreService/GetTagList/v1/?language=spanish`, sin key [verif
 
 Riesgos:
 - Endpoint **no documentado oficialmente** (lo usa la propia tienda). Puede cambiar sin aviso. Mitigación: adaptador aislado + fallback.
+- **Orden estable obligatorio** [verificado 2026-11-01]: sin `"sort": 2` (por appid), la paginación repite y saltea juegos (llegaban 10 879 distintos de 14 599). Con `"sort": 2` llegan todos. `sort: 1` (por nombre) también es estable.
 - Rate limit no publicado. 15 requests por país y barrido es un volumen bajo.
 
 ### 1.2 Región por usuario, barrido por país [verificado]
