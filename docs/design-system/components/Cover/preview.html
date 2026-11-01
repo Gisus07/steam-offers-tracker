@@ -1,0 +1,37 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Cover</title>
+<style>
+  html, body { margin: 0; }
+  .cover { position: relative; width: 960px; height: 288px; background: var(--bg); overflow: hidden; }
+  .cover svg { position: absolute; inset: 0; }
+  .deal { fill: var(--deal); }
+  .accent { fill: var(--accent); }
+  .hot { fill: var(--hot); }
+  .ink { fill: var(--ink); }
+  .glyph { fill: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 440px; }
+  .name { position: absolute; left: 32px; bottom: 56px; max-width: 440px; margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 96px; line-height: .95; color: var(--ink); letter-spacing: .005em; }
+  .tagline { position: absolute; left: 32px; bottom: 28px; max-width: 440px; margin: 0; font-family: var(--font-sans); font-size: 14px; line-height: 18px; color: var(--ink-2); }
+</style></head>
+<body>
+<div class="cover" id="root">
+  <!--
+    bloques: deal 344×288 (losa que sangra arriba, abajo y a la derecha) · accent 104×160 radius-card · hot 56×80 radius-pill · ink 32×80 radius-pill
+    disposición: una losa alta con satélites a su izquierda, todo a la derecha de x = 480
+    patrón: un glifo enorme de la display, el "%" de la calcomanía, inclinado −3° como ella y recortado por la losa deal; elegido porque la calcomanía y sus cifras condensadas son lo más propio del sistema
+    pasos y radios: separaciones space-4 (16) y space-8 (32); radius-card 16; pastillas con rx = la mitad del lado corto
+  -->
+  <svg viewBox="0 0 960 288" width="960" height="288" aria-hidden="true">
+    <defs><clipPath id="slab"><rect x="616" y="0" width="344" height="288"></rect></clipPath></defs>
+    <rect class="accent" x="496" y="16" width="104" height="160" rx="16"></rect>
+    <rect class="hot" x="496" y="192" width="56" height="80" rx="28"></rect>
+    <rect class="ink" x="568" y="192" width="32" height="80" rx="16"></rect>
+    <rect class="deal" x="616" y="0" width="344" height="288"></rect>
+    <g clip-path="url(#slab)"><text class="glyph" x="690" y="376" transform="rotate(-3 790 200)">%</text></g>
+  </svg>
+  <p class="name">Offers<br>Tracker</p>
+  <p class="tagline">Ofertas que te van a gustar, antes de que terminen.</p>
+</div>
+</body>
+</html>

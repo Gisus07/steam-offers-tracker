@@ -1,0 +1,37 @@
+<!-- @dsCard group="Navegación" height=110 subtitle="Toca un destino: la pastilla se desliza" -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>BottomNav</title>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
+<body class="ot-root">
+<div class="ot-pad" id="root">
+  <nav class="ot-nav" aria-label="Principal" id="nav">
+    <span class="ot-nav__pill" id="pill" aria-hidden="true"></span>
+    <button type="button" aria-current="page"><i data-lucide="sparkles"></i>Para ti</button>
+    <button type="button"><i data-lucide="search"></i>Explorar</button>
+    <button type="button"><i data-lucide="bookmark"></i>Guardados</button>
+    <button type="button"><i data-lucide="settings"></i>Ajustes</button>
+  </nav>
+</div>
+<script>
+(function () {
+  if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } });
+  var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pill = document.getElementById('pill'), items = document.querySelectorAll('#nav button');
+  function place(b, animate) {
+    var x = b.offsetLeft - 6, w = b.offsetWidth;
+    if (animate && M && !reduce) { M.animate(pill, { x: x, width: w + 'px' }, { type: 'spring', stiffness: 520, damping: 34 }); }
+    else { pill.style.transform = 'translateX(' + x + 'px)'; pill.style.width = w + 'px'; }
+  }
+  items.forEach(function (b) {
+    b.addEventListener('click', function () {
+      items.forEach(function (i) { if (i === b) i.setAttribute('aria-current', 'page'); else i.removeAttribute('aria-current'); });
+      place(b, true);
+    });
+  });
+  place(items[0], false);
+})();
+</script>
+</body>
+</html>

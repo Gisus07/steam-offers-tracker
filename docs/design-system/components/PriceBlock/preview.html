@@ -1,0 +1,26 @@
+<!-- @dsCard group="Oferta" height=150 subtitle="Tarjeta y detalle, con datos reales del barrido de Venezuela" -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>PriceBlock</title></head>
+<body class="ot-root">
+<div class="ot-pad ot-row" id="root" style="gap:40px;align-items:flex-end">
+  <div class="ot-price">
+    <span class="ot-price__was" id="w1"></span>
+    <span class="ot-price__now" id="n1"></span>
+  </div>
+  <div class="ot-price ot-price--hero">
+    <span class="ot-price__was" id="w2"></span>
+    <span class="ot-price__now" id="n2"></span>
+    <span class="ot-price__save" id="s2"></span>
+  </div>
+</div>
+<script>
+(function () {
+  var f = new Intl.NumberFormat('es-VE', { style: 'currency', currency: 'USD' });
+  function set(id, v) { document.getElementById(id).textContent = v; }
+  set('w1', f.format(5.99)); set('n1', f.format(0.89));
+  set('w2', f.format(12.49)); set('n2', f.format(6.24)); set('s2', 'Ahorras ' + f.format(6.25));
+})();
+</script>
+</body>
+</html>

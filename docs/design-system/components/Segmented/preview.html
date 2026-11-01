@@ -1,0 +1,33 @@
+<!-- @dsCard group="Acciones" height=80 subtitle="La pastilla se desliza (muelle 520/34)" -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Segmented</title>
+<script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
+<body class="ot-root">
+<div class="ot-pad" id="root">
+  <div class="ot-seg" role="tablist" id="seg">
+    <span class="ot-seg__pill" id="pill" aria-hidden="true"></span>
+    <button type="button" role="tab" aria-selected="true">Para ti</button>
+    <button type="button" role="tab" aria-selected="false">Terminan pronto</button>
+  </div>
+</div>
+<script>
+(function () {
+  var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pill = document.getElementById('pill'), tabs = document.querySelectorAll('#seg button');
+  function place(b, animate) {
+    var x = b.offsetLeft - 4, w = b.offsetWidth;
+    if (animate && M && !reduce) { M.animate(pill, { x: x, width: w + 'px' }, { type: 'spring', stiffness: 520, damping: 34 }); }
+    else { pill.style.transform = 'translateX(' + x + 'px)'; pill.style.width = w + 'px'; }
+  }
+  tabs.forEach(function (b) {
+    b.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === b)); });
+      place(b, true);
+    });
+  });
+  place(tabs[0], false);
+})();
+</script>
+</body>
+</html>

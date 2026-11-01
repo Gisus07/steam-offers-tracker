@@ -1,0 +1,20 @@
+<!-- @dsCard group="Acciones" height=90 subtitle="Toca para activar o desactivar" -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>FilterChip</title></head>
+<body class="ot-root">
+<div class="ot-pad ot-row" id="root" style="gap:8px">
+  <button class="ot-filter" type="button" aria-pressed="true">50% o más <span class="ot-filter__count">2.418</span></button>
+  <button class="ot-filter" type="button" aria-pressed="false">Termina hoy <span class="ot-filter__count">312</span></button>
+  <button class="ot-filter" type="button" aria-pressed="false">Menos de USD 5</button>
+  <button class="ot-filter" type="button" aria-pressed="false">Roguelike</button>
+</div>
+<script>
+(function () {
+  document.querySelectorAll('.ot-filter').forEach(function (b) {
+    b.addEventListener('click', function () { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); });
+  });
+})();
+</script>
+</body>
+</html>

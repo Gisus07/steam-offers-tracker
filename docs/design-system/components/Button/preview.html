@@ -1,0 +1,32 @@
+<!-- @dsCard group="Acciones" height=170 subtitle="Primario, secundario, de texto, de ícono, Steam y deshabilitado" -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Button</title>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
+<body class="ot-root">
+<div class="ot-pad ot-col" id="root">
+  <div class="ot-row">
+    <button class="ot-btn ot-btn--primary" type="button"><i data-lucide="external-link"></i>Ir a Steam</button>
+    <button class="ot-btn ot-btn--secondary" type="button"><i data-lucide="bookmark"></i>Guardar</button>
+    <button class="ot-btn ot-btn--ghost" type="button">Deshacer</button>
+  </div>
+  <div class="ot-row">
+    <button class="ot-btn ot-btn--steam" type="button">Iniciar sesión con Steam</button>
+    <button class="ot-btn ot-btn--icon" type="button" aria-label="No me interesa"><i data-lucide="x"></i></button>
+    <button class="ot-btn ot-btn--primary" type="button" disabled>Continuar</button>
+  </div>
+</div>
+<script>
+(function () {
+  if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } });
+  var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!M || reduce) return;
+  document.querySelectorAll('.ot-btn:not([disabled])').forEach(function (b) {
+    b.addEventListener('pointerdown', function () { M.animate(b, { scale: 0.97 }, { type: 'spring', stiffness: 600, damping: 18 }); });
+    ['pointerup', 'pointerleave'].forEach(function (t) { b.addEventListener(t, function () { M.animate(b, { scale: 1 }, { type: 'spring', stiffness: 600, damping: 18 }); }); });
+  });
+})();
+</script>
+</body>
+</html>

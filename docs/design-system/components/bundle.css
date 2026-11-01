@@ -1,0 +1,101 @@
+/* Offers Tracker — estilos de los componentes. Todos los valores salen de tokens.css (generado desde tokens.json). */
+.ot-root{font-family:var(--font-sans);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.ot-pad{padding:var(--space-4)}
+.ot-row{display:flex;flex-wrap:wrap;gap:var(--space-3);align-items:center}
+.ot-col{display:flex;flex-direction:column;gap:var(--space-3)}
+.ot-label{font:600 12px/16px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.ot-muted{color:var(--ink-2);font:400 13px/18px var(--font-sans)}
+.ot-icon{width:var(--size-icon);height:var(--size-icon);stroke-width:2}
+:where(.ot-root) button{font:inherit}
+:where(.ot-root) :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Calcomanía de descuento */
+.ot-sticker{display:inline-flex;align-items:center;justify-content:center;background:var(--deal);color:var(--on-deal);font-family:var(--font-display);font-weight:800;font-size:18px;line-height:18px;letter-spacing:.01em;padding:6px 8px 5px;border-radius:var(--radius-sticker);transform:rotate(-3deg);box-shadow:var(--shadow-sticker);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ot-sticker--lg{font-size:30px;line-height:30px;padding:8px 11px 7px}
+.ot-sticker--sm{font-size:14px;line-height:14px;padding:4px 6px 3px;transform:none;box-shadow:none}
+
+/* Precio */
+.ot-price{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ot-price__was{font:400 13px/18px var(--font-sans);color:var(--ink-3);text-decoration:line-through;font-variant-numeric:tabular-nums}
+.ot-price__now{font-family:var(--font-display);font-weight:800;font-size:24px;line-height:26px;color:var(--ink);font-variant-numeric:tabular-nums}
+.ot-price--hero .ot-price__now{font-size:44px;line-height:44px}
+.ot-price--hero .ot-price__was{font-size:15px;line-height:22px}
+.ot-price__save{font:600 12px/16px var(--font-sans);color:var(--good)}
+
+/* Chips */
+.ot-chip{display:inline-flex;align-items:center;gap:var(--space-1);height:26px;padding:0 10px;border-radius:var(--radius-pill);background:var(--surface-raised);color:var(--ink-2);font:500 12px/16px var(--font-sans);font-variant-numeric:tabular-nums;white-space:nowrap;border:0}
+.ot-chip svg{width:14px;height:14px}
+.ot-chip--hot{background:var(--hot-soft);color:var(--hot)}
+.ot-chip--good{background:var(--good-soft);color:var(--good)}
+.ot-chip--info{background:var(--info-soft);color:var(--info)}
+.ot-chip--tag{font:600 11px/16px var(--font-sans);letter-spacing:.04em}
+.ot-filter{display:inline-flex;align-items:center;gap:6px;height:var(--size-chip);padding:0 12px;border-radius:var(--radius-pill);background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);font:600 13px/18px var(--font-sans);cursor:pointer}
+.ot-filter[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ot-filter__count{font:600 11px/14px var(--font-sans);padding:1px 6px;border-radius:var(--radius-pill);background:var(--surface-raised);color:var(--ink-2)}
+.ot-filter[aria-pressed="true"] .ot-filter__count{background:var(--bg);color:var(--ink)}
+
+/* Botones */
+.ot-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);height:var(--size-button);padding:0 var(--space-5);border-radius:var(--radius-button);font:600 15px/20px var(--font-sans);border:1px solid transparent;cursor:pointer;white-space:nowrap}
+.ot-btn svg{width:var(--size-icon);height:var(--size-icon)}
+.ot-btn--primary{background:var(--accent);color:var(--on-accent)}
+.ot-btn--secondary{background:var(--surface-raised);color:var(--ink);border-color:var(--line)}
+.ot-btn--ghost{background:transparent;color:var(--accent);padding:0 var(--space-3)}
+.ot-btn--steam{background:var(--ink);color:var(--bg)}
+.ot-btn--icon{width:var(--size-tap);height:var(--size-tap);padding:0;border-radius:var(--radius-pill);background:transparent;color:var(--ink-2)}
+.ot-btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* Tarjeta de oferta */
+.ot-card{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);box-shadow:var(--shadow-card);overflow:hidden;width:100%;max-width:360px}
+.ot-card__media{position:relative;aspect-ratio:616/353;background:var(--surface-raised)}
+.ot-card__art{position:absolute;inset:0}
+.ot-card__sticker{position:absolute;left:12px;bottom:-14px}
+.ot-card__body{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-5) var(--space-4) var(--space-4)}
+.ot-card__title{font:700 17px/22px var(--font-sans);color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ot-card__tags{display:flex;gap:6px;flex-wrap:wrap}
+.ot-card__foot{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-3);margin-top:var(--space-1)}
+.ot-card__actions{display:flex;gap:2px}
+
+/* Segmentado */
+.ot-seg{position:relative;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:4px;border-radius:var(--radius-button);background:var(--surface-raised)}
+.ot-seg__pill{position:absolute;top:4px;bottom:4px;left:4px;border-radius:8px;background:var(--surface);box-shadow:var(--shadow-card)}
+.ot-seg button{position:relative;z-index:1;height:36px;padding:0 var(--space-4);border:0;background:transparent;color:var(--ink-2);font:600 14px/18px var(--font-sans);cursor:pointer;border-radius:8px}
+.ot-seg button[aria-selected="true"]{color:var(--ink)}
+
+/* Navegación flotante */
+.ot-nav{position:relative;display:grid;grid-template-columns:repeat(4,1fr);height:var(--size-nav);padding:6px;border-radius:var(--radius-nav);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-float);max-width:360px}
+.ot-nav__pill{position:absolute;top:6px;bottom:6px;left:6px;border-radius:14px;background:var(--accent-soft)}
+.ot-nav button{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;background:transparent;color:var(--ink-2);font:600 11px/14px var(--font-sans);cursor:pointer;border-radius:14px}
+.ot-nav button svg{width:24px;height:24px}
+.ot-nav button[aria-current="page"]{color:var(--accent)}
+
+/* Toast */
+.ot-toast{display:flex;align-items:center;gap:var(--space-3);min-height:52px;padding:8px 8px 8px 14px;border-radius:var(--radius-notice);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-float);color:var(--ink);font:400 14px/20px var(--font-sans);max-width:360px}
+.ot-toast > svg{width:var(--size-icon);height:var(--size-icon);flex:none}
+.ot-toast__text{flex:1;min-width:0}
+.ot-toast--good > svg{color:var(--good)}
+.ot-toast--bad{background:var(--bad-soft);border-color:transparent}
+.ot-toast--bad > svg{color:var(--bad)}
+.ot-toast--info > svg{color:var(--info)}
+
+/* Estado vacío */
+.ot-empty{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-2);padding:var(--space-10) var(--space-4);max-width:360px}
+.ot-empty__icon{width:48px;height:48px;display:grid;place-items:center;border-radius:var(--radius-pill);background:var(--surface-raised);color:var(--ink-2);margin-bottom:var(--space-2)}
+.ot-empty__icon svg{width:24px;height:24px}
+.ot-empty__title{font:700 17px/22px var(--font-sans);color:var(--ink);margin:0}
+.ot-empty__text{font:400 15px/22px var(--font-sans);color:var(--ink-2);margin:0}
+
+/* Esqueleto */
+.ot-skel{position:relative;overflow:hidden;background:var(--surface-raised);border-radius:8px}
+.ot-skel::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,var(--line),transparent);animation:ot-shimmer 1.6s infinite}
+@keyframes ot-shimmer{to{transform:translateX(100%)}}
+@media (prefers-reduced-motion:reduce){.ot-skel::after{animation:none}}
+
+/* Historial de precio */
+.ot-hist{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-4);background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);max-width:360px}
+.ot-hist svg{width:100%;height:auto;display:block}
+.ot-hist__line{fill:none;stroke:var(--ink-2);stroke-width:2;stroke-linejoin:round}
+.ot-hist__area{fill:var(--surface-raised)}
+.ot-hist__grid{stroke:var(--line);stroke-width:1}
+.ot-hist__min{fill:var(--good)}
+.ot-hist__now{fill:var(--accent)}
+.ot-hist__axis{fill:var(--ink-3);font:500 11px/14px var(--font-sans)}

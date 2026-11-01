@@ -1,0 +1,28 @@
+<!-- @dsCard group="Estados" height=250 subtitle="Deshacer, confirmación y error" -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Toast</title>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
+<body class="ot-root">
+<div class="ot-pad ot-col" id="root">
+  <div class="ot-toast" role="status"><i data-lucide="eye-off"></i><span class="ot-toast__text">No te mostraremos más este juego</span><button class="ot-btn ot-btn--ghost" type="button">Deshacer</button></div>
+  <div class="ot-toast ot-toast--good" role="status"><i data-lucide="check"></i><span class="ot-toast__text">Guardado. Te avisamos si baja más.</span></div>
+  <div class="ot-toast ot-toast--bad" role="alert"><i data-lucide="circle-alert"></i><span class="ot-toast__text">No pudimos actualizar las ofertas</span><button class="ot-btn ot-btn--ghost" type="button">Reintentar</button></div>
+  <div><button class="ot-btn ot-btn--secondary" type="button" id="replay">Ver la entrada</button></div>
+</div>
+<script>
+(function () {
+  if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } });
+  var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('replay').addEventListener('click', function () {
+    var ts = document.querySelectorAll('.ot-toast');
+    ts.forEach(function (t, i) {
+      if (M && !reduce) { M.animate(t, { y: [24, 0], opacity: [0, 1] }, { type: 'spring', stiffness: 420, damping: 26, delay: i * 0.06 }); }
+      else { t.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!-- @dsCard group="Oferta" height=470 subtitle="Presiona, guarda o descarta (con Deshacer)" -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>OfferCard</title>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script>
+<style>
+  .art{position:absolute;inset:0;display:flex;align-items:flex-end;padding:14px 16px 22px 96px;font:800 26px/26px var(--font-display);color:var(--ink-2);letter-spacing:.01em}
+  .stage{display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:16px;min-height:430px}
+  .saved svg{fill:var(--good);color:var(--good)}
+  #toast{position:relative}
+</style></head>
+<body class="ot-root">
+<div class="stage" id="root">
+  <article class="ot-card" id="card" tabindex="0" aria-label="Dead Cells, 50 por ciento de descuento">
+    <div class="ot-card__media">
+      <div class="ot-card__art art">Dead Cells</div>
+      <span class="ot-sticker ot-card__sticker" aria-hidden="true">−50%</span>
+    </div>
+    <div class="ot-card__body">
+      <h3 class="ot-card__title" style="margin:0">Dead Cells</h3>
+      <div class="ot-card__tags">
+        <span class="ot-chip ot-chip--tag">ROGUELITE</span><span class="ot-chip ot-chip--tag">METROIDVANIA</span><span class="ot-chip ot-chip--tag">ACCIÓN</span>
+      </div>
+      <span class="ot-chip ot-chip--hot" style="align-self:flex-start"><i data-lucide="clock"></i>Termina hoy, 18:00</span>
+      <div class="ot-card__foot">
+        <div class="ot-price"><span class="ot-price__was">USD 12,49</span><span class="ot-price__now">USD 6,24</span></div>
+        <div class="ot-card__actions">
+          <button class="ot-btn ot-btn--icon" type="button" id="dismiss" aria-label="No me interesa"><i data-lucide="x"></i></button>
+          <button class="ot-btn ot-btn--icon" type="button" id="save" aria-label="Guardar" aria-pressed="false"><i data-lucide="bookmark"></i></button>
+        </div>
+      </div>
+    </div>
+  </article>
+  <div class="ot-toast" id="toast" hidden role="status">
+    <i data-lucide="eye-off"></i><span class="ot-toast__text">No te mostraremos más este juego</span>
+    <button class="ot-btn ot-btn--ghost" type="button" id="undo">Deshacer</button>
+  </div>
+</div>
+<script>
+(function () {
+  if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } });
+  var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var card = document.getElementById('card'), save = document.getElementById('save');
+  var toast = document.getElementById('toast');
+  function spring(el, kf, s, d) { if (M && !reduce) return M.animate(el, kf, { type: 'spring', stiffness: s, damping: d }); }
+  card.addEventListener('pointerdown', function (e) { if (!e.target.closest('button')) spring(card, { scale: 0.97 }, 600, 18); });
+  ['pointerup', 'pointerleave'].forEach(function (t) { card.addEventListener(t, function () { spring(card, { scale: 1 }, 600, 18); }); });
+  save.addEventListener('click', function () {
+    var on = save.getAttribute('aria-pressed') !== 'true';
+    save.setAttribute('aria-pressed', String(on));
+    save.setAttribute('aria-label', on ? 'Guardado' : 'Guardar');
+    save.classList.toggle('saved', on);
+    if (on) spring(save.querySelector('svg'), { scale: [0.6, 1] }, 420, 28);
+  });
+  document.getElementById('dismiss').addEventListener('click', function () {
+    var done = function () { card.hidden = true; toast.hidden = false; spring(toast, { y: [24, 0], opacity: [0, 1] }, 420, 26); };
+    if (M && !reduce) { M.animate(card, { x: '-110%', opacity: 0 }, { duration: 0.22, ease: [0.4, 0, 1, 1] }).then(done); } else { done(); }
+  });
+  document.getElementById('undo').addEventListener('click', function () {
+    toast.hidden = true; card.hidden = false;
+    if (M && !reduce) { M.animate(card, { x: 0, opacity: 1 }, { type: 'spring', stiffness: 420, damping: 32 }); } else { card.style.transform = ''; card.style.opacity = ''; }
+  });
+})();
+</script>
+</body>
+</html>
