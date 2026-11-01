@@ -6,4 +6,9 @@ Control segmentado para cambiar entre vistas hermanas de una misma pantalla, com
 - También se usa en Ajustes para el descuento mínimo (30 / 50 / 70%).
 
 ## Movimiento
-- La pastilla se desliza a la opción tocada: muelle 520/34. Con "reducir movimiento", cambia sin desplazarse.
+- La pastilla se desliza a la opción tocada (muelle 520/34) con un leve apretón vertical al salir (muelle 600/18), y el texto cambia de `ink-2` a `ink` en 200 ms. Con "reducir movimiento", cambia sin desplazarse.
+
+## En la app
+- La pastilla se mueve con `withSpring` sobre `translateX`.
+- El color del texto cambia con una transición CSS de Reanimated, que no tiene muelle.
+- Cada cambio va con háptica `AndroidHaptics.Segment_Tick`.

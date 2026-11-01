@@ -15,7 +15,7 @@ Navegación inferior flotante con cuatro destinos: **Para ti**, **Explorar**, **
 
 - Encabezado con `screen-title` "Para ti" y "Actualizado hace 2 h". Un segmentado: **Para ti** · **Terminan pronto**.
 - Lista de OfferCard ordenada por afinidad. Una de cada cinco o seis es de exploración y lo dice: "Algo distinto".
-- **Tocar la tarjeta:** abre el detalle con la imagen y la calcomanía como elementos compartidos.
+- **Tocar la tarjeta:** abre el detalle, que entra desde la tarjeta con escala y fundido (ver Movimiento).
 - **Guardar:** ícono `bookmark` en la tarjeta; se rellena y vibra suave.
 - **No me interesa:** deslizar a la izquierda o ícono `x`. La tarjeta sale, la lista se cierra y aparece el toast "No te mostraremos más este juego" con Deshacer durante 5 s.
 - **Tirar hacia abajo:** actualiza. Si no hay nada nuevo: "Ya estás al día".

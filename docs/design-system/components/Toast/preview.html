@@ -1,14 +1,17 @@
-<!-- @dsCard group="Estados" height=250 subtitle="Deshacer, confirmación y error" -->
+<!-- @dsCard group="Estados" height=300 subtitle="Tres variantes en evaluación: A cápsula invertida, B isla superior, C barra con tiempo" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>Toast</title>
 <script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
 <body class="ot-root">
-<div class="ot-pad ot-col" id="root">
-  <div class="ot-toast" role="status"><i data-lucide="eye-off"></i><span class="ot-toast__text">No te mostraremos más este juego</span><button class="ot-btn ot-btn--ghost" type="button">Deshacer</button></div>
-  <div class="ot-toast ot-toast--good" role="status"><i data-lucide="check"></i><span class="ot-toast__text">Guardado. Te avisamos si baja más.</span></div>
-  <div class="ot-toast ot-toast--bad" role="alert"><i data-lucide="circle-alert"></i><span class="ot-toast__text">No pudimos actualizar las ofertas</span><button class="ot-btn ot-btn--ghost" type="button">Reintentar</button></div>
+<div class="ot-pad ot-col" id="root" style="gap:18px">
+  <div class="ot-col" style="gap:6px"><span class="ot-label">A · Cápsula invertida</span>
+    <div class="ot-toast-a" role="status" data-enter="up"><i data-lucide="eye-off"></i><span>No te mostraremos más este juego</span><button type="button">Deshacer</button></div></div>
+  <div class="ot-col" style="gap:6px"><span class="ot-label">B · Isla superior</span>
+    <div class="ot-toast-b" role="status" data-enter="down"><i data-lucide="eye-off"></i><span>Oculto</span><button type="button">Deshacer</button></div></div>
+  <div class="ot-col" style="gap:6px"><span class="ot-label">C · Barra con tiempo</span>
+    <div class="ot-toast-c" role="status" data-enter="up"><i data-lucide="eye-off"></i><span>No te mostraremos más este juego</span><button type="button">Deshacer</button><i class="ot-toast-c__time" id="time"></i></div></div>
   <div><button class="ot-btn ot-btn--secondary" type="button" id="replay">Ver la entrada</button></div>
 </div>
 <script>
@@ -16,11 +19,15 @@
   if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } });
   var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.getElementById('replay').addEventListener('click', function () {
-    var ts = document.querySelectorAll('.ot-toast');
-    ts.forEach(function (t, i) {
-      if (M && !reduce) { M.animate(t, { y: [24, 0], opacity: [0, 1] }, { type: 'spring', stiffness: 420, damping: 26, delay: i * 0.06 }); }
-      else { t.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); }
+    document.querySelectorAll('[data-enter]').forEach(function (t, i) {
+      var down = t.getAttribute('data-enter') === 'down';
+      if (M && !reduce) {
+        if (down) { M.animate(t, { y: [-20, 0], scaleX: [0.6, 1], opacity: [0, 1] }, { type: 'spring', stiffness: 420, damping: 28, delay: i * 0.06 }); }
+        else { M.animate(t, { y: [24, 0], opacity: [0, 1] }, { type: 'spring', stiffness: 420, damping: 26, delay: i * 0.06 }); }
+      } else { t.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); }
     });
+    var bar = document.getElementById('time');
+    if (M && !reduce) { M.animate(bar, { scaleX: [1, 0] }, { duration: 5, ease: 'linear' }); }
   });
 })();
 </script>

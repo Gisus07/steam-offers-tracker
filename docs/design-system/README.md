@@ -36,6 +36,7 @@ Offers Tracker avisa a cada persona de ofertas de Steam que le van a gustar, en 
 - Sobre un relleno `accent` el texto es `on-accent`, nunca blanco literal: en oscuro el acento es claro y pide texto oscuro.
 - `hot`, `good` y `bad` siempre van con ícono o palabra. El color nunca es la única señal.
 - El tema oscuro es el principal; el claro sigue las mismas reglas con sus valores.
+- **Ningún tema usa blanco puro.** En claro, las superficies son grises que suben hacia el blanco (`bg` #E6E9ED, `surface` #F2F4F6, `surface-raised` #DCE0E6): cansan menos la vista de noche. Ningún color de la interfaz es #FFFFFF, tampoco el texto sobre `accent` (`on-accent`).
 
 ## Tipografía
 

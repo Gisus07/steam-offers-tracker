@@ -1,14 +1,18 @@
-Aviso flotante y breve que confirma una acción, ofrece deshacerla o informa de un error, sin empujar el contenido.
+Aviso breve que confirma una acción, ofrece deshacerla o informa un error, flotando sin empujar el contenido. Hay tres variantes en evaluación; se elige una.
 
-## Variantes
-- **Confirmación con Deshacer:** "No te mostraremos más este juego" · Deshacer. Ícono `eye-off`.
-- **Buena noticia:** "Guardado" con ícono `check` en `good`. Solo cuando la acción no se ve en el mismo control.
-- **Error:** fondo `bad-soft`, ícono `circle-alert` en `bad`, qué pasó y la salida: "No pudimos actualizar las ofertas" · Reintentar.
+## Variantes en evaluación
+- **A · Cápsula invertida:** pastilla en `ink` con texto `bg` y la acción en `accent-on-inverse`. Se lee en cualquier pantalla porque invierte el tema. Flota sobre la navegación.
+- **B · Isla superior:** cápsula chica arriba al centro, en `surface-raised`, que crece para mostrar la acción. No tapa la navegación ni las tarjetas de abajo.
+- **C · Barra con tiempo:** tarjeta sobre la navegación con una línea `accent` que se vacía en 5 s: muestra cuánto queda para deshacer.
 
-## Reglas
-- Flota sobre la navegación, a `space-4` de los lados. Fondo `surface`, borde `line`, radio `radius-notice`, sombra `shadow-float`.
-- Uno a la vez: el nuevo reemplaza al anterior. Dura 5 s; con Deshacer, el tiempo se reinicia si el usuario lo toca.
-- Texto `body` a 14px, una línea si entra; la acción como botón de texto.
+## Reglas comunes
+- Uno a la vez: el nuevo reemplaza al anterior. Dura 5 s; tocarlo pausa el tiempo.
+- Ícono de Lucide y una frase: "No te mostraremos más este juego" · Deshacer. Error: ícono `circle-alert` en `bad`, qué pasó y Reintentar.
+- Nunca empuja el contenido ni bloquea la lista.
 
 ## Movimiento
-- Entra desde abajo: `y` 24 → 0 y opacidad, muelle 420/26. Sale con fundido de 150 ms. Con "reducir movimiento", solo fundido.
+- A y C entran desde abajo (`y` 24 → 0, muelle 420/26); B baja desde arriba y se expande a lo ancho (muelle 420/28). Salen con fundido de 150 ms. C anima su línea de tiempo de forma lineal en 5 s. Con "reducir movimiento", solo fundido y la línea queda fija.
+
+## En la app
+- `sonner-native`, dibujado con `toast.custom()` sobre los tokens. Configuración en Implementación en la app.
+- No se usa el toast del sistema de Android: no admite el botón Deshacer.

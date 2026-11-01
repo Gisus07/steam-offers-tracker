@@ -80,7 +80,7 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
 <div class="wrap">
   <header class="hero">
     <div>
-      <span class="eyebrow">Fase de investigación · revisión 5 · 31 oct 2026</span>
+      <span class="eyebrow">Fase de investigación · revisión 6 · 1 nov 2026</span>
       <h1>Steam Offers Tracker v2</h1>
       <p class="lede">Un notificador de descuentos en Steam, multiusuario, que muestra a cada persona las ofertas de su región y aprende sus gustos. Esto es lo que se probó, lo que se decidió y lo que falta.</p>
     </div>
@@ -263,13 +263,13 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
       <li><strong>Exploración:</strong> entre el 10 y el 20 % del feed queda fuera del perfil.</li>
       <li><strong>Arranque en frío:</strong> biblioteca, wishlist y tags elegidas en el onboarding.</li>
       <li><strong>Pulirlo:</strong> registrar impresiones permite medir CTR, precision@k y NDCG, y comparar variantes por cohortes.</li>
-      <li><strong>Notificaciones:</strong> ofertas nuevas por país, cruzadas con los usuarios de ese país, puntuadas, filtradas por sus umbrales, sin repetir lo ya enviado y por FCM en lote.</li>
+      <li><strong>Notificaciones:</strong> ofertas nuevas por país, cruzadas con los usuarios de ese país, puntuadas, filtradas por sus umbrales, sin repetir lo ya enviado y en lote por Expo Push.</li>
     </ul>
     <p class="note">A futuro: compartir una oferta a WhatsApp, Telegram o Discord desde el menú de compartir del teléfono, y grupos de amigos dentro de la app.</p>
   </section>
 
   <section>
-    <h2>4. Capa de datos</h2>
+    <h2>4. Capa de datos y servidor</h2>
     <p>NestJS 12.3.2 compila y resuelve la inyección de dependencias con TS 7.0.2 <span class="chip v">verificado</span>. Reylo funcionó de punta a punta con TS 7.1 beta, Nest, <code>pg</code> y Postgres 16 <span class="chip v">verificado</span>, aunque tiene 4 semanas de vida, exige Node 24, necesita la base levantada para typecheckear y no hace migraciones. Prisma 8 es una reescritura completa en TypeScript que sigue en release candidate y todavía no tiene varias funciones; hoy no conviene.</p>
 
     <h3>TypeORM vs Drizzle <span class="chip v">probado con un spike</span></h3>
@@ -384,6 +384,36 @@ await db.$client.end();</code></pre>
       <p><strong>Drizzle 1.0 RC, con la versión fijada, y Reylo para las queries pesadas del backend.</strong> El tipo sigue a la consulta, es el mismo ORM en Nest y en Expo sin decoradores, y se integra con Reylo. Arrancar en la 1.0 evita migrar la API relacional y las migraciones cuando salga la versión final.</p>
       <p class="note">Costo: es un RC, el módulo de Nest está en 0.0.2 y dejás lo conocido. Alternativa que compite: TypeORM 1.x, si preferís lo conocido y el módulo de Nest maduro.</p>
     </div>
+    <h3>Servidor: librerías y operación <span class="chip d">docs, npm</span> <span class="chip v">pruebas propias donde se indica</span></h3>
+    <p>Pensado para el VPS de 1 vCPU y 2 GB: nada que sume un servicio con estado si Postgres lo resuelve. Versiones al 1 de noviembre de 2026.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Tema</th><th>Recomendación</th><th>Por qué</th><th>Alternativa</th></tr></thead>
+      <tbody>
+        <tr><td>HTTP</td><td>Express, el adaptador por defecto de Nest 12</td><td>La latencia la pone el SQL (~100 ms el feed), no el adaptador; es el más compatible</td><td><code>@nestjs/platform-node</code> (Nest 12.3, 27-oct): según su doc, ~50 % más req/s que Express; será el default en Nest 13. Cambiarlo es una línea</td></tr>
+        <tr><td>Jobs y cron</td><td><strong>pg-boss 12.38</strong> en el worker</td><td>Usa solo Postgres: cron que recupera ejecuciones perdidas, reintentos con backoff, cola <code>exclusive</code> con <code>singletonKey</code> por país, dead letter y encolado dentro de una transacción de Drizzle</td><td>BullMQ: más probado, pero con Redis suma un servicio con estado que respaldar</td></tr>
+        <tr><td>Validación</td><td><strong>Zod 4</strong> (4.6.7)</td><td>Nest 12 acepta <code>schema</code> en <code>@Body</code>, <code>@Query</code> y <code>@Param</code> (Standard Schema) y lo pasa a OpenAPI sin conversores; el mismo esquema sirve en la app y en TanStack Form</td><td>ArkType 2.2</td></tr>
+        <tr><td>Contrato con la app</td><td><code>@nestjs/swagger</code> 12 → <code>openapi.json</code> en el CI → <strong>orval 8.46</strong>, que genera los hooks de TanStack Query y el cliente <code>fetch</code></td><td>Generó los hooks con TS 7 instalado <span class="chip v">verificado</span>. El CI falla si el cliente quedó viejo</td><td>openapi-typescript + openapi-react-query: con TS 7 falla en <code>ts.factory</code> <span class="chip v">verificado</span></td></tr>
+        <tr><td>Push</td><td><strong>Expo Push</strong> con <code>expo-server-sdk</code> 8</td><td>Gratis, 100 mensajes por request, receipts a los ~15 min para borrar tokens <code>DeviceNotRegistered</code>; el mismo token sirve para iOS. En Android hay que subir a EAS la cuenta de servicio de FCM v1</td><td><code>firebase-admin</code> (FCM directo): sin receipts, token nativo</td></tr>
+        <tr><td>Caché</td><td>Sin Redis</td><td>Los datos cambian una vez por barrido (cada 6 h): el feed sale de Postgres y la app lo cachea con Query. Cloudflare cachea solo los endpoints públicos por país, con una Cache Rule (el plan Free trae 10)</td><td>—</td></tr>
+        <tr><td>Exposición</td><td><strong>Cloudflare Tunnel</strong> en el compose</td><td>Solo conexiones salientes: el VPS no abre 80/443 ni expone su IP; el firewall queda con SSH. Gratis. Reiniciar <code>cloudflared</code> corta las conexiones largas</td><td>Caddy con 80/443 abiertos, aceptando solo IPs de Cloudflare</td></tr>
+        <tr><td>Backups</td><td><code>pg_dump -Fc | rclone rcat</code> a B2 después de cada barrido, retención con lifecycle de B2 y un restore de prueba al mes</td><td>La base es chica y rclone 1.75 tiene backend B2 nativo</td><td>pgBackRest 2.60 si hace falta volver a un punto en el tiempo <span class="chip u">sin probar contra B2</span></td></tr>
+        <tr><td>Logs y errores</td><td><code>nestjs-pino</code> a stdout con la rotación del log driver de Docker; errores en <strong>Sentry</strong> (SaaS) con <code>@sentry/nestjs</code> y <code>@sentry/react-native</code></td><td>App y servidor en un mismo lugar. Sentry self-hosted pide 16 GB de RAM y GlitchTip 512 MB, un cuarto del VPS</td><td>EAS Observe, solo para la app</td></tr>
+        <tr><td>Uptime</td><td>Better Stack Free: chequeo HTTP y heartbeat del barrido</td><td>Avisa si el barrido deja de correr <span class="chip u">plan según su web</span></td><td>Uptime Kuma, pero fuera del VPS</td></tr>
+        <tr><td>Despliegue</td><td>GitHub Actions → imagen con tag = SHA en GHCR → SSH con <code>docker compose pull &amp;&amp; up -d</code>; migraciones como servicio de una sola ejecución; rollback al SHA anterior</td><td>Explícito y reversible. Watchtower está archivado desde diciembre de 2025</td><td>—</td></tr>
+        <tr><td>App</td><td>EAS Workflows + EAS Update</td><td>Compila solo si cambió lo nativo (fingerprint); lo demás va por actualización</td><td>—</td></tr>
+        <tr><td>Tests</td><td><strong>Vitest + SWC + Testcontainers</strong> (<code>postgres:18</code>)</td><td>Es lo que genera Nest 12 en proyectos ESM; Jest y ts-jest piden TS anterior a 7. Testcontainers prueba las funciones SQL reales</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    <div class="rec">
+      <span class="eyebrow">Arquitectura resultante</span>
+      <p>Postgres 18 como base, cola (pg-boss) y caché. Una imagen con dos servicios, api y worker. Un schedule por país cada 6 h en una cola <code>exclusive</code> con <code>singletonKey</code> = país. Expo Push con un job de receipts. Cloudflare Tunnel. <code>pg_dump</code> + rclone a B2 con restore probado.</p>
+    </div>
+    <div class="rec fix">
+      <span class="eyebrow">Cambio pendiente en el modelo de datos</span>
+      <p>La app manda los eventos desde una cola sin conexión y los reintenta, así que el servidor tiene que ignorar los duplicados. Propuesta: <code>event_uuid uuid</code> generado en el teléfono, <code>unique (event_uuid, occurred_at)</code> (en una tabla particionada la clave única debe incluir <code>occurred_at</code>) e <code>insert … on conflict do nothing</code>. Probado sobre el modelo actual, con rollback: el reintento inserta 0 filas y el trigger <code>events_state</code> no cuenta dos veces <span class="chip v">verificado</span>.</p>
+      <p class="note">El acotado de <code>occurred_at</code> al ingresar no puede depender de <code>now()</code>, o el reintento cae en otra clave. Falta pasarlo a <code>modelo-datos.sql</code>.</p>
+    </div>
+    <p class="note">Lo que toca a la app (TanStack, Expo, recetas) está en la sección Librerías del sistema de diseño.</p>
   </section>
 
   <section>
@@ -473,6 +503,7 @@ await db.$client.end();</code></pre>
         <tr><td>Reylo sobre una instancia de Drizzle</td><td>Extender el spike en la planificación</td></tr>
         <tr><td>Regla de 12 testers y costo de Google Play</td><td>Centro de ayuda de Google Play Console</td></tr>
         <tr><td>Nombre público sin conflicto de marca</td><td>Buscarlo en las tiendas y en registros de marcas</td></tr>
+        <tr><td>Curva escalonada de TanStack Charts en Android</td><td>Spike de PriceHistory en un development build; si falla, <code>react-native-wagmi-charts</code></td></tr>
       </tbody>
     </table></div>
   </section>

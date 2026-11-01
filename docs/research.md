@@ -1,6 +1,6 @@
 # Fase de investigación — Steam Offers Tracker v2
 
-Última actualización: 2026-10-31 (revisión 5).
+Última actualización: 2026-11-01 (revisión 6: servidor y operación, §4.7).
 Objetivo: confirmar si es viable un sistema que notifique descuentos de Steam (nombre, % de descuento, precio antes/después, fecha de fin, link a la tienda) y aprenda de los gustos de cada usuario, sin scraping pesado.
 
 Leyenda: **[verificado]** = probado en vivo desde un contenedor en esta fecha. **[docs]** = documentación oficial, specs o metadatos de npm. **[no verificado]** = fuentes secundarias, falta comprobar. **[Gisus]** = dato aportado por Gisus (capturas o decisión).
@@ -260,7 +260,7 @@ Pesos iniciales de señales implícitas (a calibrar):
 
 ### 3.4 Notificaciones con varios usuarios
 
-Por cada barrido: ofertas nuevas por país × usuarios de ese país → score con su perfil → filtrar por `user_settings` → deduplicar contra `notifications_sent` → enviar por FCM en lote. Un tope diario por usuario evita el spam.
+Por cada barrido: ofertas nuevas por país × usuarios de ese país → score con su perfil → filtrar por `user_settings` → deduplicar contra `notifications_sent` → enviar en lote por Expo Push (§4.7). Un tope diario por usuario evita el spam.
 
 Volumen de referencia: 200 eventos/usuario/día × 1000 usuarios = 200 k filas/día. A esa escala conviene particionar `events` por mes [estimación].
 
@@ -437,6 +437,32 @@ Alternativa que compite: **TypeORM 1.x**, si preferís lo conocido y el módulo 
 
 **Drizzle 1.0 RC como base + Reylo para las queries pesadas del backend.** Drizzle cubre esquema, migraciones, CRUD y el móvil; Reylo, el SQL complejo del recomendador tipado contra la DB real. Si Reylo cambia de API, esas queries pasan al `sql` de Drizzle sin tocar el resto.
 
+### 4.7 Servidor: librerías y operación [docs, npm; pruebas propias donde se indica]
+
+Pensado para el VPS de 1 vCPU y 2 GB: nada que sume un servicio con estado si Postgres lo resuelve. Versiones al 2026-11-01.
+
+| Tema | Recomendación | Por qué | Alternativa |
+|---|---|---|---|
+| HTTP | Express, el adaptador por defecto de Nest 12 | La latencia la pone el SQL (~100 ms el feed), no el adaptador; es el más compatible | `@nestjs/platform-node` (Nest 12.3, 27-oct): según su doc, ~50 % más req/s que Express; será el default en Nest 13. Cambiarlo es una línea |
+| Jobs y cron | **pg-boss 12.38** en el worker | Usa solo Postgres: cron que recupera ejecuciones perdidas, reintentos con backoff, cola `exclusive` con `singletonKey` por país, dead letter y encolado dentro de una transacción de Drizzle | BullMQ: más probado, pero con Redis suma un servicio con estado que respaldar |
+| Validación | **Zod 4** (4.6.7) | Nest 12 acepta `schema` en `@Body`, `@Query` y `@Param` (Standard Schema) y lo pasa a OpenAPI sin conversores; el mismo esquema sirve en la app y en TanStack Form | ArkType 2.2 |
+| Contrato con la app | `@nestjs/swagger` 12 → `openapi.json` en el CI → **orval 8.46**, que genera los hooks de TanStack Query y el cliente `fetch` | Generó los hooks con TS 7 instalado [verificado]; el CI falla si el cliente quedó viejo | openapi-typescript + openapi-react-query: con TS 7 falla en `ts.factory` [verificado] |
+| Push | **Expo Push** con `expo-server-sdk` 8 | Gratis, 100 mensajes por request, receipts a los ~15 min para borrar tokens `DeviceNotRegistered`; el mismo token sirve para iOS. En Android hay que subir a EAS la cuenta de servicio de FCM v1 | `firebase-admin` (FCM directo): sin receipts, token nativo |
+| Caché | Sin Redis | Los datos cambian una vez por barrido (cada 6 h): el feed sale de Postgres y la app lo cachea con Query. Cloudflare cachea solo los endpoints públicos por país, con una Cache Rule (el plan Free trae 10) | — |
+| Exposición | **Cloudflare Tunnel** en el compose | Solo conexiones salientes: el VPS no abre 80/443 ni expone su IP; el firewall queda con SSH. Gratis. Reiniciar `cloudflared` corta las conexiones largas | Caddy con 80/443 abiertos, aceptando solo IPs de Cloudflare |
+| Backups | `pg_dump -Fc \| rclone rcat` a B2 después de cada barrido, retención con lifecycle de B2 y un restore de prueba al mes | La base es chica y rclone 1.75 tiene backend B2 nativo | pgBackRest 2.60 si hace falta volver a un punto en el tiempo [no verificado contra B2] |
+| Logs y errores | `nestjs-pino` a stdout con la rotación del log driver de Docker; errores en **Sentry** (SaaS) con `@sentry/nestjs` y `@sentry/react-native` | App y servidor en un mismo lugar. Sentry self-hosted pide 16 GB de RAM y GlitchTip 512 MB, un cuarto del VPS | EAS Observe, solo para la app |
+| Uptime | Better Stack Free: chequeo HTTP y heartbeat del barrido | Avisa si el barrido deja de correr [no verificado: plan según su web] | Uptime Kuma, pero fuera del VPS |
+| Despliegue | GitHub Actions → imagen con tag = SHA en GHCR → SSH con `docker compose pull && up -d`; migraciones como servicio de una sola ejecución; rollback al SHA anterior | Explícito y reversible. Watchtower está archivado desde diciembre de 2025 | — |
+| App | EAS Workflows + EAS Update | Compila solo si cambió lo nativo (fingerprint); lo demás va por actualización | — |
+| Tests | **Vitest + SWC + Testcontainers** (`postgres:18`) | Es lo que genera Nest 12 en proyectos ESM; Jest y ts-jest piden TS anterior a 7. Testcontainers prueba las funciones SQL reales | — |
+
+**Arquitectura resultante:** Postgres 18 como base, cola (pg-boss) y caché. Una imagen con dos servicios, api y worker. Un schedule por país cada 6 h en una cola `exclusive` con `singletonKey` = país. Expo Push con un job de receipts. Cloudflare Tunnel. `pg_dump` + rclone a B2 con restore probado.
+
+**Cambio pendiente en el modelo de datos [verificado en PG 18]:** la app manda los eventos desde una cola sin conexión y los reintenta, así que el servidor tiene que ignorar los duplicados. Propuesta: `event_uuid uuid` generado en el teléfono, `unique (event_uuid, occurred_at)` (en una tabla particionada la clave única debe incluir `occurred_at`) e `insert … on conflict do nothing`. Probado sobre el modelo actual, con rollback: el reintento inserta 0 filas y el trigger `events_state` no cuenta dos veces. El acotado de `occurred_at` al ingresar no puede depender de `now()`, o el reintento cae en otra clave. Falta pasarlo a `modelo-datos.sql`.
+
+Lo que toca a la app (TanStack, Expo, recetas) está en la sección Librerías del sistema de diseño (`docs/design-system/librerias.md`).
+
 ---
 
 ## 5. VPS
@@ -538,3 +564,4 @@ Mitigación propuesta: registrar una Web API key y usarla también en las llamad
 | `.run()` de Reylo sobre una instancia de Drizzle | Extender el spike en la planificación |
 | Regla de 12 testers × 14 días y costo de la cuenta de Google Play | support.google.com/googleplay/android-developer |
 | Nombre público libre de conflictos de marca | Buscarlo en las tiendas y en registros de marcas antes de elegirlo |
+| Curva escalonada de TanStack Charts en Android | Spike de PriceHistory en un development build; si falla, `react-native-wagmi-charts` |

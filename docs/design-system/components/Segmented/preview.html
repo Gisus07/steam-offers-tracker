@@ -1,32 +1,43 @@
-<!-- @dsCard group="Acciones" height=80 subtitle="La pastilla se desliza (muelle 520/34)" -->
+<!-- @dsCard group="Acciones" height=130 subtitle="La pastilla se desliza (muelle 520/34) y el texto cambia de color con ella" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>Segmented</title>
 <script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
 <body class="ot-root">
-<div class="ot-pad" id="root">
+<div class="ot-pad ot-col" id="root">
   <div class="ot-seg" role="tablist" id="seg">
     <span class="ot-seg__pill" id="pill" aria-hidden="true"></span>
     <button type="button" role="tab" aria-selected="true">Para ti</button>
     <button type="button" role="tab" aria-selected="false">Terminan pronto</button>
   </div>
+  <div class="ot-seg" role="tablist" id="seg2" aria-label="Descuento mínimo">
+    <span class="ot-seg__pill" id="pill2" aria-hidden="true"></span>
+    <button type="button" role="tab" aria-selected="false">30%</button>
+    <button type="button" role="tab" aria-selected="true">50%</button>
+    <button type="button" role="tab" aria-selected="false">70%</button>
+  </div>
 </div>
 <script>
 (function () {
   var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var pill = document.getElementById('pill'), tabs = document.querySelectorAll('#seg button');
-  function place(b, animate) {
-    var x = b.offsetLeft - 4, w = b.offsetWidth;
-    if (animate && M && !reduce) { M.animate(pill, { x: x, width: w + 'px' }, { type: 'spring', stiffness: 520, damping: 34 }); }
-    else { pill.style.transform = 'translateX(' + x + 'px)'; pill.style.width = w + 'px'; }
-  }
-  tabs.forEach(function (b) {
-    b.addEventListener('click', function () {
-      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === b)); });
-      place(b, true);
+  function wire(segId, pillId) {
+    var pill = document.getElementById(pillId), tabs = document.querySelectorAll('#' + segId + ' button');
+    function place(b, animate) {
+      var x = b.offsetLeft - 4, w = b.offsetWidth;
+      if (animate && M && !reduce) {
+        M.animate(pill, { x: x, width: w + 'px' }, { type: 'spring', stiffness: 520, damping: 34 });
+        M.animate(pill, { scaleY: [0.9, 1] }, { type: 'spring', stiffness: 600, damping: 18 });
+      } else { pill.style.transform = 'translateX(' + x + 'px)'; pill.style.width = w + 'px'; }
+    }
+    tabs.forEach(function (b) {
+      b.addEventListener('click', function () {
+        tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === b)); });
+        place(b, true);
+      });
     });
-  });
-  place(tabs[0], false);
+    tabs.forEach(function (b) { if (b.getAttribute('aria-selected') === 'true') place(b, false); });
+  }
+  wire('seg', 'pill'); wire('seg2', 'pill2');
 })();
 </script>
 </body>
