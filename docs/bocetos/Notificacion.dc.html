@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Notificación</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/offers-tracker/tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column; gap: 12px; padding: 40px 12px;">
+  <a href="Detalle.dc.html" style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-float); color: var(--ink); text-decoration: none;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span aria-hidden="true" style="width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: var(--deal); color: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 13px; line-height: 13px;">%</span>
+      <span style="font-size: 12px; line-height: 16px; color: var(--ink-2);">Offers Tracker · ahora</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+      <span style="font-weight: 700; font-size: 15px; line-height: 20px;">Caveblazers</span>
+      <span style="font-size: 14px; line-height: 20px; color: var(--ink-2); font-variant-numeric: tabular-nums;">−91% · USD 0,52 · termina en 7 d</span>
+    </div>
+    <div style="position: relative; height: 180px; border-radius: 14px; background: var(--surface-raised);">
+      <span aria-hidden="true" style="position: absolute; left: 16px; bottom: 16px; font-family: var(--font-display); font-weight: 800; font-size: 30px; line-height: 30px; color: var(--ink-3);">Caveblazers</span>
+    </div>
+    <div style="display: flex; gap: 4px;">
+      <span style="display: inline-flex; align-items: center; height: 40px; padding: 0 12px; border-radius: 10px; color: var(--accent); font-weight: 700; font-size: 14px;">Guardar</span>
+      <span style="display: inline-flex; align-items: center; height: 40px; padding: 0 12px; border-radius: 10px; color: var(--accent); font-weight: 700; font-size: 14px;">No me interesa</span>
+    </div>
+  </a>
+  <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line);">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span aria-hidden="true" style="width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: var(--deal); color: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 13px; line-height: 13px;">%</span>
+      <span style="font-size: 12px; line-height: 16px; color: var(--ink-2);">Offers Tracker · hace 2 h</span>
+    </div>
+    <span style="font-weight: 700; font-size: 15px; line-height: 20px;">3 ofertas para ti</span>
+    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 20px; color: var(--ink-2); font-variant-numeric: tabular-nums;">
+      <span>Dead Cells · −50% · USD 6,24</span>
+      <span>Overbowed · −91% · USD 0,44</span>
+      <span>Summum Aeterna · −80% · termina mañana</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'dark' };
+  }
+}
+</script>
+</body>
+</html>

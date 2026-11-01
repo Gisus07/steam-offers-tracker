@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guardados</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/offers-tracker/tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans);">
+  <div style="height: 844px; overflow-y: auto; box-sizing: border-box; padding: 28px 16px 120px; display: flex; flex-direction: column; gap: 16px;">
+    <header style="display: flex; flex-direction: column; gap: 4px;">
+      <h1 style="margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 36px; letter-spacing: 0.005em;">Guardados</h1>
+      <p style="margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-2);">3 en oferta ahora · 1 sin descuento</p>
+    </header>
+    <span style="font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);">En oferta</span>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <sc-for list="{{onSale}}" as="r" hint-placeholder-count="3">
+        <a href="Detalle.dc.html" style="display: flex; gap: 12px; padding: 10px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); text-decoration: none; color: var(--ink);">
+          <div style="position: relative; width: 112px; height: 64px; flex: none; border-radius: 10px; background: var(--surface-raised);">
+            <span style="position: absolute; left: 6px; bottom: -6px; display: inline-flex; padding: 4px 6px 3px; background: var(--deal); color: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 15px; line-height: 15px; border-radius: 6px; transform: rotate(-3deg); box-shadow: var(--shadow-sticker);">−{{r.pct}}%</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1;">
+            <span style="font-weight: 700; font-size: 15px; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{r.name}}</span>
+            <div style="display: flex; align-items: baseline; gap: 8px;">
+              <span style="font-family: var(--font-display); font-weight: 800; font-size: 20px; line-height: 22px; font-variant-numeric: tabular-nums;">{{r.now}}</span>
+              <span style="font-size: 12px; line-height: 16px; color: var(--ink-3); text-decoration: line-through; font-variant-numeric: tabular-nums;">{{r.was}}</span>
+            </div>
+            <span style="{{r.endsStyle}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>{{r.ends}}</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+    <span style="font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px;">Sin descuento ahora</span>
+    <div style="display: flex; gap: 12px; align-items: center; padding: 10px; border-radius: 16px; background: var(--surface); border: 1px dashed var(--line-strong);">
+      <div style="width: 112px; height: 64px; flex: none; border-radius: 10px; background: var(--surface-raised);"></div>
+      <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1;">
+        <span style="font-weight: 700; font-size: 15px; line-height: 20px; color: var(--ink-2);">[Juego guardado sin oferta]</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; line-height: 18px; color: var(--ink-2);"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>Te avisamos cuando baje</span>
+      </div>
+    </div>
+  </div>
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 16px;">
+    <dc-import name="Nav" active="guardados" hint-size="358px,64px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var chip = 'display: inline-flex; align-self: flex-start; align-items: center; gap: 4px; font-weight: 500; font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums;';
+    return {
+      theme: this.props.theme ?? 'dark',
+      onSale: [
+        { name: 'Blasphemous', pct: 75, now: 'USD 3,12', was: 'USD 12,49', ends: 'Termina mañana, 14:00', endsStyle: chip + ' color: var(--hot);' },
+        { name: 'Slay the Spire', pct: 75, now: 'USD 2,87', was: 'USD 11,49', ends: 'Termina en 1 d 17 h', endsStyle: chip + ' color: var(--ink-2);' },
+        { name: 'Dead Cells', pct: 50, now: 'USD 6,24', was: 'USD 12,49', ends: 'Termina en 2 d 18 h', endsStyle: chip + ' color: var(--ink-2);' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

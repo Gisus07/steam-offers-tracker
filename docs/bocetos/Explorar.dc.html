@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Explorar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/offers-tracker/tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans);">
+  <div style="height: 844px; overflow-y: auto; box-sizing: border-box; padding: 28px 16px 120px; display: flex; flex-direction: column; gap: 16px;">
+    <h1 style="margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 36px; letter-spacing: 0.005em;">Explorar</h1>
+    <label for="q" style="display: flex; align-items: center; gap: 10px; height: 46px; box-sizing: border-box; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-2);">
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
+      <input id="q" type="search" placeholder="Buscar un juego en oferta" aria-label="Buscar un juego en oferta" style="flex: 1; min-width: 0; height: 44px; border: 0; outline: none; background: transparent; color: var(--ink); font-family: var(--font-sans); font-size: 15px;">
+    </label>
+    <div style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 0 16px 2px;">
+      <sc-for list="{{filters}}" as="f" hint-placeholder-count="5">
+        <button type="button" aria-pressed="{{f.on}}" onClick="{{f.toggle}}" style="{{f.style}}">{{f.label}}<sc-if value="{{f.hasCount}}" hint-placeholder-val="{{false}}"><span style="{{f.countStyle}}">{{f.count}}</span></sc-if></button>
+      </sc-for>
+    </div>
+    <p style="margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-2);">470 ofertas · ordenadas por descuento</p>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <sc-for list="{{results}}" as="r" hint-placeholder-count="4">
+        <a href="Detalle.dc.html" style="display: flex; gap: 12px; padding: 10px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); text-decoration: none; color: var(--ink);">
+          <div style="position: relative; width: 112px; height: 64px; flex: none; border-radius: 10px; background: var(--surface-raised); overflow: visible;">
+            <span style="position: absolute; left: 6px; bottom: -6px; display: inline-flex; padding: 4px 6px 3px; background: var(--deal); color: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 15px; line-height: 15px; border-radius: 6px; transform: rotate(-3deg); box-shadow: var(--shadow-sticker);">−{{r.pct}}%</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1;">
+            <span style="font-weight: 700; font-size: 15px; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{r.name}}</span>
+            <div style="display: flex; align-items: baseline; gap: 8px;">
+              <span style="font-family: var(--font-display); font-weight: 800; font-size: 20px; line-height: 22px; font-variant-numeric: tabular-nums;">{{r.now}}</span>
+              <span style="font-size: 12px; line-height: 16px; color: var(--ink-3); text-decoration: line-through; font-variant-numeric: tabular-nums;">{{r.was}}</span>
+            </div>
+            <span style="font-weight: 500; font-size: 12px; line-height: 16px; color: var(--ink-2); font-variant-numeric: tabular-nums;">{{r.ends}}</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 16px;">
+    <dc-import name="Nav" active="explorar" hint-size="358px,64px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var s = this.state || {};
+    var self = this;
+    var on = s.on || { pct50: true, roguelike: true };
+    var defs = [
+      { key: 'all', label: 'Todos', count: '' },
+      { key: 'pct50', label: '50% o más', count: '7.793' },
+      { key: 'roguelike', label: 'Roguelike', count: '470' },
+      { key: 'today', label: 'Termina hoy', count: '' },
+      { key: 'under5', label: 'Menos de USD 5', count: '' }
+    ];
+    var base = 'display: inline-flex; flex: none; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 999px; font-family: var(--font-sans); font-weight: 600; font-size: 13px; line-height: 18px; cursor: pointer; transition: background 200ms ease, color 200ms ease;';
+    var filters = defs.map(function (d) {
+      var active = !!on[d.key];
+      return {
+        label: d.label, count: d.count, hasCount: !!d.count, on: active,
+        style: base + (active ? ' background: var(--ink); color: var(--bg); border: 1px solid var(--ink);' : ' background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong);'),
+        countStyle: 'font-weight: 600; font-size: 11px; line-height: 14px; padding: 1px 6px; border-radius: 999px; ' + (active ? 'background: var(--bg); color: var(--ink);' : 'background: var(--surface-raised); color: var(--ink-2);'),
+        toggle: function () { var n = Object.assign({}, on); n[d.key] = !active; self.setState({ on: n }); }
+      };
+    });
+    return {
+      theme: this.props.theme ?? 'dark',
+      filters: filters,
+      results: [
+        { name: 'Slay the Spire', pct: 75, now: 'USD 2,87', was: 'USD 11,49', ends: 'Termina en 1 d 17 h' },
+        { name: 'Dead Cells', pct: 50, now: 'USD 6,24', was: 'USD 12,49', ends: 'Termina en 2 d 18 h' },
+        { name: 'Inscryption', pct: 60, now: 'USD 4,19', was: 'USD 10,49', ends: 'Termina en 7 d 18 h' },
+        { name: '嗜血印 Bloody Spell', pct: 90, now: 'USD 2,49', was: 'USD 24,99', ends: 'Termina en 6 d 17 h' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

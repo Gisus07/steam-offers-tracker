@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Para ti</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/offers-tracker/tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans);">
+  <div style="height: 844px; overflow-y: auto; box-sizing: border-box; padding: 28px 16px 120px; display: flex; flex-direction: column; gap: 16px;">
+    <header style="display: flex; flex-direction: column; gap: 4px;">
+      <h1 style="margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 36px; letter-spacing: 0.005em;">Para ti</h1>
+      <p style="margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-2);">Actualizado hace 2 h · Venezuela · precios en USD</p>
+    </header>
+    <div role="tablist" aria-label="Vista" style="position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px; border-radius: 12px; background: var(--surface-raised);">
+      <span aria-hidden="true" style="{{pillStyle}}"></span>
+      <button type="button" role="tab" aria-selected="{{forYouSelected}}" onClick="{{showForYou}}" style="{{forYouTabStyle}}">Para ti</button>
+      <button type="button" role="tab" aria-selected="{{soonSelected}}" onClick="{{showSoon}}" style="{{soonTabStyle}}">Terminan pronto</button>
+    </div>
+    <sc-if value="{{isSoon}}" hint-placeholder-val="{{false}}">
+      <p style="margin: 0; font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hot);">Terminan en menos de 24 horas</p>
+    </sc-if>
+    <sc-for list="{{cards}}" as="item" hint-placeholder-count="3">
+      <dc-import name="Card" item="{{item}}" hint-size="358px,400px"></dc-import>
+    </sc-for>
+  </div>
+  <sc-if value="{{showToast}}" hint-placeholder-val="{{false}}">
+    <div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 96px; display: flex; justify-content: center;">
+      <div style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 6px 6px 16px; border-radius: 999px; background: var(--ink); color: var(--bg); box-shadow: var(--shadow-float); font-size: 14px; line-height: 20px; font-weight: 500;">
+        <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path><path d="m2 2 20 20"></path></svg>
+        <span>No te mostraremos más este juego</span>
+        <button type="button" onClick="{{undo}}" style="height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: var(--accent-on-inverse); font-family: var(--font-sans); font-weight: 700; font-size: 14px; cursor: pointer;">Deshacer</button>
+      </div>
+    </div>
+  </sc-if>
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 16px;">
+    <dc-import name="Nav" active="parati" hint-size="358px,64px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var s = this.state || {};
+    var tab = s.tab || 'foryou';
+    var saved = s.saved || { 588650: true };
+    var hidden = s.hidden || {};
+    var self = this;
+    var FEED = [
+      { id: 452060, name: 'Caveblazers', pct: 91, was: 'USD 5,79', now: 'USD 0,52', ends: 'Termina en 7 d 17 h', hot: false, explore: false, tags: ['Roguelike de acción', 'Plataformas', 'Pixelados'] },
+      { id: 588650, name: 'Dead Cells', pct: 50, was: 'USD 12,49', now: 'USD 6,24', ends: 'Termina en 2 d 18 h', hot: false, explore: false, tags: ['Aventura', 'Roguelike', 'Metroidvania'] },
+      { id: 1776840, name: 'Overbowed', pct: 91, was: 'USD 4,99', now: 'USD 0,44', ends: 'Termina en 12 d 13 h', hot: false, explore: false, tags: ['Metroidvania', 'Acción', 'Aventura'] },
+      { id: 304430, name: 'INSIDE', pct: 90, was: 'USD 13,39', now: 'USD 1,33', ends: 'Termina mañana, 14:00', hot: true, explore: true, tags: ['2.5D', 'Plataformas de puzles'] },
+      { id: 1815230, name: 'Summum Aeterna', pct: 80, was: 'USD 10,49', now: 'USD 2,09', ends: 'Termina mañana, 14:00', hot: true, explore: false, tags: ['Aventura', 'Roguelite', 'Roguelike de acción'] },
+      { id: 1083310, name: 'OUTBUDDIES DX', pct: 93, was: 'USD 9,29', now: 'USD 0,65', ends: 'Termina mañana, 13:00', hot: true, explore: false, tags: ['Indie', 'Metroidvania', 'Acción'] }
+    ];
+    var SOON = [
+      { id: 1083310, name: 'OUTBUDDIES DX', pct: 93, was: 'USD 9,29', now: 'USD 0,65', ends: 'Termina mañana, 13:00', hot: true, explore: false, tags: ['Indie', 'Metroidvania', 'Acción'] },
+      { id: 1815230, name: 'Summum Aeterna', pct: 80, was: 'USD 10,49', now: 'USD 2,09', ends: 'Termina mañana, 14:00', hot: true, explore: false, tags: ['Aventura', 'Roguelite', 'Roguelike de acción'] },
+      { id: 752500, name: 'Ghoulboy - Dark Sword of Goblin', pct: 85, was: 'USD 4,99', now: 'USD 0,74', ends: 'Termina mañana, 14:00', hot: true, explore: false, tags: ['Acción', 'Aventura', 'Indie'] },
+      { id: 48000, name: 'LIMBO', pct: 90, was: 'USD 6,69', now: 'USD 0,66', ends: 'Termina mañana, 14:00', hot: true, explore: false, tags: ['Plataformas de puzles', 'Indie'] }
+    ];
+    var list = (tab === 'soon' ? SOON : FEED).filter(function (g) { return !hidden[g.id]; });
+    var cards = list.map(function (g) {
+      var isSaved = !!saved[g.id];
+      return Object.assign({}, g, {
+        saved: isSaved,
+        save: function () { var n = Object.assign({}, saved); n[g.id] = !isSaved; self.setState({ saved: n }); },
+        dismiss: function () { var h = Object.assign({}, hidden); h[g.id] = true; self.setState({ hidden: h, lastHidden: g.id, toast: true }); }
+      });
+    });
+    var spring = 'cubic-bezier(.3, 1.3, .45, 1)';
+    var tabBase = 'position: relative; z-index: 1; height: 36px; border: 0; background: transparent; font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 18px; border-radius: 8px; cursor: pointer; transition: color 200ms ease;';
+    return {
+      theme: this.props.theme ?? 'dark',
+      cards: cards,
+      isSoon: tab === 'soon',
+      forYouSelected: tab === 'foryou',
+      soonSelected: tab === 'soon',
+      pillStyle: 'position: absolute; top: 4px; bottom: 4px; left: 4px; width: 175px; border-radius: 8px; background: var(--surface); box-shadow: var(--shadow-card); transform: translateX(' + (tab === 'soon' ? 175 : 0) + 'px); transition: transform 380ms ' + spring + ';',
+      forYouTabStyle: tabBase + ' color: ' + (tab === 'foryou' ? 'var(--ink)' : 'var(--ink-2)') + ';',
+      soonTabStyle: tabBase + ' color: ' + (tab === 'soon' ? 'var(--ink)' : 'var(--ink-2)') + ';',
+      showForYou: function () { self.setState({ tab: 'foryou' }); },
+      showSoon: function () { self.setState({ tab: 'soon' }); },
+      showToast: !!s.toast,
+      undo: function () { var h = Object.assign({}, hidden); delete h[s.lastHidden]; self.setState({ hidden: h, toast: false }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

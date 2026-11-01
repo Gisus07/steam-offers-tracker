@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Bienvenida</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/offers-tracker/tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column; padding: 40px 24px 28px; gap: 28px;">
+  <div aria-hidden="true" style="position: relative; height: 300px; flex: none;">
+    <div style="position: absolute; left: 10px; top: 36px; width: 240px; height: 138px; border-radius: 16px; background: var(--surface-raised); border: 1px solid var(--line); transform: rotate(-6deg);"></div>
+    <div style="position: absolute; right: 0; top: 0; width: 220px; height: 126px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-card); transform: rotate(4deg);"></div>
+    <div style="position: absolute; left: 44px; top: 132px; width: 270px; height: 154px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-float);"></div>
+    <span style="position: absolute; left: 30px; top: 116px; display: inline-flex; padding: 6px 8px 5px; background: var(--deal); color: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 22px; border-radius: 6px; transform: rotate(-8deg); box-shadow: var(--shadow-sticker);">−75%</span>
+    <span style="position: absolute; right: 18px; top: 92px; display: inline-flex; padding: 6px 8px 5px; background: var(--deal); color: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 20px; line-height: 20px; border-radius: 6px; transform: rotate(5deg); box-shadow: var(--shadow-sticker);">−50%</span>
+    <span style="position: absolute; left: 60px; top: 258px; display: inline-flex; padding: 9px 12px 8px; background: var(--deal); color: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: 40px; border-radius: 6px; transform: rotate(-3deg); box-shadow: var(--shadow-sticker);">−91%</span>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <h1 style="margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 42px; line-height: 42px; letter-spacing: 0.005em;">Ofertas que te van a gustar, antes de que terminen.</h1>
+    <p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--ink-2);">Miramos las rebajas de Steam en tu región y te avisamos de las que van con lo que juegas, aunque no estén en tu wishlist.</p>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+    <a href="Gustos.dc.html" style="display: flex; align-items: center; justify-content: center; height: 52px; border-radius: 12px; background: var(--ink); color: var(--bg); font-weight: 700; font-size: 16px; text-decoration: none;">Iniciar sesión con Steam</a>
+    <a href="Explorar.dc.html" style="display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 12px; color: var(--accent); font-weight: 600; font-size: 15px; text-decoration: none;">Ver ofertas sin cuenta</a>
+    <p style="margin: 4px 0 0; text-align: center; font-size: 12px; line-height: 16px; color: var(--ink-3);">No estamos afiliados a Valve ni a Steam.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'dark' };
+  }
+}
+</script>
+</body>
+</html>

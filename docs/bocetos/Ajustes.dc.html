@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ajustes</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/offers-tracker/tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans); transition: background 250ms ease, color 250ms ease;">
+  <div style="height: 844px; overflow-y: auto; box-sizing: border-box; padding: 28px 16px 120px; display: flex; flex-direction: column; gap: 12px;">
+    <h1 style="margin: 0 0 8px; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 36px; letter-spacing: 0.005em;">Ajustes</h1>
+
+    <span style="font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);">Región</span>
+    <div style="display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line);">
+      <span style="font-size: 15px; line-height: 22px;">País de tu tienda</span>
+      <span style="font-size: 15px; line-height: 22px; color: var(--ink-2);">Venezuela · USD</span>
+    </div>
+
+    <span style="font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px;">Ofertas</span>
+    <div style="display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line);">
+      <span style="font-size: 15px; line-height: 22px;">Descuento mínimo</span>
+      <div role="tablist" aria-label="Descuento mínimo" style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; border-radius: 12px; background: var(--surface-raised);">
+        <span aria-hidden="true" style="{{minPill}}"></span>
+        <sc-for list="{{minOpts}}" as="o" hint-placeholder-count="3">
+          <button type="button" role="tab" aria-selected="{{o.on}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button>
+        </sc-for>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+        <span style="font-size: 15px; line-height: 22px;">Ocultar contenido para adultos</span>
+        <button type="button" role="switch" aria-checked="{{adult}}" aria-label="Ocultar contenido para adultos" onClick="{{toggleAdult}}" style="{{adultTrack}}"><span style="{{adultKnob}}"></span></button>
+      </div>
+    </div>
+
+    <span style="font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px;">Avisos</span>
+    <div style="display: flex; flex-direction: column; gap: 14px; padding: 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line);">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+        <span style="font-size: 15px; line-height: 22px;">Avisos de ofertas</span>
+        <button type="button" role="switch" aria-checked="{{notify}}" aria-label="Avisos de ofertas" onClick="{{toggleNotify}}" style="{{notifyTrack}}"><span style="{{notifyKnob}}"></span></button>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+        <span style="font-size: 15px; line-height: 22px;">Máximo por día</span>
+        <span style="font-size: 15px; line-height: 22px; color: var(--ink-2); font-variant-numeric: tabular-nums;">5 avisos</span>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+        <span style="font-size: 15px; line-height: 22px;">Silencio</span>
+        <span style="font-size: 15px; line-height: 22px; color: var(--ink-2); font-variant-numeric: tabular-nums;">23:00 a 08:00</span>
+      </div>
+    </div>
+
+    <span style="font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px;">Apariencia</span>
+    <div role="tablist" aria-label="Tema" style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; border-radius: 12px; background: var(--surface-raised);">
+      <span aria-hidden="true" style="{{themePill}}"></span>
+      <sc-for list="{{themeOpts}}" as="o" hint-placeholder-count="3">
+        <button type="button" role="tab" aria-selected="{{o.on}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button>
+      </sc-for>
+    </div>
+
+    <span style="font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px;">Cuenta</span>
+    <div style="display: flex; flex-direction: column; gap: 4px; padding: 6px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line);">
+      <div style="display: flex; align-items: center; justify-content: space-between; min-height: 46px;">
+        <span style="font-size: 15px; line-height: 22px;">Cuenta de Steam</span>
+        <span style="font-size: 15px; line-height: 22px; color: var(--ink-2);">[tu usuario]</span>
+      </div>
+      <button type="button" style="display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 0; border: 0; background: transparent; color: var(--ink); font-family: var(--font-sans); font-size: 15px; cursor: pointer;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg>Cerrar sesión</button>
+      <button type="button" style="display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 0; border: 0; background: transparent; color: var(--bad); font-family: var(--font-sans); font-weight: 600; font-size: 15px; cursor: pointer;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Eliminar cuenta y datos</button>
+    </div>
+  </div>
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 16px;">
+    <dc-import name="Nav" active="ajustes" hint-size="358px,64px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var s = this.state || {};
+    var self = this;
+    var spring = 'cubic-bezier(.3, 1.3, .45, 1)';
+    var minIdx = s.minIdx ?? 1;
+    var themeIdx = s.themeIdx ?? 0;
+    var adult = s.adult ?? true;
+    var notify = s.notify ?? true;
+    var segBtn = 'position: relative; z-index: 1; height: 36px; border: 0; background: transparent; font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 18px; border-radius: 8px; cursor: pointer; transition: color 200ms ease;';
+    function pill(i) { return 'position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow-card); transform: translateX(' + (i * 100) + '%); transition: transform 380ms ' + spring + ';'; }
+    function opts(labels, cur, key) {
+      return labels.map(function (l, i) {
+        return { label: l, on: i === cur, style: segBtn + ' color: ' + (i === cur ? 'var(--ink)' : 'var(--ink-2)') + ';', pick: function () { var p = {}; p[key] = i; self.setState(p); } };
+      });
+    }
+    function track(on) { return 'position: relative; width: 52px; height: 32px; flex: none; border-radius: 999px; padding: 0; cursor: pointer; transition: background 200ms ease; ' + (on ? 'background: var(--accent); border: 1px solid var(--accent);' : 'background: var(--surface-raised); border: 1px solid var(--line-strong);'); }
+    function knob(on) { return 'position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 999px; transition: transform 300ms ' + spring + ', background 200ms ease; transform: translateX(' + (on ? 20 : 0) + 'px); background: ' + (on ? 'var(--on-accent)' : 'var(--ink-3)') + ';'; }
+    var base = this.props.theme ?? 'dark';
+    var theme = themeIdx === 0 ? base : (themeIdx === 1 ? 'dark' : 'light');
+    return {
+      theme: theme,
+      minPill: pill(minIdx), minOpts: opts(['30%', '50%', '70%'], minIdx, 'minIdx'),
+      themePill: pill(themeIdx), themeOpts: opts(['Sistema', 'Oscuro', 'Claro'], themeIdx, 'themeIdx'),
+      adult: adult, adultTrack: track(adult), adultKnob: knob(adult), toggleAdult: function () { self.setState({ adult: !adult }); },
+      notify: notify, notifyTrack: track(notify), notifyKnob: knob(notify), toggleNotify: function () { self.setState({ notify: !notify }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
