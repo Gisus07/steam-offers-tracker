@@ -1,0 +1,376 @@
+<title>Validación Steam Offers Tracker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Public+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: guía de trabajo de una columna; los bloques para copiar (guion, plantilla, encuesta) son el foco. */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --fg:#17202a; --muted:#566573; --line:#d6dde4;
+  --accent:#2a6f97; --deal-bg:#4c6b22; --deal-fg:#beee11; --ok:#2e7d32; --warn:#a15c00; --no:#9b2c2c;
+  --code-bg:#e9eef2;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171d; --surface:#1a2129; --fg:#e4e9ee; --muted:#9aa8b5; --line:#2c3743;
+  --accent:#66c0f4; --deal-bg:#4c6b22; --deal-fg:#beee11; --ok:#7bc67e; --warn:#e0a54a; --no:#e57373;
+  --code-bg:#222b35; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#12171d; --surface:#1a2129; --fg:#e4e9ee; --muted:#9aa8b5; --line:#2c3743;
+  --accent:#66c0f4; --deal-bg:#4c6b22; --deal-fg:#beee11; --ok:#7bc67e; --warn:#e0a54a; --no:#e57373;
+  --code-bg:#222b35; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.45rem;font-weight:700;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0;max-width:68ch}
+section{display:flex;flex-direction:column;gap:16px}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+pre{font-family:var(--f-mono);font-size:.8rem;background:var(--code-bg);padding:14px 16px;border-radius:6px;overflow-x:auto;margin:0;line-height:1.55;white-space:pre-wrap}
+ul,ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+li{max-width:68ch}
+.lede{font-size:1.1rem;color:var(--muted)}
+header{display:flex;flex-direction:column;gap:12px}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.n{font-family:var(--f-mono);color:var(--muted);white-space:nowrap}
+
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.7rem;padding:1px 7px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.v{color:var(--ok)} .d{color:var(--accent)} .u{color:var(--warn)} .x{color:var(--no)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--muted);align-items:center}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.risk{border-left:4px solid var(--warn)}
+.go{border-left:4px solid var(--deal-bg)}
+.note{font-size:.88rem;color:var(--muted)}
+
+.hyp{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.hyp div{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.hyp b{font-family:var(--f-display);font-size:1.3rem}
+.hyp span{font-size:.86rem}
+.hyp small{font-size:.78rem;color:var(--muted)}
+@media (max-width:700px){.hyp{grid-template-columns:repeat(2,1fr)}}
+
+.block{display:flex;flex-direction:column;gap:8px}
+.block-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.copy{font-family:var(--f-mono);font-size:.75rem;background:var(--surface);color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:4px 10px;cursor:pointer}
+.copy:hover{background:var(--code-bg)}
+.script{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:14px}
+.script h4{margin:0;font-family:var(--f-display);font-size:.95rem}
+.script .time{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);font-weight:400}
+.rules{counter-reset:r;list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.rules li{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;max-width:none}
+.rules li b{display:block;font-family:var(--f-display);margin-bottom:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Fase de validación · 1 nov 2026</span>
+    <h1>Validación del problema</h1>
+    <p class="lede">Antes de diseñar el modelo de negocio y la pasarela de pago hay que saber si otras personas tienen el problema y si usarían la app. Si la respuesta es no, la app queda como herramienta personal y proyecto de portafolio.</p>
+    <div class="legend">
+      <span><span class="chip v">verificado</span> fuente primaria</span>
+      <span><span class="chip d">secundaria</span> terceros</span>
+      <span><span class="chip u">criterio propio</span> ajustable antes de empezar</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>1. Qué hay que validar</h2>
+    <p>Cuatro hipótesis, de la primera que se prueba a la última. Si una falla, las siguientes no importan.</p>
+    <div class="hyp">
+      <div><b>H1</b><span><strong>Problema:</strong> se enteran tarde de ofertas de juegos que les interesan y no tienen en la wishlist.</span><small>Entrevistas y encuesta</small></div>
+      <div><b>H2</b><span><strong>Solución:</strong> los avisos personalizados les sirven más que lo que usan hoy.</span><small>Final de la entrevista y piloto</small></div>
+      <div><b>H3</b><span><strong>Uso sostenido:</strong> la siguen usando pasada la novedad.</span><small>Piloto de 4 semanas</small></div>
+      <div><b>H4</b><span><strong>Pago:</strong> alguien pagaría, con las trabas de pago de la región.</span><small>Compromisos en el piloto</small></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Mercado</h2>
+    <h3>Lo que ya hace Steam <span class="chip v">verificado</span></h3>
+    <ul>
+      <li><strong>Wishlist:</strong> avisa por email o push cuando un juego de tu wishlist baja 20 % o más, con un enfriamiento de 2 semanas por juego.</li>
+      <li><strong>Fuera de la wishlist:</strong> muestra ofertas recomendadas para cada usuario, pero solo dentro de la tienda. No encontré push ni email de ofertas por gusto fuera de la wishlist <span class="chip d">secundaria</span>.</li>
+      <li><strong>Lo que viene:</strong> el 29 de septiembre Valve anunció que a principios de 2027 su sección de ofertas pasa a ser dinámica y personalizada para cada cliente. En sus pruebas mostró 10 veces más juegos por día, con más visitas, wishlists y carritos.</li>
+    </ul>
+
+    <h3>Competidores y sustitutos</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Nombre</th><th>Tipo</th><th>Fuera de wishlist</th><th>Alertas</th><th>Se financia con</th><th>Señal de demanda</th></tr></thead>
+      <tbody>
+        <tr><td>Steam</td><td>Tienda + app</td><td>Solo en la tienda</td><td>Wishlist</td><td>Venta de juegos</td><td>Android 100M+</td></tr>
+        <tr><td>IsThereAnyDeal</td><td>Web + API</td><td>No</td><td>Email (Waitlist)</td><td>Afiliados, Patreon</td><td>Grupo Steam 15,8K</td></tr>
+        <tr><td>SteamDB</td><td>Web + extensión</td><td>No</td><td>No consta</td><td>GitHub Sponsors</td><td>Chrome 700K</td></tr>
+        <tr><td>Augmented Steam</td><td>Extensión</td><td>No</td><td>No</td><td>Afiliados</td><td>Chrome 400K</td></tr>
+        <tr><td>GG.deals</td><td>Web + extensión</td><td>No</td><td>Email, push web</td><td>Afiliados</td><td>Grupo Steam 38,9K</td></tr>
+        <tr><td>GameTrack</td><td>App Android/iOS</td><td>Parcial</td><td>Solo en el plan pago</td><td>Suscripción</td><td>Android 10K+</td></tr>
+        <tr><td>Sales for Gaming</td><td>App Android</td><td>No</td><td>No, solo lista</td><td>Anuncios</td><td>100K+</td></tr>
+        <tr><td>Bestgameprice</td><td>App Android</td><td>No</td><td>Alertas de precio</td><td>—</td><td>100K+, abandonada</td></tr>
+        <tr><td>Steamly</td><td>Bot de Discord</td><td>Parcial</td><td>DM o canal</td><td>Gratis</td><td>7 servidores</td></tr>
+        <tr><td>Telegram en español</td><td>Canales</td><td>No</td><td>Difusión</td><td>Afiliados de Amazon</td><td>2K–21K, de España</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Datos de las fichas de Google Play, Chrome Web Store, grupos de Steam y canales de Telegram. Las apps de juegos gratis tienen más tracción que las de ofertas: Epic Freebie Games Radar supera los 5 millones de instalaciones.</p>
+
+    <h3>Lo que se repite en las reseñas</h3>
+    <ol>
+      <li>No se puede ocultar lo que ya tenés ni marcar "no me interesa". Es la queja más repetida.</li>
+      <li>Notificaciones que no se pueden configurar o que nunca llegan. En el foro de Steam piden lo mismo para la wishlist, porque el ruido hace que la gente apague los avisos.</li>
+      <li>Apps que solo listan ofertas, sin alertas.</li>
+      <li>Catálogo vacío o incompleto.</li>
+      <li>Apps que no dejan cambiar la moneda o no tienen precios de la región.</li>
+    </ol>
+
+    <div class="card risk">
+      <span class="eyebrow">Huecos y riesgos</span>
+      <ul>
+        <li><strong>El hueco existe pero es angosto:</strong> nadie avisa bien de ofertas por gusto fuera de la wishlist, y los que se acercan son parciales.</li>
+        <li><strong>El mayor riesgo es Valve:</strong> tiene los datos, acaba de comprobar que personalizar ofertas funciona y podría sumarlo a sus notificaciones cuando quiera. La propuesta no puede depender solo de "te aviso fuera de la wishlist".</li>
+        <li><strong>Aprender de lo que descartás</strong> responde a la queja más repetida, y no vi a nadie que diga hacerlo.</li>
+        <li><strong>LatAm:</strong> no encontré canales ni bots de ofertas de Steam pensados para la región; lo grande en español es de España, en euros.</li>
+        <li><strong>La fecha de fin no diferencia:</strong> ya la muestran varios.</li>
+      </ul>
+    </div>
+
+    <h3>Cómo se financian</h3>
+    <p>Afiliados (ITAD, GG.deals, los canales de Telegram), donaciones (ITAD, SteamDB), anuncios (casi todas las apps chicas) y suscripción (GameTrack cobra las alertas). Steam no tiene un programa de afiliados público <span class="chip d">secundaria</span>, así que una app que solo enlaza a Steam no cobra comisión. La evidencia de que la gente paga solo por alertas de ofertas es débil: por eso el pago (H4) se prueba al final.</p>
+
+    <h3>Qué cambia en la validación</h3>
+    <ul>
+      <li>En las entrevistas, además de "me enteré tarde", explorar el ruido: qué hacen con los avisos que ya les llegan. Puede que el dolor real sea la relevancia y no la cobertura.</li>
+      <li>Preguntar si usan las notificaciones de la app de Steam: si ya les alcanzan, el problema es menor.</li>
+      <li>Reclutar en comunidades de LatAm, donde no hay un competidor fuerte.</li>
+    </ul>
+  </section>
+
+  <section id="contexto">
+    <h2>3. Contexto y benchmarks</h2>
+    <p class="note">Pendiente.</p>
+  </section>
+
+  <section>
+    <h2>4. Entrevistas</h2>
+    <h3>Las cinco reglas</h3>
+    <p class="note">Basadas en <em>The Mom Test</em>, de Rob Fitzpatrick, el libro de referencia para esto.</p>
+    <ol class="rules">
+      <li><b>Hablá de su vida, no de tu idea</b>La idea se menciona recién al final, si se menciona.</li>
+      <li><b>Preguntá por el pasado</b>"¿Cuándo fue la última vez que…?" sirve. "¿Usarías…?" no.</li>
+      <li><b>Escuchá más de lo que hablás</b>Si hablás más del 20 % del tiempo, estás vendiendo.</li>
+      <li><b>Desconfiá de los cumplidos</b>"Qué buena idea" no es un dato. Un caso concreto sí.</li>
+      <li><b>Buscá compromisos</b>Que se anote al piloto vale más que "lo pagaría".</li>
+    </ol>
+    <p><strong>Errores típicos de la primera vez:</strong> presentar la idea al principio, hacer preguntas que inducen la respuesta ("¿no te molesta perderte ofertas?"), preguntar "¿pagarías?" y entrevistar solo a amigos cercanos, que te quieren y van a ser amables.</p>
+
+    <h3>A quién y cuántos</h3>
+    <p>Entre 6 y 8 personas que compraron al menos un juego en Steam en los últimos 6 meses. Con 5 o 6 ya suelen repetirse los patrones. Mezclá perfiles: quien compra seguido y quien compra poco, quien usa la wishlist y quien no. Buscalas entre compañeros de la universidad, amigos de amigos y comunidades de jugadores en español.</p>
+
+    <div class="block">
+      <div class="block-head"><strong>Mensaje de invitación</strong><button class="copy" type="button" data-copy="invite">Copiar</button></div>
+      <pre id="invite">Hola, estoy investigando cómo la gente compra juegos en Steam y cómo se entera de las ofertas. ¿Me regalás 20 minutos para una charla por llamada esta semana? No te voy a vender nada; solo quiero escuchar cómo lo hacés vos.</pre>
+    </div>
+
+    <p><strong>Logística:</strong> de 20 a 25 minutos, por videollamada o en persona. Pedí permiso para tomar notas o grabar. Completá la plantilla apenas termina, porque en una hora ya se olvida la mitad, y guardala con un alias en lugar del nombre.</p>
+
+    <div class="block">
+      <div class="block-head"><strong>Guion (25 min)</strong><button class="copy" type="button" data-copy="guide">Copiar guion</button></div>
+      <div class="script" id="guide">
+        <div>
+          <h4>Apertura <span class="time">2 min</span></h4>
+          <ul><li>"Gracias por el tiempo. Estoy investigando cómo la gente compra juegos en Steam y cómo se entera de las ofertas. No hay respuestas correctas y no te voy a vender nada. ¿Te molesta si tomo notas?"</li></ul>
+        </div>
+        <div>
+          <h4>Contexto <span class="time">6 min</span></h4>
+          <ul>
+            <li>"¿Qué estás jugando últimamente?"</li>
+            <li>"¿Cuál fue el último juego que compraste en Steam? Contame cómo fue: cómo lo encontraste, cuándo lo compraste, si estaba en oferta."</li>
+            <li>"¿Cada cuánto comprás juegos? ¿Esperás ofertas o comprás cuando sale?"</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Profundización <span class="time">10 min</span></h4>
+          <ul>
+            <li>"¿Cómo te enterás hoy de las ofertas?" Seguí el hilo: "¿Y eso cada cuánto lo hacés?"</li>
+            <li>"¿Te pasó enterarte de una oferta cuando ya había terminado? Contame la última vez: qué juego, cómo te enteraste, qué hiciste después." Si no le pasó, no lo fuerces y anotalo como "sin problema".</li>
+            <li>"¿Ese juego lo tenías en la wishlist? ¿Cómo usás la wishlist?"</li>
+            <li>"¿Te llegan avisos de ofertas hoy, de Steam o de otro lado? ¿Qué hacés con ellos? Contame el último que ignoraste."</li>
+            <li>"¿Tenés la app de Steam en el teléfono? ¿Con las notificaciones activadas?"</li>
+            <li>"¿Probaste alguna página, canal o app para no perderte ofertas? ¿Por qué la seguís usando, o por qué la dejaste?"</li>
+            <li>"¿Cuánto te importó perderte esa oferta? ¿Lo compraste igual más caro, esperaste a otra o lo dejaste?"</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Reacción <span class="time">5 min, recién ahora</span></h4>
+          <ul>
+            <li>Describí la idea en una sola frase: "Una app que te avisa en el teléfono cuando un juego parecido a los que te gustan está en oferta en tu región, aunque no esté en tu wishlist."</li>
+            <li>"¿Qué te parece? ¿Qué tendría que tener para que la uses? ¿Qué te molestaría?"</li>
+            <li>Fijate en la diferencia entre cortesía ("está buena") y detalle concreto ("si me avisa de roguelikes de menos de 5 dólares, la uso").</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Cierre <span class="time">2 min</span></h4>
+          <ul>
+            <li>"¿Te puedo avisar cuando haya una versión de prueba?"</li>
+            <li>"¿Conocés a alguien a quien le pase esto y que pueda hablar conmigo?"</li>
+            <li>"Gracias."</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><strong>Plantilla de notas, una por entrevista</strong><button class="copy" type="button" data-copy="notes">Copiar plantilla</button></div>
+      <pre id="notes">Alias / fecha:
+Perfil: país de la cuenta | compras por mes | usa wishlist (sí/no/abandonada)
+
+Cómo se entera hoy de las ofertas:
+Cada cuánto compra; espera ofertas o no:
+
+¿Caso concreto reciente de oferta perdida o tardía? (sí/no)
+  Qué juego, cuándo, cómo se enteró:
+  ¿Estaba en la wishlist?:
+  Qué hizo después:
+  Cita textual:
+
+Avisos que recibe hoy y qué hace con ellos:
+Herramientas que probó y por qué las usa o las dejó:
+Intensidad del problema (1 = le da igual, 3 = le molestó y actuó):
+
+Reacción a la idea (frases textuales):
+Qué pidió / qué le molestaría:
+
+Compromisos: ¿se anotó al piloto? ¿te presentó a alguien?
+Sorpresas:</pre>
+    </div>
+
+    <h3>Síntesis</h3>
+    <ol>
+      <li>Después de cada entrevista, 10 minutos para completar la plantilla.</li>
+      <li>Con 5 o más entrevistas, armá un mapa de afinidad: una fila por observación en una planilla y una columna "tema" que vas llenando al agrupar las parecidas.</li>
+      <li>Contá cuántas personas contaron un caso concreto reciente, qué usan hoy y cuántas se anotaron al piloto o te presentaron a alguien.</li>
+      <li>Escribí entre 3 y 5 hallazgos y una frase del tipo "Cuando ___, quiero ___, para ___".</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>5. Encuesta</h2>
+    <p>Suma volumen, pero no reemplaza las entrevistas. Con menos de unas 30 respuestas es solo exploratoria; para cuantificar con confianza hacen falta 100 o más.</p>
+    <div class="block">
+      <div class="block-head"><strong>Preguntas para Google Forms</strong><button class="copy" type="button" data-copy="survey">Copiar preguntas</button></div>
+      <div class="tbl"><table id="survey">
+        <thead><tr><th>#</th><th>Pregunta</th><th>Respuestas</th></tr></thead>
+        <tbody>
+          <tr><td class="n">1</td><td>¿Compraste algún juego en Steam en los últimos 6 meses? (filtro)</td><td>Sí / No (si es No, termina la encuesta)</td></tr>
+          <tr><td class="n">2</td><td>¿En qué país está tu cuenta de Steam?</td><td>Respuesta corta</td></tr>
+          <tr><td class="n">3</td><td>¿Cuántos juegos compraste en Steam en los últimos 6 meses?</td><td>1–2 / 3–5 / 6–10 / Más de 10</td></tr>
+          <tr><td class="n">4</td><td>¿Cuántos de esos estaban en oferta?</td><td>Ninguno / Algunos / La mayoría / Todos</td></tr>
+          <tr><td class="n">5</td><td>¿Cómo te enterás de las ofertas? (varias opciones)</td><td>Email de la wishlist de Steam / Notificaciones de la app de Steam / Navegando la tienda / Amigos / Redes sociales / Reddit / Telegram o Discord / IsThereAnyDeal, SteamDB u otra web / Otra</td></tr>
+          <tr><td class="n">6</td><td>¿Qué te molesta de cómo te enterás hoy? (varias opciones)</td><td>Me entero tarde / Me llegan ofertas que no me interesan / Tengo que buscarlas yo / Los precios no están en mi moneda o región / Nada, estoy conforme / Otra</td></tr>
+          <tr><td class="n">7</td><td>En los últimos 3 meses, ¿te enteraste de la oferta de un juego que te interesaba cuando ya había terminado?</td><td>Sí, varias veces / Sí, una vez / No / No me acuerdo</td></tr>
+          <tr><td class="n">8</td><td>Si respondiste que sí: ¿ese juego estaba en tu wishlist?</td><td>Sí / No / Algunos sí y otros no</td></tr>
+          <tr><td class="n">9</td><td>¿Usás la wishlist de Steam?</td><td>Sí, la mantengo al día / La tengo pero abandonada / No</td></tr>
+          <tr><td class="n">10</td><td>¿Qué tan útil te resultaría recibir en el teléfono ofertas de juegos parecidos a los que te gustan, aunque no estén en tu wishlist?</td><td>Escala 1 a 5 (señal débil: es una opinión sobre el futuro)</td></tr>
+          <tr><td class="n">11</td><td>¿Cuánto gastás en promedio por mes en juegos?</td><td>Nada / Menos de 5 USD / 5–15 USD / 15–30 USD / Más de 30 USD</td></tr>
+          <tr><td class="n">12</td><td>Contanos la última vez que te perdiste una oferta: qué juego era y cómo te enteraste.</td><td>Respuesta larga</td></tr>
+          <tr><td class="n">13</td><td>¿Querés probar una versión temprana? Dejá tu email o usuario de Discord/Telegram.</td><td>Respuesta corta (señal fuerte: es un compromiso)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>6. Piloto con la versión personal</h2>
+    <p>La versión personal se construye igual, porque la necesitás. El piloto es dársela a entre 10 y 20 personas que se anotaron, durante 4 semanas. La cuenta de distribución limitada de Android permite instalarla en hasta 20 dispositivos, gratis y sin documento <span class="chip v">verificado</span>. Las métricas salen de los mismos eventos que ya registra el recomendador.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Métrica</th><th>Qué mide</th></tr></thead>
+      <tbody>
+        <tr><td>% de participantes activos cada semana</td><td>Uso sostenido (H3)</td></tr>
+        <tr><td>% de notificaciones abiertas</td><td>Si los avisos son relevantes</td></tr>
+        <tr><td>Clicks a "Ir a Steam" por persona y semana</td><td>Intención de compra</td></tr>
+        <tr><td>Compras declaradas (botón "Lo compré" o encuesta final)</td><td>Valor real</td></tr>
+        <tr><td>Test de Sean Ellis: "¿Cómo te sentirías si mañana ya no pudieras usar la app?"</td><td>Qué tan necesaria es</td></tr>
+        <tr><td>Anotados a una lista de "precio fundador"</td><td>Primera señal de pago (H4)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>7. Regla de decisión</h2>
+    <p>Se fija antes de ver los datos, para no acomodar los umbrales a los resultados. Todos son criterio propio <span class="chip u">ajustable</span>.</p>
+    <div class="card go" id="decision">
+      <span class="eyebrow">Pasar a diseñar la monetización si se cumplen las tres</span>
+      <ol>
+        <li>Entrevistas: al menos 5 de 8 cuentan un caso concreto de los últimos 3 meses.</li>
+        <li>Piloto: en la semana 4, al menos el 40 % de los participantes sigue activo.</li>
+        <li>Test de Sean Ellis: al menos el 40 % responde "muy decepcionado".</li>
+      </ol>
+      <p class="note">Como el grupo del piloto es cercano y tiende a ser amable, estos umbrales son más exigentes de lo que serían con desconocidos.</p>
+    </div>
+    <ul>
+      <li><strong>Ajustar y repetir el piloto una vez</strong> si el problema aparece en las entrevistas pero el piloto no retiene: el problema existe, pero la solución no convence.</li>
+      <li><strong>Quedarse con la herramienta personal y el portafolio</strong> si menos de 3 de 8 entrevistados cuentan un caso concreto, o si casi nadie se anota al piloto.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>8. Calendario</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Semanas</th><th>Qué</th></tr></thead>
+      <tbody>
+        <tr><td>1–2</td><td>Entrevistas y encuesta; la versión personal se construye en paralelo</td></tr>
+        <tr><td>3–6</td><td>Piloto de 4 semanas</td></tr>
+        <tr><td>7</td><td>Síntesis y decisión</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <footer class="note">La fuente de este documento es <code>docs/validacion.md</code> en el branch <code>claude/awesome-ritchie-eexchg</code> de gisus07/steam-offers-tracker.</footer>
+</div>
+
+<script>
+(function(){
+  function fallback(text, btn, label){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    btn.textContent = ok ? 'Copiado' : 'Seleccioná el texto y copialo';
+    setTimeout(function(){ btn.textContent = label; }, 2000);
+  }
+  function textFor(el){
+    if (el.tagName === 'TABLE') {
+      return Array.prototype.map.call(el.tBodies[0].rows, function(r){
+        return r.cells[0].innerText + '. ' + r.cells[1].innerText + ' — ' + r.cells[2].innerText;
+      }).join('\n');
+    }
+    return el.innerText;
+  }
+  document.querySelectorAll('[data-copy]').forEach(function(btn){
+    var label = btn.textContent;
+    btn.addEventListener('click', function(){
+      var el = document.getElementById(btn.getAttribute('data-copy'));
+      var text = textFor(el);
+      try {
+        navigator.clipboard.writeText(text).then(function(){
+          btn.textContent = 'Copiado';
+          setTimeout(function(){ btn.textContent = label; }, 2000);
+        }, function(){ fallback(text, btn, label); });
+      } catch (e) { fallback(text, btn, label); }
+    });
+  });
+})();
+</script>

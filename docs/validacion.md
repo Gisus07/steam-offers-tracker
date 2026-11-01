@@ -22,7 +22,62 @@ Cuatro hipótesis, de la primera que se prueba a la última. Si una falla, las s
 
 ## 2. Mercado
 
-_Pendiente: se completa con la investigación de competidores y benchmarks._
+### 2.1 Lo que ya hace Steam [verificado en la documentación de Steamworks y en el anuncio de Valve]
+
+- **Wishlist:** Steam avisa por email o push cuando un juego de tu wishlist baja **20 % o más**. El descuento tiene que tocar el paquete más barato y durar más de 8 horas. Hay un enfriamiento de 2 semanas por juego, más largo en las grandes rebajas.
+- **Fuera de la wishlist:** Steam ya muestra ofertas recomendadas para cada usuario, pero **solo dentro de la tienda**. No encontré push ni email de ofertas por gusto fuera de la wishlist [fuente secundaria].
+- **Lo que viene:** el 29-sep-2026 Valve anunció que **a principios de 2027** reemplaza el calendario curado de "Discounts & Events" por un sistema **dinámico y personalizado para cada cliente**. Ya pausó las Daily, Midweek y Weekend Deals. En sus pruebas mostró 10 veces más juegos por día y subieron las visitas, las wishlists y los carritos.
+
+### 2.2 Competidores y sustitutos
+
+| Nombre | Tipo | Personaliza fuera de la wishlist | Push / alertas | Precio regional | Cómo se financia | Señal de demanda |
+|---|---|---|---|---|---|---|
+| Steam | Tienda + app oficial | Parcial: solo dentro de la tienda | Email/push solo de wishlist | Nativo; Venezuela usa el nivel USD_LATAM | Venta de juegos | App Android 100M+ instalaciones |
+| IsThereAnyDeal | Web + API | No | Email de la Waitlist, webhooks | Por país | Afiliados + Patreon | Grupo de Steam: 15,8K |
+| Augmented Steam | Extensión | No | No | Vía ITAD | Afiliados | Chrome: 400K usuarios |
+| GG.deals | Web + extensión | No | Email y push de navegador [fuente secundaria] | 19 regiones | Afiliados; premium "planeado" [fuente secundaria] | Grupo de Steam: 38,9K |
+| SteamDB | Web + extensión | No | No consta | Todas las monedas | GitHub Sponsors | Chrome: 700K usuarios |
+| GameTrack | App Android/iOS | Parcial: "match score" y ofertas ordenadas por interés | Alertas de precio solo en el plan pago | Sin confirmar | Suscripción (GameTrack+) | Android 10K+; iOS 1251 valoraciones |
+| Sales for Gaming | App Android | No | No, solo lista | Sí | Anuncios | 100K+ |
+| Bestgameprice | App Android | No | Alertas de precio | No deja cambiar moneda (queja) | — | 100K+, sin actualizar desde oct-2024 |
+| GET – Steam & Epic Alert | App Android | No | Push de gratis y descuentos | Sin confirmar | Gratis | 50K+, sin actualizar desde jul-2025 |
+| Steamly | Bot de Discord | Parcial: puntúa tu wishlist según tus horas jugadas | DM o canal | Sí | Gratis | 7 servidores |
+| r/GameDeals, r/Steam | Reddit | No | No | No | — | 975K / 5,4M miembros [fuente secundaria] |
+| Canales de Telegram en español | Difusión | No | Difusión | Euros (son de España) | Afiliados de Amazon | 2K–21K suscriptores |
+
+Datos [verificado] en las fichas de Google Play, Chrome Web Store, grupos de Steam y canales de Telegram, salvo donde dice lo contrario. Hay más apps chicas (SaleStash, ST Deals, GameDeal, G Dealz) con 10 a 10K instalaciones. Las apps de juegos gratis tienen más tracción que las de ofertas: Epic Freebie Games Radar, 5M+.
+
+### 2.3 Lo que se repite en las reseñas
+
+Indicativo: Google Play muestra pocas reseñas por ficha.
+
+1. **No se puede ocultar lo que ya tenés ni marcar "no me interesa".** Es la queja más repetida.
+2. **Notificaciones que no se pueden configurar** (umbral de %, tipo de aviso) **o que nunca llegan.** En el foro de Steam piden lo mismo para la wishlist, porque el ruido hace que la gente apague los avisos.
+3. **Apps que solo listan, sin alertas.**
+4. **Catálogo vacío o incompleto, sin actualización automática.**
+5. **Región y moneda:** apps que no dejan cambiar la moneda o no tienen precios de la región del usuario.
+
+### 2.4 Huecos y riesgos
+
+- **Push de ofertas por gusto, fuera de la wishlist: el hueco existe pero es angosto.** Los que se acercan son parciales (GameTrack cobra las alertas; Steamly casi no tiene usuarios).
+- **El mayor riesgo es Valve.** Tiene los datos, acaba de comprobar que personalizar ofertas funciona (10 veces más juegos vistos) y podría sumar "ofertas recomendadas" a sus notificaciones cuando quiera. La propuesta no puede depender solo de "te aviso fuera de la wishlist".
+- **Aprender de lo que descartás** (ocultar, "no me interesa", tiempo de vista) responde a la queja más repetida, y no vi a nadie que diga hacerlo [no verificado].
+- **LatAm:** no encontré canales ni bots de ofertas de Steam pensados para LatAm. Lo grande en español es de España, en euros.
+- **La fecha de fin no diferencia:** ya la muestran Steamly, ST Deals y GameTrack.
+
+### 2.5 Cómo se financian y qué dice eso del pago
+
+- **Afiliados:** ITAD, GG.deals y los canales de Telegram. **Steam no tiene un programa de afiliados público** [fuente secundaria]: si la app solo enlaza a Steam, no cobra comisión.
+- **Donaciones:** ITAD (Patreon), SteamDB (GitHub Sponsors).
+- **Anuncios:** casi todas las apps chicas.
+- **Suscripción o compras en la app:** GameTrack+ cobra las alertas; otras apps chicas venden de 0,99 a 16,99 USD.
+- **Evidencia de que la gente paga solo por alertas de ofertas: débil.** Ninguno publica ingresos y hay alternativas gratis sin anuncios. Por eso H4 es la hipótesis más riesgosa, y se prueba al final.
+
+### 2.6 Qué cambia en la validación
+
+- En las entrevistas, además del "me enteré tarde", hay que explorar el **ruido**: qué hacen con los avisos que les llegan hoy y cuáles ignoran. Puede que el dolor real sea la relevancia y no la cobertura.
+- Preguntar si usan las notificaciones de la app de Steam: si ya les alcanzan, el problema es menor.
+- Reclutar en comunidades de LatAm, donde no hay un competidor fuerte.
 
 ---
 
@@ -76,6 +131,8 @@ Mensaje de invitación listo para copiar:
 - "¿Te pasó enterarte de una oferta cuando ya había terminado? Contame la última vez: qué juego, cómo te enteraste, qué hiciste después."
   - Si no le pasó, no lo fuerces: anotalo como "sin problema". Ese dato vale tanto como el contrario.
 - "¿Ese juego lo tenías en la wishlist? ¿Cómo usás la wishlist?"
+- "¿Te llegan avisos de ofertas hoy, de Steam o de otro lado? ¿Qué hacés con ellos? Contame el último que ignoraste."
+- "¿Tenés la app de Steam en el teléfono? ¿Con las notificaciones activadas?"
 - "¿Probaste alguna página, canal o app para no perderte ofertas? ¿Por qué la seguís usando, o por qué la dejaste?"
 - "¿Cuánto te importó perderte esa oferta? ¿Lo compraste igual más caro, esperaste a otra o lo dejaste?"
 
@@ -136,14 +193,15 @@ Preguntas listas para Google Forms:
 2. ¿En qué país está tu cuenta de Steam? — Respuesta corta
 3. ¿Cuántos juegos compraste en Steam en los últimos 6 meses? — 1–2 / 3–5 / 6–10 / Más de 10
 4. ¿Cuántos de esos estaban en oferta? — Ninguno / Algunos / La mayoría / Todos
-5. ¿Cómo te enterás de las ofertas? (varias opciones) — Wishlist de Steam (email o app) / Navegando la tienda / Amigos / Redes sociales / Reddit / Telegram o Discord / IsThereAnyDeal, SteamDB u otra web / Otra
-6. En los últimos 3 meses, ¿te enteraste de la oferta de un juego que te interesaba cuando ya había terminado? — Sí, varias veces / Sí, una vez / No / No me acuerdo
-7. Si respondiste que sí: ¿ese juego estaba en tu wishlist? — Sí / No / Algunos sí y otros no
-8. ¿Usás la wishlist de Steam? — Sí, la mantengo al día / La tengo pero abandonada / No
-9. ¿Qué tan útil te resultaría recibir en el teléfono ofertas de juegos parecidos a los que te gustan, aunque no estén en tu wishlist? — Escala 1 a 5 (**señal débil**: es una opinión sobre el futuro)
-10. ¿Cuánto gastás en promedio por mes en juegos? — Nada / Menos de 5 USD / 5–15 USD / 15–30 USD / Más de 30 USD
-11. Contanos la última vez que te perdiste una oferta: qué juego era y cómo te enteraste. — Respuesta larga
-12. ¿Querés probar una versión temprana? Dejá tu email o usuario de Discord/Telegram. — Respuesta corta (**señal fuerte**: es un compromiso)
+5. ¿Cómo te enterás de las ofertas? (varias opciones) — Email de la wishlist de Steam / Notificaciones de la app de Steam / Navegando la tienda / Amigos / Redes sociales / Reddit / Telegram o Discord / IsThereAnyDeal, SteamDB u otra web / Otra
+6. ¿Qué te molesta de cómo te enterás hoy? (varias opciones) — Me entero tarde / Me llegan ofertas que no me interesan / Tengo que buscarlas yo / Los precios no están en mi moneda o región / Nada, estoy conforme / Otra
+7. En los últimos 3 meses, ¿te enteraste de la oferta de un juego que te interesaba cuando ya había terminado? — Sí, varias veces / Sí, una vez / No / No me acuerdo
+8. Si respondiste que sí: ¿ese juego estaba en tu wishlist? — Sí / No / Algunos sí y otros no
+9. ¿Usás la wishlist de Steam? — Sí, la mantengo al día / La tengo pero abandonada / No
+10. ¿Qué tan útil te resultaría recibir en el teléfono ofertas de juegos parecidos a los que te gustan, aunque no estén en tu wishlist? — Escala 1 a 5 (**señal débil**: es una opinión sobre el futuro)
+11. ¿Cuánto gastás en promedio por mes en juegos? — Nada / Menos de 5 USD / 5–15 USD / 15–30 USD / Más de 30 USD
+12. Contanos la última vez que te perdiste una oferta: qué juego era y cómo te enteraste. — Respuesta larga
+13. ¿Querés probar una versión temprana? Dejá tu email o usuario de Discord/Telegram. — Respuesta corta (**señal fuerte**: es un compromiso)
 
 ---
 
