@@ -1,18 +1,28 @@
-Aviso breve que confirma una acción, ofrece deshacerla o informa un error, flotando sin empujar el contenido. Hay tres variantes en evaluación; se elige una.
+Aviso breve que ofrece deshacer una acción o informa un error. Sale de la barra de navegación: no flota aparte ni empuja el contenido.
 
-## Variantes en evaluación
-- **A · Cápsula invertida:** pastilla en `ink` con texto `bg` y la acción en `accent-on-inverse`. Se lee en cualquier pantalla porque invierte el tema. Flota sobre la navegación.
-- **B · Isla superior:** cápsula chica arriba al centro, en `surface-raised`, que crece para mostrar la acción. No tapa la navegación ni las tarjetas de abajo.
-- **C · Barra con tiempo:** tarjeta sobre la navegación con una línea `accent` que se vacía en 5 s: muestra cuánto queda para deshacer.
+## Cómo se ve
+- La cápsula de la barra crece hacia arriba y a lo ancho: pasa de 232×64 a 358×124px y su radio, de 32 a 28px.
+- Encima de los íconos muestra una fila con ícono, frase y una acción. Los íconos siguen visibles y funcionan mientras dura el aviso.
+- **Deshacer:**
+  - ícono `eye-off` en `ink-2`;
+  - "No te mostraremos más este juego";
+  - **Deshacer**, como botón primario compacto.
+- **Error:**
+  - ícono `circle-alert` en `bad`;
+  - qué pasó, por ejemplo "No pudimos actualizar las ofertas";
+  - **Reintentar**.
+- **Sin barra (primer uso):** el error va en línea, junto a la acción que falló.
 
-## Reglas comunes
-- Uno a la vez: el nuevo reemplaza al anterior. Dura 5 s; tocarlo pausa el tiempo.
-- Ícono de Lucide y una frase: "No te mostraremos más este juego" · Deshacer. Error: ícono `circle-alert` en `bad`, qué pasó y Reintentar.
-- Nunca empuja el contenido ni bloquea la lista.
+## Reglas
+- Uno a la vez: el nuevo reemplaza al anterior. Dura 5 s.
+- Guardar no muestra aviso: el botón cambia y el ícono de Guardados late.
+- La frase ocupa una o dos líneas, a 13px y peso 600. La acción dice lo que hace.
 
 ## Movimiento
-- A y C entran desde abajo (`y` 24 → 0, muelle 420/26); B baja desde arriba y se expande a lo ancho (muelle 420/28). Salen con fundido de 150 ms. C anima su línea de tiempo de forma lineal en 5 s. Con "reducir movimiento", solo fundido y la línea queda fija.
+- **Abrir:** ancho, alto y radio con muelle 420/28. La fila del mensaje entra con un fundido de 220 ms que empieza a los 160 ms, cuando ya hay espacio.
+- **Cerrar:** orden inverso. Primero se va el mensaje (120 ms) y después la cápsula vuelve a su tamaño.
+- **Con "reducir movimiento":** la cápsula cambia de tamaño en 150 ms, sin muelle, y el mensaje solo aparece.
 
 ## En la app
-- `sonner-native`, dibujado con `toast.custom()` sobre los tokens. Configuración en Implementación en la app.
-- No se usa el toast del sistema de Android: no admite el botón Deshacer.
+- Es un componente propio dentro de la barra, no una librería de toasts.
+- El estado vive en un store de Zustand y la forma se anima con Reanimated (ver Implementación en la app).

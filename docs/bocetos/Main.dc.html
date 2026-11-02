@@ -13,13 +13,16 @@
 body{margin:0}
 </style>
 </helmet>
-<div data-theme="{{theme}}" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans);">
+<div data-theme="{{theme}}" data-proto-root="1" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans);">
   <div style="height: 844px; overflow-y: auto; box-sizing: border-box; padding: 28px 16px 120px; display: flex; flex-direction: column; gap: 16px;">
-    <header style="display: flex; flex-direction: column; gap: 4px;">
-      <h1 style="margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 36px; letter-spacing: 0.005em;">Para ti</h1>
-      <p style="margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-2);">Actualizado hace 2 h · Venezuela · precios en USD</p>
+    <header style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
+      <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+        <h1 style="margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 36px; letter-spacing: 0.005em;">Para ti</h1>
+        <p style="margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-2);">{{updated}}</p>
+      </div>
+      <button type="button" aria-label="Actualizar" onClick="{{refresh}}" style="width: 44px; height: 44px; flex: none; display: grid; place-items: center; margin: 0; padding: 0; border: 0; border-radius: 22px; background: var(--surface-raised); color: var(--ink-2); cursor: pointer;"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{spinStyle}}"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg></button>
     </header>
-    <div role="tablist" aria-label="Vista" style="position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px; border-radius: 12px; background: var(--surface-raised);">
+    <div role="tablist" aria-label="Vista" style="position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px; border-radius: 22px; background: var(--surface-raised);">
       <span aria-hidden="true" style="{{pillStyle}}"></span>
       <button type="button" role="tab" aria-selected="{{forYouSelected}}" onClick="{{showForYou}}" style="{{forYouTabStyle}}">Para ti</button>
       <button type="button" role="tab" aria-selected="{{soonSelected}}" onClick="{{showSoon}}" style="{{soonTabStyle}}">Terminan pronto</button>
@@ -27,70 +30,236 @@ body{margin:0}
     <sc-if value="{{isSoon}}" hint-placeholder-val="{{false}}">
       <p style="margin: 0; font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hot);">Terminan en menos de 24 horas</p>
     </sc-if>
-    <sc-for list="{{cards}}" as="item" hint-placeholder-count="3">
-      <dc-import name="Card" item="{{item}}" hint-size="358px,400px"></dc-import>
-    </sc-for>
+    <div style="position: relative; display: flex; flex-direction: column; gap: 16px;">
+      <sc-if value="{{showSkeleton}}" hint-placeholder-val="{{false}}">
+        <div aria-hidden="true" style="{{skelStyle}}">
+          <sc-for list="{{skelRows}}" as="r" hint-placeholder-count="2">
+            <div style="width: 358px; box-sizing: border-box; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;">
+              <div style="height: 205px; background: var(--surface-raised);"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 16px 14px;">
+                <div style="height: 18px; width: 72%; border-radius: 8px; background: var(--surface-raised);"></div>
+                <div style="display: flex; gap: 6px;">
+                  <div style="height: 26px; width: 84px; border-radius: 999px; background: var(--surface-raised);"></div>
+                  <div style="height: 26px; width: 96px; border-radius: 999px; background: var(--surface-raised);"></div>
+                  <div style="height: 26px; width: 70px; border-radius: 999px; background: var(--surface-raised);"></div>
+                </div>
+                <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 2px;">
+                  <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <div style="height: 26px; width: 120px; border-radius: 999px; background: var(--surface-raised);"></div>
+                    <div style="height: 26px; width: 150px; border-radius: 8px; background: var(--surface-raised);"></div>
+                  </div>
+                  <div style="display: flex; gap: 8px;">
+                    <div style="width: 44px; height: 44px; border-radius: 22px; background: var(--surface-raised);"></div>
+                    <div style="width: 44px; height: 44px; border-radius: 22px; background: var(--surface-raised);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{showContent}}" hint-placeholder-val="{{true}}">
+        <sc-for list="{{cards}}" as="item" hint-placeholder-count="3">
+          <div style="{{item.wrapStyle}}">
+            <dc-import name="Card" item="{{item}}" hint-size="358px,400px"></dc-import>
+          </div>
+        </sc-for>
+      </sc-if>
+    </div>
   </div>
-  <sc-if value="{{showToast}}" hint-placeholder-val="{{false}}">
-    <div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 96px; display: flex; justify-content: center;">
-      <div style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 6px 6px 16px; border-radius: 999px; background: var(--ink); color: var(--bg); box-shadow: var(--shadow-float); font-size: 14px; line-height: 20px; font-weight: 500;">
-        <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path><path d="m2 2 20 20"></path></svg>
-        <span>No te mostraremos más este juego</span>
-        <button type="button" onClick="{{undo}}" style="height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: var(--accent-on-inverse); font-family: var(--font-sans); font-weight: 700; font-size: 14px; cursor: pointer;">Deshacer</button>
-      </div>
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 10;">
+    <dc-import name="Nav" active="parati" bump="{{bump}}" toast="{{toast}}" hint-size="358px,64px"></dc-import>
+  </div>
+  <sc-if value="{{hasDetail}}" hint-placeholder-val="{{false}}">
+    <div style="{{detailStyle}}">
+      <dc-import name="Detalle" theme="{{theme}}" item="{{detailItem}}" saved="{{detailSaved}}" onSave="{{detailSave}}" onClose="{{closeDetail}}" onDismiss="{{detailDismiss}}" hint-size="390px,844px"></dc-import>
     </div>
   </sc-if>
-  <div style="position: absolute; left: 16px; right: 16px; bottom: 16px;">
-    <dc-import name="Nav" active="parati" hint-size="358px,64px"></dc-import>
-  </div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
+  componentDidMount() { this.timers = []; this.tok = {}; this.load(); }
+  componentWillUnmount() { (this.timers || []).forEach(function (t) { clearTimeout(t); }); clearTimeout(this.toastT); }
+  later(ms, fn) { if (!this.timers) this.timers = []; this.timers.push(setTimeout(fn, ms)); }
+  load() {
+    var self = this;
+    this.setState({ phase: 'loading', skel: true });
+    this.later(900, function () { self.reveal(); });
+  }
+  reveal() {
+    var self = this;
+    this.rev = (this.rev || 0) + 1;
+    var n = this.rev;
+    this.setState({ phase: 'enter' });
+    this.later(40, function () { if (self.rev === n) self.setState({ phase: 'shown' }); });
+    this.later(900, function () { if (self.rev === n) self.setState({ phase: 'done', skel: false }); });
+  }
+  refresh() {
+    var cur = this.state || {};
+    if (cur.phase && cur.phase !== 'done') return;
+    this.hideToast();
+    this.setState({ spin: (cur.spin || 0) + 1, fresh: true });
+    this.load();
+  }
+  showTab(t) {
+    var cur = this.state || {};
+    if ((cur.tab || 'foryou') === t) return;
+    this.hideToast();
+    this.setState({ tab: t, skel: false });
+    this.reveal();
+  }
+  savedOf(cur) { return Object.assign({ 588650: true }, cur.saved); }
+  toggleSave(id) {
+    var cur = this.state || {};
+    var sv = this.savedOf(cur);
+    var now = !sv[id];
+    sv[id] = now;
+    this.setState({ saved: sv, bump: now ? (cur.bump || 0) + 1 : (cur.bump || 0) });
+  }
+  setSt(id, v) {
+    var m = Object.assign({}, (this.state || {}).st);
+    if (v) m[id] = v; else delete m[id];
+    this.setState({ st: m });
+  }
+  dismiss(id) {
+    var self = this;
+    if (!this.tok) this.tok = {};
+    var t = this.tok[id] = (this.tok[id] || 0) + 1;
+    this.setSt(id, 'out');
+    this.later(220, function () {
+      if (self.tok[id] !== t) return;
+      self.setSt(id, 'gone');
+      self.showToast({ kind: 'undo', text: 'No te mostraremos más este juego', action: 'Deshacer', onAction: function () { self.undo(id); } });
+    });
+  }
+  undo(id) {
+    var self = this;
+    if (!this.tok) this.tok = {};
+    var t = this.tok[id] = (this.tok[id] || 0) + 1;
+    this.hideToast();
+    this.setSt(id, 'out');
+    this.later(280, function () { if (self.tok[id] === t) self.setSt(id, null); });
+  }
+  showToast(t) {
+    var self = this;
+    clearTimeout(this.toastT);
+    this.setState({ toast: t });
+    this.toastT = setTimeout(function () { self.setState({ toast: null }); }, 5000);
+  }
+  hideToast() {
+    clearTimeout(this.toastT);
+    if ((this.state || {}).toast) this.setState({ toast: null });
+  }
+  openDetail(g, e) {
+    var self = this;
+    var origin = '50% 40%';
+    try {
+      var el = e && e.currentTarget;
+      var root = el && el.closest ? el.closest('[data-proto-root]') : null;
+      if (el && root) {
+        var r = el.getBoundingClientRect();
+        var rr = root.getBoundingClientRect();
+        var k = rr.width / 390 || 1;
+        origin = Math.round((r.left - rr.left + r.width / 2) / k) + 'px ' + Math.round((r.top - rr.top + r.height * 0.35) / k) + 'px';
+      }
+    } catch (err) {}
+    this.setState({ detail: { id: g.id, stage: 'enter', origin: origin } });
+    this.later(30, function () {
+      var d = (self.state || {}).detail;
+      if (d && d.stage === 'enter') self.setState({ detail: Object.assign({}, d, { stage: 'open' }) });
+    });
+  }
+  closeDetail(then) {
+    var self = this;
+    var d = (this.state || {}).detail;
+    if (!d || d.stage === 'exit') return;
+    this.setState({ detail: Object.assign({}, d, { stage: 'exit' }) });
+    this.later(220, function () {
+      self.setState({ detail: null });
+      if (typeof then === 'function') then();
+    });
+  }
   renderVals() {
     var s = this.state || {};
-    var tab = s.tab || 'foryou';
-    var saved = s.saved || { 588650: true };
-    var hidden = s.hidden || {};
     var self = this;
+    var tab = s.tab || 'foryou';
+    var phase = s.phase || 'loading';
+    var saved = this.savedOf(s);
+    var st = s.st || {};
     var FEED = [
-      { id: 452060, name: 'Caveblazers', pct: 91, was: 'USD 5,79', now: 'USD 0,52', ends: 'Termina en 7 d 17 h', hot: false, explore: false, tags: ['Roguelike de acción', 'Plataformas', 'Pixelados'] },
-      { id: 588650, name: 'Dead Cells', pct: 50, was: 'USD 12,49', now: 'USD 6,24', ends: 'Termina en 2 d 18 h', hot: false, explore: false, tags: ['Aventura', 'Roguelike', 'Metroidvania'] },
-      { id: 1776840, name: 'Overbowed', pct: 91, was: 'USD 4,99', now: 'USD 0,44', ends: 'Termina en 12 d 13 h', hot: false, explore: false, tags: ['Metroidvania', 'Acción', 'Aventura'] },
-      { id: 304430, name: 'INSIDE', pct: 90, was: 'USD 13,39', now: 'USD 1,33', ends: 'Termina mañana, 14:00', hot: true, explore: true, tags: ['2.5D', 'Plataformas de puzles'] },
-      { id: 1815230, name: 'Summum Aeterna', pct: 80, was: 'USD 10,49', now: 'USD 2,09', ends: 'Termina mañana, 14:00', hot: true, explore: false, tags: ['Aventura', 'Roguelite', 'Roguelike de acción'] },
-      { id: 1083310, name: 'OUTBUDDIES DX', pct: 93, was: 'USD 9,29', now: 'USD 0,65', ends: 'Termina mañana, 13:00', hot: true, explore: false, tags: ['Indie', 'Metroidvania', 'Acción'] }
+      { id: 452060, name: 'Caveblazers', pct: 91, was: 'USD 5,79', now: 'USD 0,52', save: 'USD 5,27', ends: 'Termina en 7 d 17 h', endAbs: '9 de noviembre, 13:00', hot: false, explore: false, reviewPct: 85, reviews: '3.437', dev: 'Deadpan Games', tags: ['Roguelike de acción', 'Plataformas', 'Pixelados'] },
+      { id: 588650, name: 'Dead Cells', pct: 50, was: 'USD 12,49', now: 'USD 6,24', save: 'USD 6,25', ends: 'Termina en 2 d 18 h', endAbs: '4 de noviembre, 14:00', hot: false, explore: false, reviewPct: 97, reviews: '157.300', dev: 'Motion Twin', tags: ['Aventura', 'Roguelike', 'Metroidvania'] },
+      { id: 1776840, name: 'Overbowed', pct: 91, was: 'USD 4,99', now: 'USD 0,44', save: 'USD 4,55', ends: 'Termina en 12 d 13 h', endAbs: '14 de noviembre, 09:00', hot: false, explore: false, reviewPct: 91, reviews: '96', dev: 'Klardonics Digital y tsuwami', tags: ['Metroidvania', 'Acción', 'Aventura'] },
+      { id: 304430, name: 'INSIDE', pct: 90, was: 'USD 13,39', now: 'USD 1,33', save: 'USD 12,06', ends: 'Termina mañana, 14:00', endAbs: '2 de noviembre, 14:00', hot: true, explore: true, reviewPct: 97, reviews: '70.291', dev: 'Playdead', tags: ['2.5D', 'Plataformas de puzles'] },
+      { id: 1815230, name: 'Summum Aeterna', pct: 80, was: 'USD 10,49', now: 'USD 2,09', save: 'USD 8,40', ends: 'Termina mañana, 14:00', endAbs: '2 de noviembre, 14:00', hot: true, explore: false, reviewPct: 83, reviews: '316', dev: 'Aeternum Game Studios S.L', tags: ['Aventura', 'Roguelite', 'Roguelike de acción'] },
+      { id: 1083310, name: 'OUTBUDDIES DX', pct: 93, was: 'USD 9,29', now: 'USD 0,65', save: 'USD 8,64', ends: 'Termina mañana, 13:00', endAbs: '2 de noviembre, 13:00', hot: true, explore: false, reviewPct: 69, reviews: '202', dev: 'Julian Laufer', tags: ['Indie', 'Metroidvania', 'Acción'] }
     ];
     var SOON = [
-      { id: 1083310, name: 'OUTBUDDIES DX', pct: 93, was: 'USD 9,29', now: 'USD 0,65', ends: 'Termina mañana, 13:00', hot: true, explore: false, tags: ['Indie', 'Metroidvania', 'Acción'] },
-      { id: 1815230, name: 'Summum Aeterna', pct: 80, was: 'USD 10,49', now: 'USD 2,09', ends: 'Termina mañana, 14:00', hot: true, explore: false, tags: ['Aventura', 'Roguelite', 'Roguelike de acción'] },
-      { id: 752500, name: 'Ghoulboy - Dark Sword of Goblin', pct: 85, was: 'USD 4,99', now: 'USD 0,74', ends: 'Termina mañana, 14:00', hot: true, explore: false, tags: ['Acción', 'Aventura', 'Indie'] },
-      { id: 48000, name: 'LIMBO', pct: 90, was: 'USD 6,69', now: 'USD 0,66', ends: 'Termina mañana, 14:00', hot: true, explore: false, tags: ['Plataformas de puzles', 'Indie'] }
+      FEED[5],
+      FEED[4],
+      { id: 752500, name: 'Ghoulboy - Dark Sword of Goblin', pct: 85, was: 'USD 4,99', now: 'USD 0,74', save: 'USD 4,25', ends: 'Termina mañana, 14:00', endAbs: '2 de noviembre, 14:00', hot: true, explore: false, reviewPct: 79, reviews: '162', dev: 'Serkan Bakar', tags: ['Acción', 'Aventura', 'Indie'] },
+      { id: 48000, name: 'LIMBO', pct: 90, was: 'USD 6,69', now: 'USD 0,66', save: 'USD 6,03', ends: 'Termina mañana, 14:00', endAbs: '2 de noviembre, 14:00', hot: true, explore: false, reviewPct: 91, reviews: '40.941', dev: 'Playdead', tags: ['Plataformas de puzles', 'Indie'] }
     ];
-    var list = (tab === 'soon' ? SOON : FEED).filter(function (g) { return !hidden[g.id]; });
-    var cards = list.map(function (g) {
-      var isSaved = !!saved[g.id];
+    var list = tab === 'soon' ? SOON : FEED;
+    function wrap(g, i) {
+      var k = st[g.id];
+      var away = k === 'out' || k === 'gone';
+      var flat = k === 'gone';
+      var hidden = phase === 'enter';
+      var d = phase === 'shown' ? i * 70 : 0;
+      var tr = hidden ? 'none' : (k
+        ? 'transform 220ms cubic-bezier(.4, 0, 1, 1), opacity 200ms linear, max-height 260ms cubic-bezier(.2, 0, 0, 1), margin-top 260ms cubic-bezier(.2, 0, 0, 1)'
+        : 'transform 320ms cubic-bezier(.2, .8, .2, 1) ' + d + 'ms, opacity 280ms ease ' + d + 'ms, max-height 260ms cubic-bezier(.2, 0, 0, 1), margin-top 260ms cubic-bezier(.2, 0, 0, 1)');
+      return 'max-height: ' + (flat ? 0 : 440) + 'px; margin-top: ' + (flat ? -16 : 0) + 'px; overflow: ' + (k ? 'hidden' : 'visible') + '; opacity: ' + ((away || hidden) ? 0 : 1) + '; transform: translateX(' + (away ? '-110%' : '0') + ') translateY(' + (hidden ? 12 : 0) + 'px); transition: ' + tr + ';' + (flat ? ' pointer-events: none;' : '');
+    }
+    var cards = list.map(function (g, i) {
       return Object.assign({}, g, {
-        saved: isSaved,
-        save: function () { var n = Object.assign({}, saved); n[g.id] = !isSaved; self.setState({ saved: n }); },
-        dismiss: function () { var h = Object.assign({}, hidden); h[g.id] = true; self.setState({ hidden: h, lastHidden: g.id, toast: true }); }
+        saved: !!saved[g.id],
+        wrapStyle: wrap(g, i),
+        onSave: function () { self.toggleSave(g.id); },
+        onDismiss: function () { self.dismiss(g.id); },
+        onOpen: function (e) { self.openDetail(g, e); }
       });
     });
     var spring = 'cubic-bezier(.3, 1.3, .45, 1)';
-    var tabBase = 'position: relative; z-index: 1; height: 36px; border: 0; background: transparent; font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 18px; border-radius: 8px; cursor: pointer; transition: color 200ms ease;';
+    var tabBase = 'position: relative; z-index: 1; height: 36px; margin: 0; padding: 0; border: 0; background: transparent; font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 18px; border-radius: 18px; cursor: pointer; transition: color 200ms ease;';
+    var det = s.detail || null;
+    var all = FEED.concat(SOON);
+    var dItem = null;
+    if (det) { for (var j = 0; j < all.length; j++) { if (all[j].id === det.id) { dItem = all[j]; break; } } }
+    var stage = det ? det.stage : null;
     return {
       theme: this.props.theme ?? 'dark',
+      updated: phase === 'loading' ? 'Buscando ofertas en Venezuela…' : ((s.fresh ? 'Actualizado ahora' : 'Actualizado hace 2 h') + ' · Venezuela · precios en USD'),
+      spinStyle: 'width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transform: rotate(' + ((s.spin || 0) * 360) + 'deg); transition: transform 700ms cubic-bezier(.3, 1.2, .45, 1);',
+      refresh: function () { self.refresh(); },
       cards: cards,
       isSoon: tab === 'soon',
       forYouSelected: tab === 'foryou',
       soonSelected: tab === 'soon',
-      pillStyle: 'position: absolute; top: 4px; bottom: 4px; left: 4px; width: 175px; border-radius: 8px; background: var(--surface); box-shadow: var(--shadow-card); transform: translateX(' + (tab === 'soon' ? 175 : 0) + 'px); transition: transform 380ms ' + spring + ';',
+      pillStyle: 'position: absolute; top: 4px; bottom: 4px; left: 4px; width: 175px; border-radius: 18px; background: var(--surface); box-shadow: var(--shadow-card); transform: translateX(' + (tab === 'soon' ? 175 : 0) + 'px); transition: transform 380ms ' + spring + ';',
       forYouTabStyle: tabBase + ' color: ' + (tab === 'foryou' ? 'var(--ink)' : 'var(--ink-2)') + ';',
       soonTabStyle: tabBase + ' color: ' + (tab === 'soon' ? 'var(--ink)' : 'var(--ink-2)') + ';',
-      showForYou: function () { self.setState({ tab: 'foryou' }); },
-      showSoon: function () { self.setState({ tab: 'soon' }); },
-      showToast: !!s.toast,
-      undo: function () { var h = Object.assign({}, hidden); delete h[s.lastHidden]; self.setState({ hidden: h, toast: false }); }
+      showForYou: function () { self.showTab('foryou'); },
+      showSoon: function () { self.showTab('soon'); },
+      showSkeleton: phase === 'loading' || (!!s.skel && phase !== 'done'),
+      skelStyle: 'position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 16px; pointer-events: none; opacity: ' + (phase === 'shown' ? 0 : 1) + '; transition: opacity 220ms ease;',
+      skelRows: [1, 2],
+      showContent: phase !== 'loading',
+      bump: s.bump || 0,
+      toast: s.toast || null,
+      hasDetail: !!(det && dItem),
+      detailStyle: 'position: absolute; inset: 0; z-index: 30; transform-origin: ' + (det ? det.origin : '50% 50%') + '; transform: scale(' + (stage === 'open' ? 1 : (stage === 'exit' ? 0.94 : 0.9)) + '); opacity: ' + (stage === 'open' ? 1 : 0) + '; transition: ' + (stage === 'enter' ? 'none' : (stage === 'open' ? 'opacity 200ms ease-out, transform 340ms cubic-bezier(.3, 1.15, .45, 1)' : 'opacity 180ms ease-in, transform 220ms cubic-bezier(.4, 0, 1, 1)')) + ';' + (stage === 'exit' ? ' pointer-events: none;' : ''),
+      detailItem: dItem,
+      detailSaved: det ? !!saved[det.id] : false,
+      detailSave: function () { if (det) self.toggleSave(det.id); },
+      closeDetail: function () { self.closeDetail(); },
+      detailDismiss: function () {
+        if (!det) return;
+        var id = det.id;
+        self.closeDetail(function () { self.dismiss(id); });
+      }
     };
   }
 }

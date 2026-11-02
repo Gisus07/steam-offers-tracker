@@ -19,16 +19,18 @@ body{margin:0}
       <h1 style="margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 36px; letter-spacing: 0.005em;">Para ti</h1>
       <p style="margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-2);">Actualizado hace 10 min · Venezuela · precios en USD</p>
     </header>
-    <div role="tablist" aria-label="Vista" style="position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px; border-radius: 12px; background: var(--surface-raised);">
-      <span aria-hidden="true" style="position: absolute; top: 4px; bottom: 4px; left: 4px; width: 175px; border-radius: 8px; background: var(--surface); box-shadow: var(--shadow-card);"></span>
-      <button type="button" role="tab" aria-selected="true" style="position: relative; z-index: 1; height: 36px; border: 0; background: transparent; color: var(--ink); font-family: var(--font-sans); font-weight: 600; font-size: 14px; border-radius: 8px;">Para ti</button>
-      <button type="button" role="tab" aria-selected="false" style="position: relative; z-index: 1; height: 36px; border: 0; background: transparent; color: var(--ink-2); font-family: var(--font-sans); font-weight: 600; font-size: 14px; border-radius: 8px;">Terminan pronto</button>
+    <div role="tablist" aria-label="Vista" style="position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px; border-radius: 22px; background: var(--surface-raised);">
+      <span aria-hidden="true" style="position: absolute; top: 4px; bottom: 4px; left: 4px; width: 175px; border-radius: 18px; background: var(--surface); box-shadow: var(--shadow-card);"></span>
+      <button type="button" role="tab" aria-selected="true" style="position: relative; z-index: 1; height: 36px; border: 0; background: transparent; color: var(--ink); font-family: var(--font-sans); font-weight: 600; font-size: 14px; border-radius: 18px;">Para ti</button>
+      <button type="button" role="tab" aria-selected="false" style="position: relative; z-index: 1; height: 36px; border: 0; background: transparent; color: var(--ink-2); font-family: var(--font-sans); font-weight: 600; font-size: 14px; border-radius: 18px;">Terminan pronto</button>
     </div>
     <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 40px 4px 0;">
       <span style="width: 48px; height: 48px; display: grid; place-items: center; border-radius: 999px; background: var(--surface-raised); color: var(--ink-2); margin-bottom: 8px;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg></span>
       <h2 style="margin: 0; font-weight: 700; font-size: 17px; line-height: 22px;">Todavía no hay ofertas para ti</h2>
       <p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--ink-2);">Aparecen cuando Steam publica rebajas; te avisamos cuando llegue una que te guste.</p>
-      <a href="Gustos.dc.html" style="display: inline-flex; align-items: center; height: 48px; margin-top: 8px; padding: 0 20px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-raised); color: var(--ink); font-weight: 600; font-size: 15px; text-decoration: none;">Ajustar mis gustos</a>
+      <div style="margin-top: 8px;">
+        <dc-import name="Button" label="Ajustar mis gustos" variant="secondary" href="Gustos.dc.html" hint-size="200px,52px"></dc-import>
+      </div>
     </div>
   </div>
   <div style="position: absolute; left: 16px; right: 16px; bottom: 16px;">

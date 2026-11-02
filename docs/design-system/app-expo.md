@@ -24,7 +24,8 @@ Cómo llevar este sistema a Expo SDK 58 sin copiar valores a mano. Qué librerí
   - el color del texto del segmentado, con `transitionProperty` y `transitionDuration`.
 - La API CSS no tiene muelles: lo que lleva muelle sigue con `withSpring`.
 - `useReducedMotion()` decide entre la receta y el fundido de 150 ms.
-- No hay transiciones de elemento compartido. En Reanimated 4.7.1 siguen detrás de un flag y su doc no las recomienda para producción. Tarjeta → detalle usa la entrada con escala (ver Movimiento).
+- No hay transiciones de elemento compartido. En Reanimated 4.7.1 siguen detrás de un flag y su doc no las recomienda para producción.
+- Tarjeta → detalle: el detalle se monta sobre la lista y crece desde la tarjeta. `measure()` da la posición de la tarjeta y `transformOrigin` la usa (ver Movimiento).
 
 ## Datos y sin conexión
 
@@ -53,6 +54,17 @@ Cómo llevar este sistema a Expo SDK 58 sin copiar valores a mano. Qué librerí
   - La cola se vacía por lotes al pasar a segundo plano y al recuperar la red.
   - Cada evento lleva un UUID (`Crypto.randomUUID()` de `expo-crypto`), y el servidor ignora los reintentos con `on conflict do nothing` (probado en Postgres 18).
 
+## Estado del cliente
+
+- Zustand guarda lo que vive solo en el teléfono, repartido en stores chicos por tema:
+  - `useSession`: invitado o con cuenta;
+  - `usePrefs`: tema fijado, primer uso hecho o saltado;
+  - `useOnboarding`: gustos elegidos antes de enviarlos;
+  - `useExplore`: filtros;
+  - `useToast`: el aviso de la barra.
+- `usePrefs` y `useSession` persisten con `persist` y `createJSONStorage`, sobre el mismo adaptador de MMKV que usa Query. El token de sesión no va ahí: va en `expo-secure-store`.
+- Nada que venga del servidor se copia a Zustand; eso es de Query.
+
 ## Imágenes y listas
 
 - `expo-image` dentro de FlashList se configura así:
@@ -63,18 +75,16 @@ Cómo llevar este sistema a Expo SDK 58 sin copiar valores a mano. Qué librerí
 - Mientras la imagen carga, rige la regla de Imágenes: `surface-raised` con el nombre del juego.
 - FlashList se usa en Para ti, Explorar y Guardados. Las animaciones de entrada van solo en ítems nuevos, no en los reciclados.
 
-## Toasts
+## Aviso en la barra
 
-- `sonner-native` monta un solo `<Toaster>` en la raíz, con esta configuración:
-  - `visibleToasts={1}`, para que haya uno a la vez.
-  - `duration={5000}`.
-  - `position` según la variante elegida: `bottom-center` para A y C, `top-center` para B.
-- La variante se dibuja con `toast.custom()` o con `unstyled` y `styles` desde el tema. No queda a la vista ningún estilo propio de sonner.
-- Deshacer manda el evento inverso (`undismiss` o `unsave`) y cierra el toast.
+- No hay librería de toasts: el aviso es parte de la barra (ver Toast).
+- Un store de Zustand guarda el aviso actual: `useToast = create((set) => ({ toast: null, show: (t) => set({ toast: t }), hide: () => set({ toast: null }) }))`. Hay uno a la vez: `show` reemplaza al anterior.
+- La barra lee `toast` y anima ancho, alto y `borderRadius` con `withSpring`; el mensaje entra con `withDelay`. Un temporizador de 5 s llama a `hide`.
+- Deshacer manda el evento inverso (`undismiss` o `unsave`) y llama a `hide`.
 
 ## Navegación y hojas
 
-- `expo-router` con la barra flotante propia sobre `expo-router/ui` (`TabList`, `TabTrigger`, `TabSlot`). Las NativeTabs del SDK 58 son estables, pero en Android usan la barra Material y no permiten una barra flotante.
+- `expo-router` con la barra flotante propia sobre `expo-router/ui` (`TabList`, `TabTrigger`, `TabSlot`). Las NativeTabs del SDK 58 son estables, pero en Android usan la barra Material y no permiten una barra flotante. Cada `TabTrigger` lleva solo el ícono y su `accessibilityLabel`.
 - Los filtros de Explorar van en una hoja nativa (`presentation: 'formSheet'`). En Android admite hasta tres alturas.
 
 ## Avisos y háptica

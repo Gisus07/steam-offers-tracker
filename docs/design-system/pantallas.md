@@ -1,14 +1,17 @@
 # Pantallas y comportamiento
 
-Navegación inferior flotante con cuatro destinos: **Para ti**, **Explorar**, **Guardados** y **Ajustes**. Las acciones van a la derecha, al alcance del pulgar. Lo secundario se abre en hojas que suben desde abajo.
+Barra flotante en cápsula, solo con íconos, con cuatro destinos: **Para ti**, **Explorar**, **Guardados** y **Ajustes**. Es también donde aparecen los avisos. Las acciones van a la derecha, al alcance del pulgar. Lo secundario se abre en hojas que suben desde abajo.
 
 ## Primer uso
 
-1. **Bienvenida:** una frase ("Te avisamos de ofertas de Steam que te van a gustar, antes de que terminen") y el botón "Iniciar sesión con Steam". Debajo, "Ver ofertas sin cuenta" abre Explorar en modo invitado.
+1. **Bienvenida:** una frase ("Te avisamos de ofertas de Steam que te van a gustar, antes de que terminen") y el botón "Iniciar sesión con Steam". Debajo, "Ver ofertas sin cuenta" abre Explorar en modo invitado. La ilustración entra animada la primera vez: las tarjetas se acomodan y las calcomanías se pegan una a una.
 2. **Login con Steam:** se abre el navegador del sistema con la página de Steam; al volver, la app ya tiene la sesión. Si falla: aviso `bad` con "Volver a intentar".
 3. **Importar:** "Leyendo tu biblioteca y tu wishlist" con esqueletos de juegos. Si la wishlist es privada, se dice y se sigue sin ella.
 4. **Región:** el país precargado desde tu perfil de Steam, con la moneda ("Venezuela · precios en USD"). Se puede cambiar.
-5. **Gustos:** chips de tags precargados desde la biblioteca; tocar uno lo suma o lo saca. Mínimo tres.
+5. **Gustos (opcional):** chips de tags precargados desde la biblioteca; tocar uno lo suma o lo saca.
+   - "Saltar" está siempre a mano.
+   - Sin gustos, el perfil arranca neutro: el feed ordena por descuento y por reseñas ponderadas por cantidad.
+   - Desde ahí aprende de lo que la persona guarda, descarta y abre.
 6. **Avisos:** explica cuántos avisos por día como máximo (5 por defecto) y el horario de silencio, y recién ahí pide el permiso del sistema.
 
 ## Para ti (feed)
@@ -16,9 +19,9 @@ Navegación inferior flotante con cuatro destinos: **Para ti**, **Explorar**, **
 - Encabezado con `screen-title` "Para ti" y "Actualizado hace 2 h". Un segmentado: **Para ti** · **Terminan pronto**.
 - Lista de OfferCard ordenada por afinidad. Una de cada cinco o seis es de exploración y lo dice: "Algo distinto".
 - **Tocar la tarjeta:** abre el detalle, que entra desde la tarjeta con escala y fundido (ver Movimiento).
-- **Guardar:** ícono `bookmark` en la tarjeta; se rellena y vibra suave.
-- **No me interesa:** deslizar a la izquierda o ícono `x`. La tarjeta sale, la lista se cierra y aparece el toast "No te mostraremos más este juego" con Deshacer durante 5 s.
-- **Tirar hacia abajo:** actualiza. Si no hay nada nuevo: "Ya estás al día".
+- **Guardar:** ícono `bookmark` en la tarjeta; se rellena, vibra suave y el ícono de Guardados de la barra late una vez.
+- **No me interesa:** deslizar a la izquierda o ícono `x`. La tarjeta sale, la lista se cierra y la barra muestra el aviso "No te mostraremos más este juego" con Deshacer durante 5 s.
+- **Tirar hacia abajo:** actualiza. Mientras carga, esqueletos; al llegar, las tarjetas entran con un fundido escalonado. Si no hay nada nuevo: "Ya estás al día".
 - **Vacío:** "Todavía no hay ofertas para ti. Aparecen cuando Steam publica rebajas; te avisamos cuando llegue una que te guste." Salida: "Ajustar mis gustos".
 
 ## Detalle de la oferta

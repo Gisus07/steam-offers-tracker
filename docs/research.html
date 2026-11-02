@@ -80,7 +80,7 @@ footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padd
 <div class="wrap">
   <header class="hero">
     <div>
-      <span class="eyebrow">Fase de investigación · revisión 6 · 1 nov 2026</span>
+      <span class="eyebrow">Fase de investigación · revisión 6 · 2 nov 2026</span>
       <h1>Steam Offers Tracker v2</h1>
       <p class="lede">Un notificador de descuentos en Steam, multiusuario, que muestra a cada persona las ofertas de su región y aprende sus gustos. Esto es lo que se probó, lo que se decidió y lo que falta.</p>
     </div>
@@ -412,6 +412,11 @@ await db.$client.end();</code></pre>
       <span class="eyebrow">Cambio pendiente en el modelo de datos</span>
       <p>La app manda los eventos desde una cola sin conexión y los reintenta, así que el servidor tiene que ignorar los duplicados. Propuesta: <code>event_uuid uuid</code> generado en el teléfono, <code>unique (event_uuid, occurred_at)</code> (en una tabla particionada la clave única debe incluir <code>occurred_at</code>) e <code>insert … on conflict do nothing</code>. Probado sobre el modelo actual, con rollback: el reintento inserta 0 filas y el trigger <code>events_state</code> no cuenta dos veces <span class="chip v">verificado</span>.</p>
       <p class="note">El acotado de <code>occurred_at</code> al ingresar no puede depender de <code>now()</code>, o el reintento cae en otra clave. Falta pasarlo a <code>modelo-datos.sql</code>.</p>
+    </div>
+    <div class="rec fix">
+      <span class="eyebrow">Cambio pendiente en el ranking de un perfil vacío</span>
+      <p>Gustos es opcional. Si la persona lo salta y todavía no tiene eventos, el coseno vale 0 y el feed queda ordenado solo por descuento y <code>review_percent</code>. Con el barrido de Venezuela eso pone arriba juegos con 100% de reseñas positivas sobre 1 a 26 reseñas. Reemplazando <code>review_percent</code> por un promedio bayesiano (200 reseñas virtuales al 70%), arriba quedan INSIDE, The Last Campfire, POSTAL 2 y Outlast <span class="chip v">verificado</span>.</p>
+      <p class="note">Falta pasarlo a <code>feed_for_user</code> en <code>modelo-datos.sql</code>.</p>
     </div>
     <p class="note">Lo que toca a la app (TanStack, Expo, recetas) está en la sección Librerías del sistema de diseño.</p>
   </section>

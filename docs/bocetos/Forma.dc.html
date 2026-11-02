@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Forma: cápsula o relieve</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/offers-tracker/tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 900px; height: 520px; box-sizing: border-box; display: grid; grid-template-columns: repeat(2, 404px); gap: 36px; padding: 28px; background: var(--surface-raised); color: var(--ink); font-family: var(--font-sans);">
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="2">
+    <section style="display: flex; flex-direction: column; gap: 14px; box-sizing: border-box; padding: 20px 23px; border-radius: 20px; background: var(--bg); border: 1px solid var(--line);">
+      <span style="font-weight: 700; font-size: 16px; line-height: 24px;">{{c.title}}</span>
+      <dc-import name="Button" label="Ir a Steam" variant="primary" icon="external" shape="{{c.shape}}" block="{{true}}" hint-size="358px,52px"></dc-import>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
+        <dc-import name="Button" label="No me interesa" variant="secondary" icon="x" size="md" shape="{{c.shape}}" block="{{true}}" hint-size="175px,44px"></dc-import>
+        <dc-import name="Button" label="Iniciar sesión" variant="steam" size="md" shape="{{c.shape}}" block="{{true}}" hint-size="175px,44px"></dc-import>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <dc-import name="Button" label="Ver ofertas sin cuenta" variant="text" size="md" shape="{{c.shape}}" hint-size="200px,44px"></dc-import>
+        <div style="display: flex; gap: 8px;">
+          <dc-import name="Button" label="Volver" variant="icon" icon="back" shape="{{c.shape}}" hint-size="44px,44px"></dc-import>
+          <dc-import name="Button" label="No me interesa" variant="icon" icon="x" shape="{{c.shape}}" hint-size="44px,44px"></dc-import>
+          <dc-import name="Button" label="Guardado" variant="icon" icon="bookmark" toggled="{{true}}" shape="{{c.shape}}" hint-size="44px,44px"></dc-import>
+        </div>
+      </div>
+      <dc-import name="Nav" active="parati" shape="{{c.shape}}" hint-size="358px,64px"></dc-import>
+      <div style="height: 124px; display: flex; align-items: flex-end;">
+        <dc-import name="Nav" active="guardados" shape="{{c.shape}}" toast="{{c.undo}}" hint-size="358px,64px"></dc-import>
+      </div>
+    </section>
+  </sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"$preview":{"width":900,"height":520}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var undo = { kind: 'undo', text: 'No te mostraremos más este juego', action: 'Deshacer' };
+    return {
+      theme: this.props.theme ?? 'dark',
+      cols: [
+        { title: 'A · Cápsula', shape: 'capsula', undo: undo },
+        { title: 'B · Relieve', shape: 'relieve', undo: undo }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

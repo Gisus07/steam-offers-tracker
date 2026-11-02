@@ -1,18 +1,19 @@
-<!-- @dsCard group="Navegación" height=110 subtitle="Toca un destino: la pastilla se desliza" -->
+<!-- @dsCard group="Navegación" height=170 subtitle="Solo íconos: toca un destino, o guarda un juego para ver latir Guardados" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>BottomNav</title>
 <script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
 <body class="ot-root">
-<div class="ot-pad" id="root">
+<div class="ot-pad ot-col" id="root" style="align-items:flex-start">
   <nav class="ot-nav" aria-label="Principal" id="nav">
     <span class="ot-nav__pill" id="pill" aria-hidden="true"></span>
-    <button type="button" aria-current="page"><i data-lucide="sparkles"></i>Para ti</button>
-    <button type="button"><i data-lucide="search"></i>Explorar</button>
-    <button type="button"><i data-lucide="bookmark"></i>Guardados</button>
-    <button type="button"><i data-lucide="settings"></i>Ajustes</button>
+    <button type="button" aria-label="Para ti" aria-current="page"><i data-lucide="sparkles"></i></button>
+    <button type="button" aria-label="Explorar"><i data-lucide="search"></i></button>
+    <button type="button" aria-label="Guardados" id="saved"><i data-lucide="bookmark"></i></button>
+    <button type="button" aria-label="Ajustes"><i data-lucide="settings"></i></button>
   </nav>
+  <button class="ot-btn ot-btn--secondary" type="button" id="bump" style="border-radius:24px">Guardar un juego</button>
 </div>
 <script>
 (function () {
@@ -20,9 +21,9 @@
   var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var pill = document.getElementById('pill'), items = document.querySelectorAll('#nav button');
   function place(b, animate) {
-    var x = b.offsetLeft - 6, w = b.offsetWidth;
-    if (animate && M && !reduce) { M.animate(pill, { x: x, width: w + 'px' }, { type: 'spring', stiffness: 520, damping: 34 }); }
-    else { pill.style.transform = 'translateX(' + x + 'px)'; pill.style.width = w + 'px'; }
+    var x = b.offsetLeft - 5;
+    if (animate && M && !reduce) { M.animate(pill, { x: x }, { type: 'spring', stiffness: 520, damping: 34 }); }
+    else { pill.style.transform = 'translateX(' + x + 'px)'; }
   }
   items.forEach(function (b) {
     b.addEventListener('click', function () {
@@ -31,6 +32,13 @@
     });
   });
   place(items[0], false);
+  document.getElementById('bump').addEventListener('click', function () {
+    var icon = document.querySelector('#saved svg');
+    if (!icon || !M || reduce) return;
+    M.animate(icon, { scale: 1.3 }, { duration: 0.15, ease: 'easeOut' }).then(function () {
+      M.animate(icon, { scale: 1 }, { type: 'spring', stiffness: 420, damping: 14 });
+    });
+  });
 })();
 </script>
 </body>

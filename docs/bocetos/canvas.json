@@ -5,37 +5,40 @@
   "launch": {"view": "canvas"},
   "pages": [],
   "boards": {
-    "Bienvenida.dc.html": {"x": 0, "y": 0, "w": 390, "h": 844, "title": "Bienvenida"},
-    "Gustos.dc.html": {"x": 470, "y": 0, "w": 390, "h": 844, "title": "Tus gustos", "is_interactive": true},
+    "Bienvenida.dc.html": {"x": 0, "y": 0, "w": 390, "h": 844, "title": "Bienvenida (toca la ilustración para repetir)", "is_interactive": true},
+    "Gustos.dc.html": {"x": 470, "y": 0, "w": 390, "h": 844, "title": "Tus gustos · opcional", "is_interactive": true},
     "Avisos.dc.html": {"x": 940, "y": 0, "w": 390, "h": 844, "title": "Avisos"},
-    "Main.dc.html": {"x": 0, "y": 1244, "w": 390, "h": 844, "title": "Para ti", "is_interactive": true},
-    "Detalle.dc.html": {"x": 470, "y": 1244, "w": 390, "h": 844, "title": "Detalle de la oferta"},
+    "Main.dc.html": {"x": 0, "y": 1244, "w": 390, "h": 844, "title": "Para ti · prototipo", "is_interactive": true},
+    "Detalle.dc.html": {"x": 470, "y": 1244, "w": 390, "h": 844, "title": "Detalle de la oferta", "is_interactive": true},
     "Explorar.dc.html": {"x": 940, "y": 1244, "w": 390, "h": 844, "title": "Explorar", "is_interactive": true},
     "Guardados.dc.html": {"x": 1410, "y": 1244, "w": 390, "h": 844, "title": "Guardados"},
     "Ajustes.dc.html": {"x": 1880, "y": 1244, "w": 390, "h": 844, "title": "Ajustes", "is_interactive": true},
     "Vacio.dc.html": {"x": 0, "y": 2488, "w": 390, "h": 844, "title": "Para ti, sin ofertas"},
     "Cargando.dc.html": {"x": 470, "y": 2488, "w": 390, "h": 844, "title": "Cargando"},
     "Notificacion.dc.html": {"x": 940, "y": 2488, "w": 390, "h": 844, "title": "Notificación"},
-    "Toasts.dc.html": {"x": 1410, "y": 2488, "w": 860, "h": 620, "title": "Toast: tres variantes"},
+    "Toasts.dc.html": {"x": 1410, "y": 2488, "w": 1266, "h": 568, "title": "Aviso en la barra"},
     "ParaTiClaro.dc.html": {"x": 0, "y": 3732, "w": 390, "h": 844, "title": "Para ti · tema claro", "is_interactive": true},
     "DetalleClaro.dc.html": {"x": 470, "y": 3732, "w": 390, "h": 844, "title": "Detalle · tema claro"},
-    "Card.dc.html": {"x": 0, "y": 4976, "w": 358, "h": 400, "title": "Tarjeta de oferta"},
-    "Nav.dc.html": {"x": 438, "y": 4976, "w": 358, "h": 64, "title": "Navegación"}
+    "Card.dc.html": {"x": 0, "y": 4976, "w": 358, "h": 400, "title": "Tarjeta de oferta", "is_interactive": true},
+    "Nav.dc.html": {"x": 438, "y": 4976, "w": 358, "h": 64, "title": "Navegación"},
+    "Button.dc.html": {"x": 876, "y": 4976, "w": 358, "h": 52, "title": "Botón", "is_interactive": true},
+    "Forma.dc.html": {"x": 1314, "y": 4976, "w": 900, "h": 520, "title": "Forma: cápsula o relieve", "is_interactive": true}
   },
   "order": [
     "Bienvenida.dc.html", "Gustos.dc.html", "Avisos.dc.html",
     "Main.dc.html", "Detalle.dc.html", "Explorar.dc.html", "Guardados.dc.html", "Ajustes.dc.html",
     "Vacio.dc.html", "Cargando.dc.html", "Notificacion.dc.html", "Toasts.dc.html",
     "ParaTiClaro.dc.html", "DetalleClaro.dc.html",
-    "Card.dc.html", "Nav.dc.html"
+    "Card.dc.html", "Nav.dc.html", "Button.dc.html", "Forma.dc.html"
   ],
   "notes": {
     "rowFirstUse": {"x": 0, "y": -280, "text": "Primer uso", "kind": "title1", "maxW": 1330},
     "rowApp": {"x": 0, "y": 964, "text": "La app", "kind": "title1", "maxW": 2270},
-    "rowStates": {"x": 0, "y": 2208, "text": "Estados y avisos", "kind": "title1", "maxW": 2270},
+    "rowStates": {"x": 0, "y": 2208, "text": "Estados y avisos", "kind": "title1", "maxW": 2676},
     "rowLight": {"x": 0, "y": 3452, "text": "Tema claro", "kind": "title1", "maxW": 860},
-    "rowParts": {"x": 0, "y": 4696, "text": "Piezas reutilizadas", "kind": "title1", "maxW": 796},
-    "dataNote": {"x": 1410, "y": -240, "w": 420, "text": "Datos reales del barrido de Venezuela del 1 de noviembre de 2026 (precios en USD, fechas en hora de Caracas). Las imágenes de Steam se muestran como placeholder: en la app va la cápsula del juego.", "fill": "teal"}
+    "rowParts": {"x": 0, "y": 4696, "text": "Piezas reutilizadas", "kind": "title1", "maxW": 2214},
+    "dataNote": {"x": 1410, "y": -240, "w": 420, "text": "Datos reales del barrido de Venezuela del 1 de noviembre de 2026 (precios en USD, fechas en hora de Caracas). Las imágenes de Steam se muestran como placeholder: en la app va la cápsula del juego.", "fill": "teal"},
+    "protoNote": {"x": 470, "y": 1048, "w": 420, "text": "Para ti es un prototipo: toca una tarjeta para abrir el detalle, guarda y descarta (Deshacer sale de la barra). El botón de actualizar repite el paso de esqueleto a tarjetas; en la app eso lo hace tirar hacia abajo.", "fill": "teal"}
   },
   "designSystems": [
     {"title": "Offers Tracker Design System", "namespace": "offers-tracker", "artifact": "https://claude.ai/artifact/3qWsoSZPWnQgiVQSHeb8zp", "version": "1793575354-9cde", "copiedAt": "2026-11-01T23:35:00Z"}

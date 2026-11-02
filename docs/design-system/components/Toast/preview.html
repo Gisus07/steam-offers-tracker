@@ -1,34 +1,78 @@
-<!-- @dsCard group="Estados" height=300 subtitle="Tres variantes en evaluación: A cápsula invertida, B isla superior, C barra con tiempo" -->
+<!-- @dsCard group="Estados" height=240 subtitle="Sale de la barra: la cápsula crece con el mensaje y la acción, y vuelve a los 5 s" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>Toast</title>
 <script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
 <body class="ot-root">
-<div class="ot-pad ot-col" id="root" style="gap:18px">
-  <div class="ot-col" style="gap:6px"><span class="ot-label">A · Cápsula invertida</span>
-    <div class="ot-toast-a" role="status" data-enter="up"><i data-lucide="eye-off"></i><span>No te mostraremos más este juego</span><button type="button">Deshacer</button></div></div>
-  <div class="ot-col" style="gap:6px"><span class="ot-label">B · Isla superior</span>
-    <div class="ot-toast-b" role="status" data-enter="down"><i data-lucide="eye-off"></i><span>Oculto</span><button type="button">Deshacer</button></div></div>
-  <div class="ot-col" style="gap:6px"><span class="ot-label">C · Barra con tiempo</span>
-    <div class="ot-toast-c" role="status" data-enter="up"><i data-lucide="eye-off"></i><span>No te mostraremos más este juego</span><button type="button">Deshacer</button><i class="ot-toast-c__time" id="time"></i></div></div>
-  <div><button class="ot-btn ot-btn--secondary" type="button" id="replay">Ver la entrada</button></div>
+<div class="ot-pad ot-col" id="root" style="gap:16px">
+  <div class="ot-row">
+    <button class="ot-btn ot-btn--secondary" type="button" id="undoDemo" style="border-radius:24px">Descartar un juego</button>
+    <button class="ot-btn ot-btn--secondary" type="button" id="errDemo" style="border-radius:24px">Fallar la carga</button>
+  </div>
+  <div style="height:124px;display:flex;align-items:flex-end">
+    <div class="ot-dock" id="dock">
+      <div class="ot-dock__panel" id="panel">
+        <div class="ot-dock__msg" id="msg" role="status">
+          <span class="ot-dock__icon" id="icUndo"><i data-lucide="eye-off"></i></span>
+          <span class="ot-dock__icon" id="icBad" hidden><i data-lucide="circle-alert"></i></span>
+          <span class="ot-dock__text" id="msgText">No te mostraremos más este juego</span>
+          <button class="ot-btn ot-btn--primary" type="button" id="msgAction">Deshacer</button>
+        </div>
+        <nav class="ot-nav" aria-label="Principal">
+          <span class="ot-nav__pill" aria-hidden="true"></span>
+          <button type="button" aria-label="Para ti" aria-current="page"><i data-lucide="sparkles"></i></button>
+          <button type="button" aria-label="Explorar"><i data-lucide="search"></i></button>
+          <button type="button" aria-label="Guardados"><i data-lucide="bookmark"></i></button>
+          <button type="button" aria-label="Ajustes"><i data-lucide="settings"></i></button>
+        </nav>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
 (function () {
   if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } });
   var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.getElementById('replay').addEventListener('click', function () {
-    document.querySelectorAll('[data-enter]').forEach(function (t, i) {
-      var down = t.getAttribute('data-enter') === 'down';
-      if (M && !reduce) {
-        if (down) { M.animate(t, { y: [-20, 0], scaleX: [0.6, 1], opacity: [0, 1] }, { type: 'spring', stiffness: 420, damping: 28, delay: i * 0.06 }); }
-        else { M.animate(t, { y: [24, 0], opacity: [0, 1] }, { type: 'spring', stiffness: 420, damping: 26, delay: i * 0.06 }); }
-      } else { t.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); }
-    });
-    var bar = document.getElementById('time');
-    if (M && !reduce) { M.animate(bar, { scaleX: [1, 0] }, { duration: 5, ease: 'linear' }); }
-  });
+  var anim = !!M && !reduce;
+  var dock = document.getElementById('dock'), panel = document.getElementById('panel'), msg = document.getElementById('msg');
+  var text = document.getElementById('msgText'), action = document.getElementById('msgAction');
+  var icUndo = document.getElementById('icUndo'), icBad = document.getElementById('icBad');
+  var timer = null, open = false;
+  function setOpen(next) {
+    if (next === open) return;
+    open = next;
+    dock.classList.toggle('ot-dock--open', next);
+    var w = next ? Math.min(dock.clientWidth, 358) : 232;
+    if (anim) {
+      if (next) {
+        M.animate(panel, { width: w + 'px', height: '124px', borderRadius: '28px' }, { type: 'spring', stiffness: 420, damping: 28 });
+        M.animate(msg, { opacity: [0, 1] }, { duration: 0.22, delay: 0.16 });
+      } else {
+        M.animate(msg, { opacity: 0 }, { duration: 0.12 });
+        M.animate(panel, { width: '232px', height: '64px', borderRadius: '32px' }, { type: 'spring', stiffness: 420, damping: 28, delay: 0.08 });
+      }
+    } else {
+      panel.style.width = w + 'px';
+      panel.style.height = next ? '124px' : '64px';
+      panel.style.borderRadius = next ? '28px' : '32px';
+      msg.style.opacity = next ? '1' : '0';
+    }
+  }
+  function show(kind) {
+    var bad = kind === 'error';
+    msg.classList.toggle('ot-dock__msg--bad', bad);
+    icUndo.hidden = bad;
+    icBad.hidden = !bad;
+    text.textContent = bad ? 'No pudimos actualizar las ofertas' : 'No te mostraremos más este juego';
+    action.textContent = bad ? 'Reintentar' : 'Deshacer';
+    clearTimeout(timer);
+    setOpen(true);
+    timer = setTimeout(function () { setOpen(false); }, 5000);
+  }
+  document.getElementById('undoDemo').addEventListener('click', function () { show('undo'); });
+  document.getElementById('errDemo').addEventListener('click', function () { show('error'); });
+  action.addEventListener('click', function () { clearTimeout(timer); setOpen(false); });
 })();
 </script>
 </body>

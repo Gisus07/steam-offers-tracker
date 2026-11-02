@@ -60,7 +60,8 @@ Las versiones con `~` son las que fija el SDK. Las demás son la última en npm.
 | Animación | `react-native-reanimated` + `react-native-worklets` | 4.7.1 / 0.13.0 | usar | Muelles con `withSpring`. Bucles y cambios de color con su API CSS, que corre en el hilo de UI. Las transiciones de elemento compartido siguen experimentales y no se usan |
 | Gestos | `react-native-gesture-handler` | ~3.3.0 | usar | API de hooks y `ReanimatedSwipeable` para deslizar y descartar. El builder `Gesture.Pan()` está deprecado y no se usa en código nuevo |
 | Navegación | `expo-router` | ~58.0.29 | usar | Barra flotante propia con `expo-router/ui`. Los filtros van en una hoja nativa (`formSheet`) |
-| Toasts | `sonner-native` | 0.27.0 | usar | Acción Deshacer, deslizar para cerrar y `toast.custom()` para dibujar la variante elegida con los tokens. Sus peers ya vienen en el SDK |
+| Avisos | Propio, dentro de la barra | — | usar | El aviso sale de la barra de navegación (ver Toast), y ninguna librería de toasts dibuja eso. La forma se anima con Reanimated y el estado vive en Zustand |
+| Estado del cliente | `zustand` | 5.0.16 | usar | Lo que vive solo en el teléfono: sesión, preferencias locales, borrador de Gustos, filtros de Explorar y el aviso de la barra. Persiste en MMKV con `persist` y `createJSONStorage`. Lo que viene del servidor no se copia acá: es de Query. TanStack Store haría lo mismo, pero sigue en alpha y su doc lo ata a ReactDOM |
 | Tema y estilos | `react-native-unistyles` | 3.7.0 | usar | Toma los temas generados desde `tokens.json`, tipados y sin providers. Necesita development build |
 | Caché local | `react-native-mmkv` | 4.3.2 | usar | Síncrono: el caché de Query y los ajustes se leen al abrir, sin esperar. Comparte `react-native-nitro-modules` con Unistyles |
 | Cola de eventos | `expo-sqlite` | ~58.0.15 | usar | Guarda los eventos mientras no hay red y los borra por lotes al enviarlos |
@@ -91,6 +92,7 @@ Si el cliente queda viejo respecto del contrato, el CI falla. openapi-typescript
 - **Moti:** no declara soporte para Reanimated 4.
 - **`@gorhom/bottom-sheet`:** usa la API de gestos deprecada, y `formSheet` alcanza para los filtros.
 - **`burnt`:** en Android usa el toast del sistema, que no admite el botón Deshacer.
+- **`sonner-native`:** el aviso vive dentro de la barra, y una librería de toasts flota aparte.
 - **Notifee:** el repo está archivado.
 - **Skia y victory-native:**
   - Skia 3 exige Vulkan, así que Google Play oculta la app en los equipos que no lo tienen.

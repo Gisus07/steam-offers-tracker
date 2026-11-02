@@ -1,6 +1,6 @@
 # Fase de investigación — Steam Offers Tracker v2
 
-Última actualización: 2026-11-01 (revisión 6: servidor y operación, §4.7).
+Última actualización: 2026-11-02 (revisión 6: servidor y operación, §4.7).
 Objetivo: confirmar si es viable un sistema que notifique descuentos de Steam (nombre, % de descuento, precio antes/después, fecha de fin, link a la tienda) y aprenda de los gustos de cada usuario, sin scraping pesado.
 
 Leyenda: **[verificado]** = probado en vivo desde un contenedor en esta fecha. **[docs]** = documentación oficial, specs o metadatos de npm. **[no verificado]** = fuentes secundarias, falta comprobar. **[Gisus]** = dato aportado por Gisus (capturas o decisión).
@@ -460,6 +460,8 @@ Pensado para el VPS de 1 vCPU y 2 GB: nada que sume un servicio con estado si Po
 **Arquitectura resultante:** Postgres 18 como base, cola (pg-boss) y caché. Una imagen con dos servicios, api y worker. Un schedule por país cada 6 h en una cola `exclusive` con `singletonKey` = país. Expo Push con un job de receipts. Cloudflare Tunnel. `pg_dump` + rclone a B2 con restore probado.
 
 **Cambio pendiente en el modelo de datos [verificado en PG 18]:** la app manda los eventos desde una cola sin conexión y los reintenta, así que el servidor tiene que ignorar los duplicados. Propuesta: `event_uuid uuid` generado en el teléfono, `unique (event_uuid, occurred_at)` (en una tabla particionada la clave única debe incluir `occurred_at`) e `insert … on conflict do nothing`. Probado sobre el modelo actual, con rollback: el reintento inserta 0 filas y el trigger `events_state` no cuenta dos veces. El acotado de `occurred_at` al ingresar no puede depender de `now()`, o el reintento cae en otra clave. Falta pasarlo a `modelo-datos.sql`.
+
+**Cambio pendiente en el ranking de un perfil vacío [verificado en PG 18]:** Gustos es opcional. Si la persona lo salta y todavía no tiene eventos, el coseno vale 0 y el feed queda ordenado solo por descuento y `review_percent`. Con el barrido de Venezuela eso pone arriba juegos con 100% de reseñas positivas sobre 1 a 26 reseñas. Reemplazando `review_percent` por un promedio bayesiano (200 reseñas virtuales al 70%), arriba quedan INSIDE, The Last Campfire, POSTAL 2 y Outlast. Falta pasarlo a `feed_for_user` en `modelo-datos.sql`.
 
 Lo que toca a la app (TanStack, Expo, recetas) está en la sección Librerías del sistema de diseño (`docs/design-system/librerias.md`).
 

@@ -26,7 +26,7 @@ body{margin:0}
     <span style="font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px;">Ofertas</span>
     <div style="display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line);">
       <span style="font-size: 15px; line-height: 22px;">Descuento mínimo</span>
-      <div role="tablist" aria-label="Descuento mínimo" style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; border-radius: 12px; background: var(--surface-raised);">
+      <div role="tablist" aria-label="Descuento mínimo" style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; border-radius: 22px; background: var(--surface-raised);">
         <span aria-hidden="true" style="{{minPill}}"></span>
         <sc-for list="{{minOpts}}" as="o" hint-placeholder-count="3">
           <button type="button" role="tab" aria-selected="{{o.on}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button>
@@ -55,7 +55,7 @@ body{margin:0}
     </div>
 
     <span style="font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px;">Apariencia</span>
-    <div role="tablist" aria-label="Tema" style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; border-radius: 12px; background: var(--surface-raised);">
+    <div role="tablist" aria-label="Tema" style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; border-radius: 22px; background: var(--surface-raised);">
       <span aria-hidden="true" style="{{themePill}}"></span>
       <sc-for list="{{themeOpts}}" as="o" hint-placeholder-count="3">
         <button type="button" role="tab" aria-selected="{{o.on}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button>
@@ -87,8 +87,8 @@ class Component extends DCLogic {
     var themeIdx = s.themeIdx ?? 0;
     var adult = s.adult ?? true;
     var notify = s.notify ?? true;
-    var segBtn = 'position: relative; z-index: 1; height: 36px; border: 0; background: transparent; font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 18px; border-radius: 8px; cursor: pointer; transition: color 200ms ease;';
-    function pill(i) { return 'position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow-card); transform: translateX(' + (i * 100) + '%); transition: transform 380ms ' + spring + ';'; }
+    var segBtn = 'position: relative; z-index: 1; height: 36px; border: 0; background: transparent; font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 18px; border-radius: 18px; cursor: pointer; transition: color 200ms ease;';
+    function pill(i) { return 'position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow-card); transform: translateX(' + (i * 100) + '%); transition: transform 380ms ' + spring + ';'; }
     function opts(labels, cur, key) {
       return labels.map(function (l, i) {
         return { label: l, on: i === cur, style: segBtn + ' color: ' + (i === cur ? 'var(--ink)' : 'var(--ink-2)') + ';', pick: function () { var p = {}; p[key] = i; self.setState(p); } };
