@@ -1,93 +1,190 @@
 /* Offers Tracker Design System — generated from tokens.json */
-@font-face { font-family: "Big Shoulders Display"; src: url("fonts/BigShouldersDisplay-Variable.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
-@font-face { font-family: "Hanken Grotesk"; src: url("fonts/HankenGrotesk-Variable.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
 :root, [data-theme="dark"] {
-  --bg: #0E1014;
-  --surface: #161920;
-  --surface-raised: #1E222B;
-  --line: #2A2F3A;
-  --line-strong: #6E778A;
-  --ink: #EEF1F6;
-  --ink-2: #B3BAC7;
-  --ink-3: #8F98A9;
-  --accent: #3DD6C3;
-  --on-accent: #04201C;
-  --accent-soft: #123A35;
-  --accent-on-inverse: #0A7266;
-  --deal: #FFD23F;
-  --on-deal: #1A1405;
-  --hot: #FFA27A;
-  --hot-soft: #3A2318;
-  --good: #57D98A;
-  --good-soft: #183626;
-  --bad: #F2555A;
-  --bad-soft: #3D1A23;
-  --info: #8AB4FF;
-  --info-soft: #1C2742;
-  --scrim: rgba(5, 6, 8, 0.64);
-  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 28px -18px rgba(0, 0, 0, 0.7);
-  --shadow-float: 0 18px 40px -16px rgba(0, 0, 0, 0.75), 0 2px 6px rgba(0, 0, 0, 0.4);
-  --shadow-sticker: 0 2px 0 rgba(0, 0, 0, 0.35);
+  --bg: #0e1014; /* Fondo de pantalla. Grafito con un leve sesgo azul en oscuro; gris claro en claro. Ningún tema usa blanco puro. */
+  --surface: #161920; /* Tarjetas de oferta, hojas, barra de navegación. En claro es un gris casi blanco (#F2F4F6), nunca #FFFFFF. */
+  --surface-raised: #1e222b; /* Campos, chips de tag, chip de cuenta regresiva normal, esqueletos. */
+  --line: #2a2f3a; /* Separadores y bordes de tarjeta. Decorativo: no lleva significado. */
+  --line-strong: #6e778a; /* Borde de campos y controles. 3,5:1 o más sobre surface y surface-raised en ambos temas. */
+  --ink: #eef1f6; /* Texto principal y precios sobre bg, surface y surface-raised (14:1 o más en ambos temas). Filtro activo invertido. */
+  --ink-2: #b3bac7; /* Texto secundario sobre bg, surface y surface-raised (6,7:1 o más). */
+  --ink-3: #8f98a9; /* Precio tachado, metadatos y placeholders sobre bg, surface y surface-raised (4,9:1 o más). */
+  --accent: #3dd6c3; /* Solo lo que se toca: botón primario, links, ícono activo, anillo de foco. Texto acento sobre bg, surface, surface-raised y accent-soft (5:1 o más). */
+  --on-accent: #04201c; /* Texto e íconos sobre un relleno accent (5,8:1 o más). Nunca blanco literal. */
+  --accent-soft: #123a35; /* Fondo del botón de texto presionado. */
+  --accent-on-inverse: #0a7266; /* Acción dentro de una superficie invertida (fondo ink): el Deshacer del toast cápsula. 5,1:1 o más sobre ink en ambos temas. */
+  --accent-lip: #22766b; /* Canto del botón primario: la franja de 4px que se ve debajo y desaparece al presionar. Es accent mezclado 55% con negro. */
+  --raised-lip: #343a47; /* Canto de los botones secundarios y de ícono. En oscuro es más claro que el fondo, para que se lea como el costado del botón. */
+  --ink-lip: #8b919b; /* Canto del botón invertido (Iniciar sesión con Steam y el botón de la bienvenida). */
+  --deal: #ffd23f; /* La calcomanía de descuento y nada más. Igual en los dos temas, como una etiqueta de rebaja impresa. */
+  --on-deal: #1a1405; /* Texto de la calcomanía sobre deal (12,7:1). */
+  --hot: #ffa27a; /* Termina en menos de 24 horas. Texto e ícono sobre surface y hot-soft (4,7:1 o más). Siempre con ícono de reloj. */
+  --hot-soft: #3a2318; /* Fondo del chip de cuenta regresiva cuando la oferta termina hoy o mañana. */
+  --good: #57d98a; /* Buenas noticias: guardado, precio mínimo registrado, compra marcada. Sobre surface y good-soft (5:1 o más). Siempre con ícono o palabra. */
+  --good-soft: #183626; /* Fondo del chip Mínimo registrado y del toast de guardado. */
+  --bad: #f2555a; /* Algo falló: login, sincronización, red. Sobre surface y bad-soft (4,5:1 o más). Siempre con ícono de alerta y una salida. */
+  --bad-soft: #3d1a23; /* Fondo de avisos de error. */
+  --info: #8ab4ff; /* Información neutra: moneda de la región, sin conexión, datos de Steam. Sobre surface e info-soft (5,4:1 o más). */
+  --info-soft: #1c2742; /* Fondo de la pastilla Sin conexión y de avisos informativos. */
+  --scrim: rgba(5, 6, 8, 0.64); /* Velo detrás de hojas y del detalle abierto. */
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 28px -18px rgba(0, 0, 0, 0.7); /* Tarjeta de oferta en reposo. */
+  --shadow-float: 0 18px 40px -16px rgba(0, 0, 0, 0.75), 0 2px 6px rgba(0, 0, 0, 0.4); /* Lo que flota sobre el contenido: navegación, toasts, hojas. */
+  --shadow-sticker: 0 2px 0 rgba(0, 0, 0, 0.35); /* Separa la calcomanía de la imagen del juego. */
 }
 [data-theme="light"] {
-  --bg: #E6E9ED;
-  --surface: #F2F4F6;
-  --surface-raised: #DCE0E6;
-  --line: #C9CED6;
-  --line-strong: #6A7282;
-  --ink: #14171D;
-  --ink-2: #434B5A;
-  --ink-3: #545C6B;
-  --accent: #075F55;
-  --on-accent: #F2F4F6;
-  --accent-soft: #CBE7E1;
-  --accent-on-inverse: #3DD6C3;
-  --hot: #9C380B;
-  --hot-soft: #F4DCCF;
-  --good: #13652F;
-  --good-soft: #D3EBDC;
-  --bad: #8A1330;
-  --bad-soft: #F1D6DE;
-  --info: #1D4BA8;
-  --info-soft: #D7E1F5;
+  --bg: #e6e9ed;
+  --surface: #f2f4f6;
+  --surface-raised: #dce0e6;
+  --line: #c9ced6;
+  --line-strong: #6a7282;
+  --ink: #14171d;
+  --ink-2: #434b5a;
+  --ink-3: #545c6b;
+  --accent: #075f55;
+  --on-accent: #f2f4f6;
+  --accent-soft: #cbe7e1;
+  --accent-on-inverse: #3dd6c3;
+  --accent-lip: #04342f;
+  --raised-lip: #b9bfc9;
+  --ink-lip: #0b0d10;
+  --deal: #ffd23f;
+  --on-deal: #1a1405;
+  --hot: #9c380b;
+  --hot-soft: #f4dccf;
+  --good: #13652f;
+  --good-soft: #d3ebdc;
+  --bad: #8a1330;
+  --bad-soft: #f1d6de;
+  --info: #1d4ba8;
+  --info-soft: #d7e1f5;
   --scrim: rgba(20, 23, 29, 0.48);
   --shadow-card: 0 1px 2px rgba(20, 23, 29, 0.05), 0 8px 24px -16px rgba(20, 23, 29, 0.22);
   --shadow-float: 0 14px 36px -16px rgba(20, 23, 29, 0.28), 0 2px 6px rgba(20, 23, 29, 0.07);
   --shadow-sticker: 0 1px 0 rgba(26, 20, 5, 0.35), 0 4px 10px -4px rgba(26, 20, 5, 0.35);
 }
 :root {
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --radius-sticker: 6px;
-  --radius-field: 10px;
-  --radius-button: 12px;
-  --radius-notice: 14px;
-  --radius-card: 16px;
-  --radius-nav: 20px;
-  --radius-sheet: 22px;
-  --radius-pill: 999px;
-  --size-tap: 44px;
-  --size-button: 48px;
-  --size-chip: 32px;
-  --size-nav: 64px;
-  --size-icon: 20px;
+  --space-1: 4px; /* Entre ícono y texto dentro de un chip. */
+  --space-2: 8px; /* Paso base. Entre chips, entre precio tachado y precio final. */
+  --space-3: 12px; /* Padding interno de la tarjeta compacta, gap de filas de chips. */
+  --space-4: 16px; /* Margen lateral de pantalla y padding de tarjeta. */
+  --space-5: 20px; /* Padding horizontal de botones. */
+  --space-6: 24px; /* Entre bloques del detalle. */
+  --space-8: 32px; /* Entre secciones de una pantalla. */
+  --space-10: 40px; /* Aire arriba del título de pantalla y en estados vacíos. */
+  --radius-sticker: 6px; /* Calcomanía de descuento. */
+  --radius-field: 10px; /* Campos de texto y buscador. */
+  --radius-button: 999px; /* Botones: cápsula (radio completo). Los de ícono son círculos. */
+  --radius-notice: 14px; /* Toasts y avisos. */
+  --radius-card: 16px; /* Tarjetas de oferta y bloques del detalle. */
+  --radius-nav: 20px; /* Barra de navegación flotante. */
+  --radius-sheet: 22px; /* Esquinas superiores de las hojas que suben desde abajo. */
+  --radius-pill: 999px; /* Chips, cuenta regresiva y pastillas. */
+  --size-tap: 44px; /* Área táctil mínima de cualquier control. */
+  --size-button: 52px; /* Alto del botón principal. El compacto y los de ícono usan size-tap (44px). */
+  --size-chip: 32px; /* Alto de chips de filtro. */
+  --size-nav: 64px; /* Alto de la barra de navegación flotante. */
+  --size-icon: 20px; /* Íconos de Lucide en controles; 16px dentro de chips, 24px en la navegación. */
   --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
   --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+  --text-price-hero: 800 44px/44px var(--font-display); /* Precio final en el detalle de la oferta. */
+  --text-screen-title: 800 34px/36px var(--font-display); /* Título de pantalla. Una vez por pantalla. */
+  --text-price-card: 800 24px/26px var(--font-display); /* Precio final en la tarjeta. */
+  --text-sticker-text: 800 18px/18px var(--font-display); /* Texto de la calcomanía de descuento. */
+  --text-title-lg: 700 22px/28px var(--font-sans); /* Nombre del juego en el detalle. */
+  --text-title-md: 700 17px/22px var(--font-sans); /* Nombre del juego en la tarjeta. Máximo dos líneas. */
+  --text-body: 400 15px/22px var(--font-sans); /* Texto corrido y descripciones. */
+  --text-button-text: 600 15px/20px var(--font-sans); /* Etiquetas de botones. */
+  --text-body-sm: 400 13px/18px var(--font-sans); /* Metadatos, precio tachado, ayudas. */
+  --text-label: 600 12px/16px var(--font-sans); /* Encabezados de sección en mayúsculas y chips de tag. */
+  --text-caption: 500 12px/16px var(--font-sans); /* Cuenta regresiva y datos chicos, con cifras tabulares. */
 }
-.price-hero { font-family: var(--font-display); font-size: 44px; line-height: 44px; font-weight: 800; }
-.screen-title { font-family: var(--font-display); font-size: 34px; line-height: 36px; font-weight: 800; letter-spacing: 0.005em; }
-.price-card { font-family: var(--font-display); font-size: 24px; line-height: 26px; font-weight: 800; }
-.sticker-text { font-family: var(--font-display); font-size: 18px; line-height: 18px; font-weight: 800; letter-spacing: 0.01em; }
-.title-lg { font-family: var(--font-sans); font-size: 22px; line-height: 28px; font-weight: 700; }
-.title-md { font-family: var(--font-sans); font-size: 17px; line-height: 22px; font-weight: 700; }
-.body { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 400; }
-.button-text { font-family: var(--font-sans); font-size: 15px; line-height: 20px; font-weight: 600; }
-.body-sm { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 400; }
-.label { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em; }
-.caption { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 500; }
+.price-hero {
+  font-family: var(--font-display);
+  font-size: 44px;
+  line-height: 44px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.screen-title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 36px;
+  font-weight: 800;
+  letter-spacing: 0.005em;
+}
+.price-card {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 26px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.sticker-text {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 18px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+.title-lg {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.title-md {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.button-text {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.body-sm {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.caption {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+@font-face {
+  font-family: "Big Shoulders Display";
+  src: url("fonts/BigShouldersDisplay-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("fonts/HankenGrotesk-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}

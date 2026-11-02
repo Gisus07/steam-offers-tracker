@@ -7,7 +7,13 @@
     "v": 1
   },
   "docs": {
-    "sections": []
+    "readme": "project/README.md",
+    "sections": [
+      "project/app-expo.md",
+      "project/librerias.md",
+      "project/movimiento.md",
+      "project/pantallas.md"
+    ]
   },
   "groups": [],
   "lastChange": {
