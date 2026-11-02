@@ -8,7 +8,7 @@ Cada receta de abajo es la que se eligió el 2 de noviembre de 2026 en el [Catá
 
 - Cada animación **explica un cambio, da continuidad, confirma o señala**. Si no, sobra.
 - **Responder al toque:** 120–140 ms (el hundido del botón, el aplaste de Guardar). **Confirmar o cambiar de lugar:** 200–400 ms. Una secuencia que cuenta algo, como guardar o la bienvenida, puede durar más, pero nunca bloquea el siguiente toque.
-- **Muelles:** firmes en lo que cambia de lugar (rigidez 200–520, amortiguación 24–36). El rebote se guarda para lo que confirma: guardar, la calcomanía, el filtro y el ícono de la barra.
+- **Muelles:** firmes en lo que cambia de lugar (rigidez 200–520, amortiguación 24–36). El rebote se guarda para lo que confirma: guardar, la calcomanía, el filtro, el ícono de la barra y el apretón del segmentado.
 - Una animación en curso se interrumpe y sigue desde donde está, sin heredar el impulso de un salto.
 - Se define una vez por componente (botón, tarjeta, hoja, aviso) y se reutiliza.
 - En listas largas solo anima lo que **entra**; al reciclar filas, nada se anima de nuevo.
