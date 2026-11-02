@@ -6,7 +6,7 @@ Aviso breve que ofrece deshacer una acción o informa un error. Sale de la barra
 - **Deshacer:**
   - ícono `eye-off` en `ink-2`;
   - "No te mostraremos más este juego";
-  - **Deshacer**, como botón primario compacto.
+  - **Deshacer**, como botón primario compacto, con su canto (ver Button).
 - **Error:**
   - ícono `circle-alert` en `bad`;
   - qué pasó, por ejemplo "No pudimos actualizar las ofertas";
@@ -14,13 +14,14 @@ Aviso breve que ofrece deshacer una acción o informa un error. Sale de la barra
 - **Sin barra (primer uso):** el error va en línea, junto a la acción que falló.
 
 ## Reglas
-- Uno a la vez: el nuevo reemplaza al anterior. Dura 5 s.
-- Guardar no muestra aviso: el botón cambia y el ícono de Guardados late.
+- Uno a la vez: el nuevo reemplaza al anterior.
+- Dura 5 s y no muestra cuánto queda.
+- Guardar no muestra aviso: una copia del ícono vuela a Guardados y Guardados late.
 - La frase ocupa una o dos líneas, a 13px y peso 600. La acción dice lo que hace.
 
 ## Movimiento
-- **Abrir:** ancho, alto y radio con muelle 420/28. La fila del mensaje entra con un fundido de 220 ms que empieza a los 160 ms, cuando ya hay espacio.
-- **Cerrar:** orden inverso. Primero se va el mensaje (120 ms) y después la cápsula vuelve a su tamaño.
+- **Abrir:** ancho, alto y radio con muelle 340/28. La fila del mensaje entra con un fundido de 260 ms que empieza a los 200 ms, cuando ya hay espacio.
+- **Cerrar:** orden inverso. Primero se va el mensaje (180 ms) y, 100 ms después, la cápsula vuelve a su tamaño con el mismo muelle.
 - **Con "reducir movimiento":** la cápsula cambia de tamaño en 150 ms, sin muelle, y el mensaje solo aparece.
 
 ## En la app

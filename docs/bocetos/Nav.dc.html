@@ -24,62 +24,69 @@ body{margin:0}
           <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px; flex: none; fill: none; stroke: var(--ink-2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path><path d="m2 2 20 20"></path></svg>
         </sc-if>
         <span style="flex: 1; min-width: 0; font-weight: 600; font-size: 13px; line-height: 17px;">{{msg.text}}</span>
-        <dc-import name="Button" label="{{msg.action}}" variant="primary" size="md" shape="{{shape}}" onPress="{{msg.onAction}}" hint-size="112px,44px"></dc-import>
+        <dc-import name="Button" label="{{msg.action}}" variant="primary" size="md" onPress="{{msg.onAction}}" hint-size="112px,44px"></dc-import>
       </sc-if>
     </div>
     <div style="{{rowStyle}}">
       <span aria-hidden="true" style="{{indicatorStyle}}"></span>
-      <a href="Main.dc.html" aria-label="Para ti" aria-current="{{cur0}}" style="{{item0}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg></a>
-      <a href="Explorar.dc.html" aria-label="Explorar" aria-current="{{cur1}}" style="{{item1}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></a>
-      <a href="Guardados.dc.html" aria-label="Guardados" aria-current="{{cur2}}" style="{{item2}}"><span style="{{bumpStyle}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"></path></svg></span></a>
-      <a href="Ajustes.dc.html" aria-label="Ajustes" aria-current="{{cur3}}" style="{{item3}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
+      <a href="Main.dc.html" aria-label="Para ti" aria-current="{{cur0}}" style="{{item0}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{ic0}}"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg></a>
+      <a href="Explorar.dc.html" aria-label="Explorar" aria-current="{{cur1}}" style="{{item1}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{ic1}}"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></a>
+      <a href="Guardados.dc.html" aria-label="Guardados" aria-current="{{cur2}}" style="{{item2}}"><span style="{{bumpStyle}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{ic2}}"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"></path></svg></span></a>
+      <a href="Ajustes.dc.html" aria-label="Ajustes" aria-current="{{cur3}}" style="{{item3}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{ic3}}"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
     </div>
   </nav>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["parati","explorar","guardados","ajustes"],"default":"parati"},"shape":{"editor":"enum","options":["capsula","relieve"],"default":"capsula"},"bump":{"editor":null},"toast":{"editor":null},"$preview":{"width":358,"height":64}}'>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["parati","explorar","guardados","ajustes"],"default":"parati"},"bump":{"editor":null},"toast":{"editor":null},"$preview":{"width":358,"height":64}}'>
 class Component extends DCLogic {
   componentDidUpdate(prev) {
     var self = this;
     if (this.props.bump && this.props.bump !== prev.bump) {
       clearTimeout(this.bumpT);
-      this.setState({ bumping: true });
-      this.bumpT = setTimeout(function () { self.setState({ bumping: false }); }, 160);
+      clearTimeout(this.glowT);
+      // Guardados se rellena un momento y late: 1,3 en 180 ms
+      this.setState({ bumping: true, glow: true });
+      this.bumpT = setTimeout(function () { self.setState({ bumping: false }); }, 180);
+      this.glowT = setTimeout(function () { self.setState({ glow: false }); }, 900);
     }
     if (this.props.toast && this.props.toast !== prev.toast) this.setState({ last: this.props.toast });
   }
-  componentWillUnmount() { clearTimeout(this.bumpT); }
+  componentWillUnmount() { clearTimeout(this.bumpT); clearTimeout(this.glowT); }
   renderVals() {
     var s = this.state || {};
     var keys = ['parati', 'explorar', 'guardados', 'ajustes'];
     var i = Math.max(0, keys.indexOf(this.props.active ?? 'parati'));
-    var shape = this.props.shape ?? 'capsula';
-    var relieve = shape === 'relieve';
     var toast = this.props.toast || null;
     var open = !!toast;
     var msg = toast || s.last || null;
-    var spring = 'cubic-bezier(.3, 1.15, .45, 1)';
-    var panel = 'position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); box-sizing: border-box; overflow: hidden; margin: 0; background: var(--surface); '
-      + (relieve ? 'border: 1.5px solid var(--line-strong); box-shadow: 0 4px 0 var(--line-strong), var(--shadow-float); ' : 'border: 1px solid var(--line); box-shadow: var(--shadow-float); ')
-      + 'width: ' + (open ? 358 : (relieve ? 233 : 232)) + 'px; height: ' + (open ? 124 : 64) + 'px; border-radius: ' + (relieve ? 20 : (open ? 28 : 32)) + 'px; '
-      + 'transition: width 420ms ' + spring + ', height 420ms ' + spring + ', border-radius 420ms ' + spring + ';';
+    // Abre con una curva que imita el muelle 340/28; al cerrar, la cápsula espera 100 ms a que se vaya el mensaje
+    var spring = 'cubic-bezier(.3, 1.12, .5, 1)';
+    var wait = open ? '0ms' : '100ms';
+    var panel = 'position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); box-sizing: border-box; overflow: hidden; margin: 0; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-float); '
+      + 'width: ' + (open ? 358 : 232) + 'px; height: ' + (open ? 124 : 64) + 'px; border-radius: ' + (open ? 28 : 32) + 'px; '
+      + 'transition: width 420ms ' + spring + ' ' + wait + ', height 420ms ' + spring + ' ' + wait + ', border-radius 420ms ' + spring + ' ' + wait + ';';
     function item(n) {
-      return 'position: relative; z-index: 1; width: 52px; height: 52px; display: grid; place-items: center; border-radius: ' + (relieve ? 14 : 26) + 'px; text-decoration: none; color: ' + (n === i ? 'var(--bg)' : 'var(--ink-2)') + '; transition: color 200ms ease;';
+      return 'position: relative; z-index: 1; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 26px; text-decoration: none; color: ' + (n === i ? 'var(--bg)' : 'var(--ink-2)') + '; transition: color 200ms ease;';
+    }
+    // El ícono activo va relleno; Guardados también, un momento, al guardar
+    function ic(n) {
+      var filled = n === i || (n === 2 && !!s.glow);
+      return 'width: 24px; height: 24px; fill: ' + (filled ? 'currentColor' : 'none') + '; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;';
     }
     function cur(n) { return n === i ? 'page' : undefined; }
     return {
-      shape: shape,
       panelStyle: panel,
-      msgStyle: 'position: absolute; left: 0; right: 0; top: 0; height: 60px; box-sizing: border-box; padding: 8px 8px 0 16px; display: flex; align-items: center; gap: 10px; opacity: ' + (open ? 1 : 0) + '; transition: opacity ' + (open ? '220ms ease 160ms' : '120ms ease') + '; pointer-events: ' + (open ? 'auto' : 'none') + ';',
+      msgStyle: 'position: absolute; left: 0; right: 0; top: 0; height: 60px; box-sizing: border-box; padding: 8px 8px 0 16px; display: flex; align-items: center; gap: 10px; opacity: ' + (open ? 1 : 0) + '; transition: opacity ' + (open ? '260ms ease 200ms' : '180ms ease') + '; pointer-events: ' + (open ? 'auto' : 'none') + ';',
       hasMsg: !!msg,
       isError: !!msg && msg.kind === 'error',
       isUndo: !!msg && msg.kind !== 'error',
       msg: msg || { text: '', action: '' },
       rowStyle: 'position: absolute; left: 50%; bottom: 0; width: 230px; height: 62px; transform: translateX(-50%); box-sizing: border-box; padding: 5px; display: grid; grid-template-columns: repeat(4, 52px); column-gap: 4px; align-items: center;',
-      indicatorStyle: 'position: absolute; top: 5px; left: 5px; width: 52px; height: 52px; border-radius: ' + (relieve ? 14 : 26) + 'px; background: var(--ink); ' + (relieve ? 'box-shadow: 0 3px 0 color-mix(in srgb, var(--ink) 50%, #000); ' : '') + 'transform: translateX(' + (i * 56) + 'px); transition: transform 380ms cubic-bezier(.3, 1.3, .45, 1);',
+      indicatorStyle: 'position: absolute; top: 5px; left: 5px; width: 52px; height: 52px; border-radius: 26px; background: var(--ink); transform: translateX(' + (i * 56) + 'px); transition: transform 380ms cubic-bezier(.3, 1.3, .45, 1);',
       item0: item(0), item1: item(1), item2: item(2), item3: item(3),
+      ic0: ic(0), ic1: ic(1), ic2: ic(2), ic3: ic(3),
       cur0: cur(0), cur1: cur(1), cur2: cur(2), cur3: cur(3),
-      bumpStyle: 'display: grid; place-items: center; transform: scale(' + (s.bumping ? 1.3 : 1) + '); transition: transform ' + (s.bumping ? '150ms ease-out' : '460ms cubic-bezier(.3, 1.6, .5, 1)') + ';'
+      bumpStyle: 'display: grid; place-items: center; transform: scale(' + (s.bumping ? 1.3 : 1) + '); transition: transform ' + (s.bumping ? '180ms ease-out' : '460ms cubic-bezier(.3, 1.6, .5, 1)') + ';'
     };
   }
 }

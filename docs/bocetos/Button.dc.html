@@ -22,7 +22,7 @@ body{margin:0}
   </sc-if>
 </span>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","options":["primary","secondary","text","steam","icon"],"default":"primary"},"shape":{"editor":"enum","options":["capsula","relieve"],"default":"capsula"},"label":{"editor":null},"size":{"editor":null},"block":{"editor":null},"href":{"editor":null},"icon":{"editor":null},"toggled":{"editor":null},"disabled":{"editor":null},"onPress":{"editor":null},"$preview":{"width":358,"height":52}}'>
+<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","options":["primary","secondary","text","steam","icon"],"default":"primary"},"label":{"editor":null},"size":{"editor":null},"block":{"editor":null},"href":{"editor":null},"icon":{"editor":null},"toggled":{"editor":null},"disabled":{"editor":null},"onPress":{"editor":null},"$preview":{"width":358,"height":56}}'>
 class Component extends DCLogic {
   renderVals() {
     var s = this.state || {};
@@ -30,7 +30,6 @@ class Component extends DCLogic {
     var p = this.props;
     var standalone = p.label == null;
     var variant = p.variant ?? 'primary';
-    var shape = p.shape ?? 'capsula';
     var size = p.size ?? 'lg';
     var block = p.block ?? standalone;
     var label = p.label ?? 'Continuar';
@@ -44,36 +43,30 @@ class Component extends DCLogic {
       back: ['m15 18-6-6 6-6', 'M0 0', 'M0 0']
     };
     var paths = ICONS[p.icon] || null;
+    // Estilo control: cápsula (círculo en los de ícono) con un canto de 4px que desaparece al presionar.
+    // Los cantos salen de los tokens accent-lip, raised-lip e ink-lip; la mezcla es el respaldo.
+    var RAISED = 'var(--raised-lip, color-mix(in srgb, var(--line) 85%, var(--line-strong)))';
     var C = {
-      primary: { bg: 'var(--accent)', rbg: 'var(--accent)', fg: 'var(--on-accent)', border: '0', edge: '0', lip: 'color-mix(in srgb, var(--accent) 55%, #000)' },
-      secondary: { bg: 'var(--surface-raised)', rbg: 'var(--surface)', fg: 'var(--ink)', border: '1px solid var(--line)', edge: '1.5px solid var(--line-strong)', lip: 'var(--line-strong)' },
-      text: { bg: 'transparent', rbg: 'transparent', fg: 'var(--accent)', border: '0', edge: '0', lip: 'transparent' },
-      steam: { bg: 'var(--ink)', rbg: 'var(--ink)', fg: 'var(--bg)', border: '0', edge: '0', lip: 'color-mix(in srgb, var(--ink) 50%, #000)' },
-      icon: { bg: 'var(--surface-raised)', rbg: 'var(--surface)', fg: 'var(--ink-2)', border: '0', edge: '1.5px solid var(--line-strong)', lip: 'var(--line-strong)' }
+      primary: { bg: 'var(--accent)', fg: 'var(--on-accent)', border: '1px solid transparent', lip: 'var(--accent-lip, color-mix(in srgb, var(--accent) 55%, #000))' },
+      secondary: { bg: 'var(--surface-raised)', fg: 'var(--ink)', border: '1px solid var(--line)', lip: RAISED },
+      text: { bg: 'transparent', fg: 'var(--accent)', border: '1px solid transparent', lip: '' },
+      steam: { bg: 'var(--ink)', fg: 'var(--bg)', border: '1px solid transparent', lip: 'var(--ink-lip, color-mix(in srgb, var(--ink) 58%, #000))' },
+      icon: { bg: 'var(--surface-raised)', fg: 'var(--ink-2)', border: '1px solid var(--line)', lip: RAISED }
     };
     var c = C[variant] || C.primary;
     var on = isIcon && !!p.toggled;
-    var relieve = shape === 'relieve';
     var h = (isIcon || size === 'md') ? 44 : 52;
     var fg = on ? 'var(--good)' : c.fg;
-    var bg = on ? 'var(--good-soft)' : (relieve ? c.rbg : c.bg);
+    var bg = on ? 'var(--good-soft)' : c.bg;
     if (variant === 'text' && pressed) bg = 'var(--accent-soft)';
-    var radius, transform, shadow, border, transition;
-    if (relieve) {
-      var lip = variant === 'text' ? 0 : (isIcon ? 3 : 4);
-      radius = isIcon ? 12 : 14;
-      transform = 'translateY(' + (pressed ? lip : 0) + 'px)';
-      shadow = lip ? '0 ' + (pressed ? 0 : lip) + 'px 0 ' + c.lip : 'none';
-      border = c.edge;
-      transition = 'transform 110ms ease-out, box-shadow 110ms ease-out, background-color 200ms ease';
-    } else {
-      radius = pressed ? (isIcon ? 14 : 16) : h / 2;
-      transform = 'scale(' + (pressed ? (isIcon ? 0.9 : 0.97) : 1) + ')';
-      shadow = 'none';
-      border = c.border;
-      transition = 'border-radius 260ms cubic-bezier(.3, 1.3, .45, 1), transform 260ms cubic-bezier(.3, 1.3, .45, 1), background-color 200ms ease';
-    }
-    var style = 'box-sizing: border-box; display: ' + (block ? 'flex' : 'inline-flex') + '; align-items: center; justify-content: center; gap: 8px; width: ' + (block ? '100%' : (isIcon ? '44px' : 'auto')) + '; height: ' + h + 'px; margin: 0; padding: 0 ' + (isIcon ? 0 : (size === 'md' ? 18 : 24)) + 'px; border: ' + border + '; border-radius: ' + radius + 'px; background: ' + bg + '; color: ' + fg + '; font-family: var(--font-sans); font-weight: ' + (variant === 'text' ? 600 : 700) + '; font-size: ' + (size === 'md' ? 15 : 16) + 'px; line-height: 20px; text-decoration: none; white-space: nowrap; vertical-align: top; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; transform: ' + transform + '; box-shadow: ' + shadow + '; transition: ' + transition + ';' + (disabled ? ' opacity: .45; pointer-events: none;' : '');
+    var lip = c.lip ? 4 : 0;
+    var sunk = pressed ? lip : 0;
+    var shadow = lip ? '0 ' + (lip - sunk) + 'px 0 ' + c.lip : 'none';
+    // Baja en 120 ms; al soltar vuelve con una curva que imita el muelle 500/26
+    var transition = pressed
+      ? 'transform 120ms ease-out, box-shadow 120ms ease-out, background-color 200ms ease, color 200ms ease'
+      : 'transform 300ms cubic-bezier(.3, 1.4, .5, 1), box-shadow 160ms ease-out, background-color 200ms ease, color 200ms ease';
+    var style = 'box-sizing: border-box; display: ' + (block ? 'flex' : 'inline-flex') + '; align-items: center; justify-content: center; gap: 8px; width: ' + (block ? '100%' : (isIcon ? '44px' : 'auto')) + '; height: ' + h + 'px; margin: 0; padding: 0 ' + (isIcon ? 0 : (size === 'md' ? 18 : 24)) + 'px; border: ' + c.border + '; border-radius: ' + (h / 2) + 'px; background: ' + bg + '; color: ' + fg + '; font-family: var(--font-sans); font-weight: ' + (variant === 'text' ? 600 : 700) + '; font-size: ' + (size === 'md' ? 15 : 16) + 'px; line-height: 20px; text-decoration: none; white-space: nowrap; vertical-align: top; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; transform: translateY(' + sunk + 'px); box-shadow: ' + shadow + '; transition: ' + transition + ';' + (disabled ? ' opacity: .45; pointer-events: none;' : '');
     var icon = isIcon ? 22 : 20;
     return {
       wrapStyle: 'display: ' + (block ? 'block' : 'inline-block') + '; width: ' + (block ? '100%' : 'auto') + '; vertical-align: top; font-family: var(--font-sans); color: var(--ink);',

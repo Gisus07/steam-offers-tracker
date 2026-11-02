@@ -9,19 +9,21 @@ La tarjeta de una oferta: imagen del juego, calcomanía, nombre, tags, precio, c
 - DealSticker `md` pegada sobre el borde inferior izquierdo de la imagen.
 - Nombre en `title-md`, dos líneas como máximo; hasta tres chips de tag.
 - PriceBlock `card` a la izquierda; CountdownChip encima del precio.
-- Acciones a la derecha, al alcance del pulgar, en botones de ícono de 44px (Button, de ícono).
+- Acciones a la derecha, al alcance del pulgar, en botones de ícono de 44px con canto (Button, de ícono).
 - Fondo `surface`, borde `line`, radio `radius-card`, sombra `shadow-card`.
 
 ## Comportamiento
-- **Al cargar:** entra con un fundido y 12px de subida, escalonada 70 ms por tarjeta, mientras el esqueleto se desvanece.
-- **Tocar:** abre el detalle, que crece desde la tarjeta (escala .9 → 1 y fundido, muelle 300/30). Cerrar lo encoge hacia el mismo punto.
-- **Presionar:** escala .98, muelle 600/18. El botón de ícono presionado se aplana según la forma de Button.
+- **Al cargar:** el esqueleto se convierte en la tarjeta. Un brillo la cruza y cada bloque toma la forma de su pieza (ver Skeleton).
+- **Calcomanía:** la primera vez que la oferta aparece, baja como un sello y se asienta (ver DealSticker).
+- **Presionar:** escala .98 en 120 ms. Los botones de ícono se hunden (Button).
+- **Tocar:** abre el detalle con un contenedor que se transforma. La tarjeta crece hasta ocupar la pantalla y la lista de atrás se aleja (ver Movimiento). Cerrar la devuelve a su lugar.
 - **Guardar:**
-  - el ícono `bookmark` se rellena (escala .6 → 1, muelle 420/28), con háptica ligera y estado `good`;
-  - el ícono de Guardados de la barra late una vez.
+  - el ícono `bookmark` se aplasta, se rellena y estalla en puntos `good`;
+  - una copia vuela a Guardados en la barra, que late (ver Movimiento);
+  - háptica `Confirm` y estado `good`.
 - **No me interesa:** se activa al deslizar a la izquierda o con el ícono `x`.
-  - La tarjeta sale hacia la izquierda en 220 ms y la lista se cierra en 260 ms.
-  - La barra muestra el aviso con Deshacer. Deshacer abre el espacio y la tarjeta vuelve desde la izquierda.
+  - Al agarrarla se levanta (1,03 y más sombra). Al soltarla pasado el umbral, se lanza y se achica; si no, vuelve a su lugar. Con el ícono se lanza sin levantarse.
+  - La lista se cierra en 340 ms y la barra muestra el aviso con Deshacer. Deshacer abre el espacio y la tarjeta vuelve.
   - Registra el evento `dismiss`; Deshacer registra `undismiss`.
 - **Eventos de uso:** cada vez que la tarjeta queda visible al menos un segundo se registra una `impression`; el tiempo en el detalle se registra como `dwell`.
 

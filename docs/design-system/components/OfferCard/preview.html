@@ -1,4 +1,4 @@
-<!-- @dsCard group="Oferta" height=580 subtitle="Presiona, guarda (late Guardados) o descarta: el aviso sale de la barra" -->
+<!-- @dsCard group="Oferta" height=590 subtitle="Presiona o arrastra a la izquierda; guarda (vuela a Guardados) o descarta: el aviso sale de la barra" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>OfferCard</title>
@@ -7,6 +7,10 @@
 <style>
   .art{position:absolute;inset:0;display:flex;align-items:flex-end;padding:14px 16px 22px 96px;font:800 26px/26px var(--font-display);color:var(--ink-2);letter-spacing:.01em}
   .stage{display:flex;flex-direction:column;gap:16px;padding:16px;max-width:360px}
+  #card{touch-action:pan-y;cursor:grab}
+  .dot{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--good);opacity:0;pointer-events:none}
+  .spark{position:absolute;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:var(--good);opacity:0;pointer-events:none;z-index:2}
+  .fly{position:fixed;left:0;top:0;width:22px;height:22px;color:var(--good);fill:currentColor;pointer-events:none;z-index:10}
 </style></head>
 <body class="ot-root">
 <div class="stage" id="root">
@@ -32,7 +36,7 @@
       </div>
     </article>
   </div>
-  <div style="height:124px;display:flex;align-items:flex-end">
+  <div style="height:128px;display:flex;align-items:flex-end">
     <div class="ot-dock" id="dock">
       <div class="ot-dock__panel" id="panel">
         <div class="ot-dock__msg" id="msg" role="status">
@@ -40,7 +44,7 @@
           <span class="ot-dock__text">No te mostraremos más este juego</span>
           <button class="ot-btn ot-btn--primary" type="button" id="undo">Deshacer</button>
         </div>
-        <nav class="ot-nav" aria-label="Principal">
+        <nav class="ot-nav" aria-label="Principal" id="nav">
           <span class="ot-nav__pill" aria-hidden="true"></span>
           <button type="button" aria-label="Para ti" aria-current="page"><i data-lucide="sparkles"></i></button>
           <button type="button" aria-label="Explorar"><i data-lucide="search"></i></button>
@@ -56,64 +60,164 @@
   if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } });
   var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var anim = !!M && !reduce;
-  var card = document.getElementById('card'), slot = document.getElementById('slot'), save = document.getElementById('save');
-  var dock = document.getElementById('dock'), panel = document.getElementById('panel'), msg = document.getElementById('msg');
-  var timer = null;
+  function $(id) { return document.getElementById(id); }
+  function spring(k, d, delay) { return { type: 'spring', stiffness: k, damping: d, velocity: 0, delay: delay || 0 }; }
+  function tw(ms, ease, delay) { return { duration: ms / 1000, ease: ease || 'easeOut', delay: delay || 0 }; }
+  var card = $('card'), slot = $('slot'), save = $('save'), panel = $('panel'), dock = $('dock'), msg = $('msg');
+  var nav = $('nav'), navSaved = $('navSaved');
+  var timer = null, gone = false, slotH = 0;
+
+  // ---- Aviso en la barra: abre con muelle 340/28, mensaje a los 200 ms; cierra con el mensaje primero ----
   function setOpen(open) {
     dock.classList.toggle('ot-dock--open', open);
     var w = open ? Math.min(dock.clientWidth, 358) : 232;
-    if (anim) {
-      if (open) {
-        M.animate(panel, { width: w + 'px', height: '124px', borderRadius: '28px' }, { type: 'spring', stiffness: 420, damping: 28 });
-        M.animate(msg, { opacity: [0, 1] }, { duration: 0.22, delay: 0.16 });
-      } else {
-        M.animate(msg, { opacity: 0 }, { duration: 0.12 });
-        M.animate(panel, { width: '232px', height: '64px', borderRadius: '32px' }, { type: 'spring', stiffness: 420, damping: 28, delay: 0.08 });
-      }
-    } else {
+    if (!anim) {
       panel.style.width = w + 'px';
       panel.style.height = open ? '124px' : '64px';
       panel.style.borderRadius = open ? '28px' : '32px';
       msg.style.opacity = open ? '1' : '0';
+      return;
+    }
+    if (open) {
+      M.animate(panel, { width: w + 'px', height: '124px', borderRadius: '28px' }, spring(340, 28));
+      M.animate(msg, { opacity: [0, 1] }, tw(260, 'easeOut', 0.2));
+    } else {
+      M.animate(msg, { opacity: 0 }, tw(180));
+      M.animate(panel, { width: '232px', height: '64px', borderRadius: '32px' }, spring(340, 28, 0.1));
     }
   }
-  card.addEventListener('pointerdown', function (e) { if (anim && !e.target.closest('button')) M.animate(card, { scale: 0.98 }, { type: 'spring', stiffness: 600, damping: 18 }); });
-  ['pointerup', 'pointerleave'].forEach(function (t) { card.addEventListener(t, function () { if (anim) M.animate(card, { scale: 1 }, { type: 'spring', stiffness: 600, damping: 18 }); }); });
-  save.addEventListener('click', function () {
-    var on = save.getAttribute('aria-pressed') !== 'true';
-    save.setAttribute('aria-pressed', String(on));
-    save.setAttribute('aria-label', on ? 'Guardado' : 'Guardar');
-    if (!on || !anim) return;
-    M.animate(save.querySelector('svg'), { scale: [0.6, 1] }, { type: 'spring', stiffness: 420, damping: 28 });
-    var icon = document.querySelector('#navSaved svg');
-    M.animate(icon, { scale: 1.3 }, { duration: 0.15, ease: 'easeOut' }).then(function () {
-      M.animate(icon, { scale: 1 }, { type: 'spring', stiffness: 420, damping: 14 });
-    });
+
+  // ---- Sombras: misma estructura en reposo y levantada, para que Motion pueda mezclarlas ----
+  var restShadow = '';
+  function shadows() {
+    var rest = getComputedStyle(card).boxShadow;
+    if (!rest || rest === 'none') rest = '0px 0px 0px rgba(0, 0, 0, 0)';
+    return { rest: rest + ', 0px 0px 0px rgba(0, 0, 0, 0)', lifted: rest + ', 0px 18px 30px rgba(0, 0, 0, 0.42)' };
+  }
+
+  // ---- Presionar y arrastrar: escala .98 al tocar; al arrastrar se levanta a 1,03 y sigue al dedo ----
+  var drag = null;
+  card.addEventListener('pointerdown', function (e) {
+    if (gone || !anim || e.target.closest('button')) return;
+    var sh = shadows();
+    restShadow = sh.rest;
+    drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, dx: 0, lifted: false, sh: sh };
+    M.animate(card, { scale: 0.98 }, tw(120));
   });
-  document.getElementById('dismiss').addEventListener('click', function () {
-    slot.style.height = slot.offsetHeight + 'px';
-    slot.style.overflow = 'hidden';
-    function collapse() {
-      if (anim) { M.animate(slot, { height: '0px' }, { duration: 0.26, ease: [0.2, 0, 0, 1] }); } else { slot.style.height = '0px'; }
-      clearTimeout(timer);
-      setOpen(true);
-      timer = setTimeout(function () { setOpen(false); }, 5000);
+  card.addEventListener('pointermove', function (e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var dx = e.clientX - drag.x0;
+    if (!drag.lifted) {
+      if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(e.clientY - drag.y0)) return;
+      drag.lifted = true;
+      try { card.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ }
+      M.animate(card, { scale: 1.03 }, spring(420, 30));
+      M.animate(card, { boxShadow: [drag.sh.rest, drag.sh.lifted] }, tw(200));
     }
-    if (anim) { M.animate(card, { x: '-110%', opacity: 0 }, { duration: 0.22, ease: [0.4, 0, 1, 1] }).then(collapse); }
-    else { card.style.opacity = '0'; collapse(); }
+    drag.dx = Math.min(24, dx);
+    M.animate(card, { x: drag.dx, rotate: drag.dx / 30 }, { duration: 0 });
   });
-  document.getElementById('undo').addEventListener('click', function () {
+  function endDrag() {
+    if (!drag) return;
+    var d = drag;
+    drag = null;
+    if (!d.lifted) { M.animate(card, { scale: 1 }, spring(500, 26)); return; }
+    if (d.dx < -90) { fling(d.dx, true); return; }
+    M.animate(card, { x: 0, rotate: 0, scale: 1 }, spring(300, 30));
+    M.animate(card, { boxShadow: [d.sh.lifted, d.sh.rest] }, tw(200)).then(function () { card.style.boxShadow = ''; });
+  }
+  card.addEventListener('pointerup', endDrag);
+  card.addEventListener('pointercancel', endDrag);
+  card.addEventListener('pointerleave', function () { if (drag && !drag.lifted) endDrag(); });
+
+  // ---- Se lanza (320 ms), el hueco se cierra (340 ms) y sale el aviso ----
+  function fling(fromX, lifted) {
+    gone = true;
+    if (!anim) { card.style.opacity = '0'; collapse(); return; }
+    M.animate(card, { x: [fromX, -320], rotate: [fromX / 30, -10], scale: [lifted ? 1.03 : 1, 0.92], opacity: [1, 0] }, tw(320, 'easeIn')).then(collapse);
+  }
+  function collapse() {
+    slotH = slot.offsetHeight;
+    slot.style.overflow = 'hidden';
+    if (anim) M.animate(slot, { height: [slotH + 'px', '0px'], marginBottom: ['0px', '-16px'] }, tw(340, [0.2, 0, 0, 1]));
+    else { slot.style.height = '0px'; slot.style.marginBottom = '-16px'; }
     clearTimeout(timer);
-    setOpen(false);
-    var h = card.offsetHeight;
+    setOpen(true);
+    // En la app el aviso se va a los 5 s y no hay vuelta atrás; acá la tarjeta vuelve sola para poder repetir
+    timer = setTimeout(function () { setOpen(false); setTimeout(restore, 700); }, 5000);
+  }
+  function restore() {
+    if (!gone) return;
     function back() {
       slot.style.height = '';
       slot.style.overflow = '';
-      if (anim) { M.animate(card, { x: 0, opacity: 1 }, { type: 'spring', stiffness: 420, damping: 32 }); }
-      else { card.style.transform = ''; card.style.opacity = '1'; }
+      slot.style.marginBottom = '';
+      gone = false;
+      if (anim) {
+        M.animate(card, { x: [-320, 0], rotate: [-10, 0], scale: [0.92, 1], opacity: [0, 1] }, spring(300, 30));
+        if (restShadow) card.style.boxShadow = '';
+      } else { card.style.opacity = '1'; }
     }
-    if (anim) { M.animate(slot, { height: h + 'px' }, { duration: 0.26, ease: [0.2, 0, 0, 1] }).then(back); } else { back(); }
+    if (anim) M.animate(slot, { height: ['0px', slotH + 'px'], marginBottom: ['-16px', '0px'] }, tw(340, [0.2, 0, 0, 1])).then(back);
+    else back();
+  }
+  $('dismiss').addEventListener('click', function () { if (!gone) fling(0, false); });
+  $('undo').addEventListener('click', function () {
+    clearTimeout(timer);
+    setOpen(false);
+    restore();
   });
+
+  // ---- Guardar: se aplasta (140 ms), se rellena y estalla, y una copia vuela a Guardados (700 ms) ----
+  var dots = [], sparks = [];
+  for (var i = 0; i < 8; i++) { var dEl = document.createElement('span'); dEl.className = 'dot'; save.appendChild(dEl); dots.push(dEl); }
+  for (var j = 0; j < 5; j++) { var sEl = document.createElement('span'); sEl.className = 'spark'; nav.appendChild(sEl); sparks.push(sEl); }
+  function setSaved(on) {
+    save.setAttribute('aria-pressed', String(on));
+    save.setAttribute('aria-label', on ? 'Guardado' : 'Guardar');
+  }
+  save.addEventListener('click', function () {
+    var on = save.getAttribute('aria-pressed') !== 'true';
+    var icon = save.querySelector('svg');
+    if (!on || !anim || !icon) { setSaved(on); return; }
+    M.animate(icon, { scaleX: [1, 1.22], scaleY: [1, 0.72] }, tw(140, 'easeIn')).then(function () {
+      setSaved(true);
+      M.animate(icon, { scaleX: [1.22, 1], scaleY: [0.72, 1] }, spring(420, 14));
+      dots.forEach(function (d, k) {
+        var a = (Math.PI * 2 * k) / dots.length;
+        M.animate(d, { x: [0, Math.cos(a) * 34], y: [0, Math.sin(a) * 34], opacity: [1, 0], scale: [1, 0.4] }, tw(600));
+      });
+      setTimeout(function () { fly(icon); }, 180);
+    });
+  });
+  function fly(icon) {
+    var a = icon.getBoundingClientRect(), b = navSaved.getBoundingClientRect();
+    var ax = a.left + a.width / 2, ay = a.top + a.height / 2, bx = b.left + b.width / 2, by = b.top + b.height / 2;
+    var c = icon.cloneNode(true);
+    c.setAttribute('class', 'fly');
+    c.removeAttribute('style');
+    c.style.left = (ax - 11) + 'px';
+    c.style.top = (ay - 11) + 'px';
+    document.body.appendChild(c);
+    // x y y con curvas distintas dibujan el arco
+    M.animate(c, { x: [0, bx - ax] }, tw(700, 'easeOut'));
+    M.animate(c, { scale: [1, 0.55] }, tw(700, 'easeIn'));
+    M.animate(c, { y: [0, by - ay] }, tw(700, [0.55, 0, 0.85, 0.35])).then(function () { c.remove(); arrive(); });
+  }
+  function arrive() {
+    var svg = navSaved.querySelector('svg');
+    if (!svg) return;
+    svg.style.fill = 'currentColor';
+    setTimeout(function () { if (navSaved.getAttribute('aria-current') !== 'page') svg.style.fill = ''; }, 900);
+    M.animate(svg, { scale: [1, 1.3] }, tw(180)).then(function () { M.animate(svg, { scale: 1 }, spring(380, 14)); });
+    var cx = navSaved.offsetLeft + navSaved.offsetWidth / 2, cy = navSaved.offsetTop + navSaved.offsetHeight / 2;
+    sparks.forEach(function (s, k) {
+      var ang = (Math.PI * 2 * k) / sparks.length - Math.PI / 2;
+      s.style.left = cx + 'px';
+      s.style.top = cy + 'px';
+      M.animate(s, { x: [0, Math.cos(ang) * 24], y: [0, Math.sin(ang) * 24], opacity: [1, 0] }, tw(460));
+    });
+  }
 })();
 </script>
 </body>

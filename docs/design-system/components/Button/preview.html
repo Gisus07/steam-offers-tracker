@@ -1,53 +1,32 @@
-<!-- @dsCard group="Acciones" height=300 subtitle="Forma en evaluación: A cápsula (recomendada) se aplana al presionar; B relieve se hunde" -->
+<!-- @dsCard group="Acciones" height=240 subtitle="Estilo control: cápsula con canto; al presionar se hunde 4px y el canto desaparece" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>Button</title>
-<script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script></head>
 <body class="ot-root">
 <div class="ot-pad ot-col" id="root" style="gap:18px">
-  <div class="ot-col ot-shape-a" style="gap:10px">
-    <span class="ot-label">A · Cápsula (recomendada)</span>
-    <div class="ot-row">
-      <button class="ot-btn ot-btn--primary" type="button"><i data-lucide="external-link"></i>Ir a Steam</button>
-      <button class="ot-btn ot-btn--secondary" type="button"><i data-lucide="x"></i>No me interesa</button>
-      <button class="ot-btn ot-btn--ghost" type="button">Deshacer</button>
-    </div>
-    <div class="ot-row">
-      <button class="ot-btn ot-btn--steam" type="button">Iniciar sesión con Steam</button>
-      <button class="ot-btn ot-btn--icon" type="button" aria-label="Guardado" aria-pressed="true"><i data-lucide="bookmark"></i></button>
-      <button class="ot-btn ot-btn--icon" type="button" aria-label="No me interesa"><i data-lucide="x"></i></button>
-      <button class="ot-btn ot-btn--primary" type="button" disabled>Continuar</button>
-    </div>
+  <div class="ot-row">
+    <button class="ot-btn ot-btn--primary" type="button"><i data-lucide="external-link"></i>Ir a Steam</button>
+    <button class="ot-btn ot-btn--secondary" type="button"><i data-lucide="x"></i>No me interesa</button>
+    <button class="ot-btn ot-btn--ghost" type="button">Ver ofertas sin cuenta</button>
   </div>
-  <div class="ot-col ot-shape-b" style="gap:10px">
-    <span class="ot-label">B · Relieve</span>
-    <div class="ot-row">
-      <button class="ot-btn ot-btn--primary" type="button"><i data-lucide="external-link"></i>Ir a Steam</button>
-      <button class="ot-btn ot-btn--secondary" type="button"><i data-lucide="x"></i>No me interesa</button>
-      <button class="ot-btn ot-btn--ghost" type="button">Deshacer</button>
-    </div>
-    <div class="ot-row">
-      <button class="ot-btn ot-btn--steam" type="button">Iniciar sesión con Steam</button>
-      <button class="ot-btn ot-btn--icon" type="button" aria-label="Guardado" aria-pressed="true"><i data-lucide="bookmark"></i></button>
-      <button class="ot-btn ot-btn--icon" type="button" aria-label="No me interesa"><i data-lucide="x"></i></button>
-      <button class="ot-btn ot-btn--primary" type="button" disabled>Continuar</button>
-    </div>
+  <div class="ot-row">
+    <button class="ot-btn ot-btn--steam" type="button">Iniciar sesión con Steam</button>
+    <button class="ot-btn ot-btn--icon" type="button" aria-label="Volver"><i data-lucide="chevron-left"></i></button>
+    <button class="ot-btn ot-btn--icon" type="button" aria-label="No me interesa"><i data-lucide="x"></i></button>
+    <button class="ot-btn ot-btn--icon" type="button" id="save" aria-label="Guardar" aria-pressed="false"><i data-lucide="bookmark"></i></button>
+    <button class="ot-btn ot-btn--primary" type="button" disabled>Continuar</button>
   </div>
+  <p class="ot-muted" style="margin:0">Mantén presionado cualquiera: baja 4px en 120 ms y, al soltar, vuelve con un rebote corto.</p>
 </div>
 <script>
 (function () {
   if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } });
-  var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!M || reduce) return;
-  document.querySelectorAll('.ot-shape-a .ot-btn:not([disabled])').forEach(function (b) {
-    var icon = b.classList.contains('ot-btn--icon');
-    var rest = (b.offsetHeight / 2) + 'px';
-    function go(pressed) {
-      M.animate(b, { borderRadius: pressed ? (icon ? '14px' : '16px') : rest, scale: pressed ? (icon ? 0.9 : 0.97) : 1 }, { type: 'spring', stiffness: 600, damping: 18 });
-    }
-    b.addEventListener('pointerdown', function () { go(true); });
-    ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (t) { b.addEventListener(t, function () { go(false); }); });
+  var save = document.getElementById('save');
+  save.addEventListener('click', function () {
+    var on = save.getAttribute('aria-pressed') !== 'true';
+    save.setAttribute('aria-pressed', String(on));
+    save.setAttribute('aria-label', on ? 'Guardado' : 'Guardar');
   });
 })();
 </script>

@@ -34,29 +34,22 @@
 .ot-filter__count{font:600 11px/14px var(--font-sans);padding:1px 6px;border-radius:var(--radius-pill);background:var(--surface-raised);color:var(--ink-2)}
 .ot-filter[aria-pressed="true"] .ot-filter__count{background:var(--bg);color:var(--ink)}
 
-/* Botones */
-.ot-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);height:var(--size-button);padding:0 var(--space-5);border-radius:var(--radius-button);font:600 15px/20px var(--font-sans);border:1px solid transparent;cursor:pointer;white-space:nowrap}
+/* Botones: estilo control. Cápsula con un canto de 4px debajo; al presionar, la cara baja 4px y el canto desaparece.
+   Los cantos salen de accent-lip, raised-lip e ink-lip; la mezcla es el respaldo mientras tokens.css no los tenga. */
+@property --ot-lip-h{syntax:'<length>';inherits:false;initial-value:4px}
+.ot-btn{--lip:var(--accent-lip,color-mix(in srgb,var(--accent) 55%,#000));--ot-lip-h:4px;display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);height:var(--size-button);padding:0 var(--space-5);border-radius:var(--radius-pill);font:600 15px/20px var(--font-sans);border:1px solid transparent;cursor:pointer;white-space:nowrap;box-shadow:0 var(--ot-lip-h) 0 var(--lip);transition:transform .3s cubic-bezier(.3,1.4,.5,1),--ot-lip-h .16s ease-out,background-color .2s ease,color .2s ease;-webkit-tap-highlight-color:transparent;user-select:none}
 .ot-btn svg{width:var(--size-icon);height:var(--size-icon)}
 .ot-btn--primary{background:var(--accent);color:var(--on-accent)}
-.ot-btn--secondary{background:var(--surface-raised);color:var(--ink);border-color:var(--line)}
-.ot-btn--ghost{background:transparent;color:var(--accent);padding:0 var(--space-3)}
-.ot-btn--steam{background:var(--ink);color:var(--bg)}
-.ot-btn--icon{width:var(--size-tap);height:var(--size-tap);padding:0;border-radius:var(--radius-pill);background:var(--surface-raised);color:var(--ink-2);border-color:transparent}
+.ot-btn--secondary{--lip:var(--raised-lip,color-mix(in srgb,var(--line) 85%,var(--line-strong)));background:var(--surface-raised);color:var(--ink);border-color:var(--line)}
+.ot-btn--ghost{background:transparent;color:var(--accent);padding:0 var(--space-3);box-shadow:none}
+.ot-btn--steam{--lip:var(--ink-lip,color-mix(in srgb,var(--ink) 58%,#000));background:var(--ink);color:var(--bg)}
+.ot-btn--icon{--lip:var(--raised-lip,color-mix(in srgb,var(--line) 85%,var(--line-strong)));position:relative;width:var(--size-tap);height:var(--size-tap);padding:0;background:var(--surface-raised);color:var(--ink-2);border-color:var(--line)}
 .ot-btn--icon[aria-pressed="true"]{background:var(--good-soft);color:var(--good)}
 .ot-btn--icon[aria-pressed="true"] svg{fill:currentColor}
+.ot-btn:not([disabled]):not(.ot-btn--ghost):active{transform:translateY(4px);--ot-lip-h:0px;transition:transform .12s ease-out,--ot-lip-h .12s ease-out,background-color .2s ease,color .2s ease}
+.ot-btn--ghost:not([disabled]):active{background:var(--accent-soft)}
 .ot-btn[disabled]{opacity:.45;cursor:not-allowed}
-/* Forma en evaluación: A cápsula (recomendada) y B relieve */
-.ot-shape-a .ot-btn{border-radius:calc(var(--size-button) / 2)}
-.ot-shape-a .ot-btn--icon{border-radius:calc(var(--size-tap) / 2)}
-.ot-shape-b .ot-btn{--lip:color-mix(in srgb,var(--accent) 55%,#000);border-radius:14px;box-shadow:0 4px 0 var(--lip);transition:transform .11s ease-out,box-shadow .11s ease-out}
-.ot-shape-b .ot-btn--secondary{--lip:var(--line-strong);background:var(--surface);border:1.5px solid var(--line-strong)}
-.ot-shape-b .ot-btn--steam{--lip:color-mix(in srgb,var(--ink) 50%,#000)}
-.ot-shape-b .ot-btn--ghost{box-shadow:none}
-.ot-shape-b .ot-btn--icon{--lip:var(--line-strong);border-radius:12px;background:var(--surface);border:1.5px solid var(--line-strong);box-shadow:0 3px 0 var(--lip)}
-.ot-shape-b .ot-btn--icon[aria-pressed="true"]{background:var(--good-soft)}
-.ot-shape-b .ot-btn:not([disabled]):active{transform:translateY(4px);box-shadow:0 0 0 var(--lip)}
-.ot-shape-b .ot-btn--icon:not([disabled]):active{transform:translateY(3px)}
-.ot-shape-b .ot-btn--ghost:not([disabled]):active{transform:none;background:var(--accent-soft)}
+@media (prefers-reduced-motion:reduce){.ot-btn{transition:background-color .15s ease,color .15s ease}.ot-btn:not([disabled]):not(.ot-btn--ghost):active{transition:none}}
 
 /* Tarjeta de oferta */
 .ot-card{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);box-shadow:var(--shadow-card);overflow:hidden;width:100%;max-width:360px}
@@ -81,6 +74,7 @@
 .ot-nav button{position:relative;z-index:1;display:grid;place-items:center;width:52px;height:52px;padding:0;border:0;border-radius:var(--radius-pill);background:transparent;color:var(--ink-2);cursor:pointer;transition:color .2s ease}
 .ot-nav button svg{width:24px;height:24px}
 .ot-nav button[aria-current="page"]{color:var(--bg)}
+.ot-nav button[aria-current="page"] svg{fill:currentColor}
 
 /* Aviso en la barra: la cápsula de la navegación crece con el mensaje */
 .ot-dock{position:relative;width:100%;max-width:358px;height:var(--size-nav)}

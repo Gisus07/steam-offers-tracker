@@ -1,11 +1,11 @@
-<!-- @dsCard group="Oferta" height=150 subtitle="sm · md · lg, y la entrada de una oferta nueva" -->
+<!-- @dsCard group="Oferta" height=150 subtitle="sm · md · lg, y la entrada de una oferta nueva: sello que se asienta" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>DealSticker</title>
 <script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
 <body class="ot-root">
 <div class="ot-pad ot-col" id="root">
-  <div class="ot-row" style="gap:28px;padding:10px 4px">
+  <div class="ot-row" id="row" style="gap:28px;padding:10px 4px">
     <span class="ot-sticker ot-sticker--sm" aria-label="50 por ciento de descuento">−50%</span>
     <span class="ot-sticker" aria-label="85 por ciento de descuento">−85%</span>
     <span class="ot-sticker ot-sticker--lg" id="big" aria-label="93 por ciento de descuento">−93%</span>
@@ -14,11 +14,15 @@
 </div>
 <script>
 (function () {
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.getElementById('replay').addEventListener('click', function () {
-    var el = document.getElementById('big');
-    if (!window.Motion || reduce) { el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); return; }
-    Motion.animate(el, { scale: [0.85, 1], rotate: [-3, -3] }, { type: 'spring', stiffness: 420, damping: 32 });
+    var el = document.getElementById('big'), row = document.getElementById('row');
+    if (!M || reduce) { el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); return; }
+    // Baja como un sello (340/26) y el giro se asienta bamboleando (260/9); abajo, un golpe de 4px
+    M.animate(el, { scale: [1.8, 1] }, { type: 'spring', stiffness: 340, damping: 26, velocity: 0 });
+    M.animate(el, { rotate: [16, -3] }, { type: 'spring', stiffness: 260, damping: 9, velocity: 0 });
+    M.animate(el, { opacity: [0, 1] }, { duration: 0.12 });
+    M.animate(row, { y: [0, 4, 0] }, { duration: 0.26, delay: 0.14, ease: 'easeOut' });
   });
 })();
 </script>

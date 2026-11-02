@@ -14,4 +14,8 @@ La calcomanía amarilla con el porcentaje de descuento: lo primero que se lee de
 - Etiqueta accesible: "85 por ciento de descuento".
 
 ## Movimiento
-- Solo la primera vez que una oferta nueva aparece en pantalla: de escala .85 a 1, muelle 420/32. Nunca al reciclar filas ni al volver a una pantalla.
+- **Sello que se asienta**, solo la primera vez que una oferta nueva aparece en pantalla:
+  - baja como un sello: escala 1,8 → 1, muelle 340/26;
+  - el giro se asienta bamboleando: 16° → −3°, muelle 260/9;
+  - la imagen de abajo recibe un golpe: baja 4px y vuelve en 260 ms.
+- Nunca al reciclar filas ni al volver a una pantalla.

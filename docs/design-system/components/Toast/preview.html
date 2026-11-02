@@ -1,4 +1,4 @@
-<!-- @dsCard group="Estados" height=240 subtitle="Sale de la barra: la cápsula crece con el mensaje y la acción, y vuelve a los 5 s" -->
+<!-- @dsCard group="Estados" height=250 subtitle="Sale de la barra: la cápsula crece con el mensaje y la acción, y vuelve a los 5 s" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>Toast</title>
@@ -7,10 +7,10 @@
 <body class="ot-root">
 <div class="ot-pad ot-col" id="root" style="gap:16px">
   <div class="ot-row">
-    <button class="ot-btn ot-btn--secondary" type="button" id="undoDemo" style="border-radius:24px">Descartar un juego</button>
-    <button class="ot-btn ot-btn--secondary" type="button" id="errDemo" style="border-radius:24px">Fallar la carga</button>
+    <button class="ot-btn ot-btn--secondary" type="button" id="undoDemo">Descartar un juego</button>
+    <button class="ot-btn ot-btn--secondary" type="button" id="errDemo">Fallar la carga</button>
   </div>
-  <div style="height:124px;display:flex;align-items:flex-end">
+  <div style="height:128px;display:flex;align-items:flex-end">
     <div class="ot-dock" id="dock">
       <div class="ot-dock__panel" id="panel">
         <div class="ot-dock__msg" id="msg" role="status">
@@ -39,6 +39,8 @@
   var text = document.getElementById('msgText'), action = document.getElementById('msgAction');
   var icUndo = document.getElementById('icUndo'), icBad = document.getElementById('icBad');
   var timer = null, open = false;
+  var SPRING = { type: 'spring', stiffness: 340, damping: 28, velocity: 0 };
+  // Abre: cápsula con muelle 340/28 y mensaje a los 200 ms (260 ms). Cierra: mensaje en 180 ms y la cápsula 100 ms después
   function setOpen(next) {
     if (next === open) return;
     open = next;
@@ -46,11 +48,11 @@
     var w = next ? Math.min(dock.clientWidth, 358) : 232;
     if (anim) {
       if (next) {
-        M.animate(panel, { width: w + 'px', height: '124px', borderRadius: '28px' }, { type: 'spring', stiffness: 420, damping: 28 });
-        M.animate(msg, { opacity: [0, 1] }, { duration: 0.22, delay: 0.16 });
+        M.animate(panel, { width: w + 'px', height: '124px', borderRadius: '28px' }, SPRING);
+        M.animate(msg, { opacity: [0, 1] }, { duration: 0.26, delay: 0.2 });
       } else {
-        M.animate(msg, { opacity: 0 }, { duration: 0.12 });
-        M.animate(panel, { width: '232px', height: '64px', borderRadius: '32px' }, { type: 'spring', stiffness: 420, damping: 28, delay: 0.08 });
+        M.animate(msg, { opacity: 0 }, { duration: 0.18 });
+        M.animate(panel, { width: '232px', height: '64px', borderRadius: '32px' }, Object.assign({}, SPRING, { delay: 0.1 }));
       }
     } else {
       panel.style.width = w + 'px';

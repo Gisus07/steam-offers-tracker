@@ -21,8 +21,8 @@
     "DetalleClaro.dc.html": {"x": 470, "y": 3732, "w": 390, "h": 844, "title": "Detalle · tema claro"},
     "Card.dc.html": {"x": 0, "y": 4976, "w": 358, "h": 400, "title": "Tarjeta de oferta", "is_interactive": true},
     "Nav.dc.html": {"x": 438, "y": 4976, "w": 358, "h": 64, "title": "Navegación"},
-    "Button.dc.html": {"x": 876, "y": 4976, "w": 358, "h": 52, "title": "Botón", "is_interactive": true},
-    "Forma.dc.html": {"x": 1314, "y": 4976, "w": 900, "h": 520, "title": "Forma: cápsula o relieve", "is_interactive": true}
+    "Button.dc.html": {"x": 876, "y": 4976, "w": 358, "h": 56, "title": "Botón (estilo control)", "is_interactive": true},
+    "Forma.dc.html": {"x": 1314, "y": 4976, "w": 900, "h": 520, "title": "Forma elegida: estilo control (toca los botones)", "is_interactive": true}
   },
   "order": [
     "Bienvenida.dc.html", "Gustos.dc.html", "Avisos.dc.html",

@@ -1,4 +1,4 @@
-<!-- @dsCard group="Acciones" height=130 subtitle="La pastilla se desliza (muelle 520/34) y el texto cambia de color con ella" -->
+<!-- @dsCard group="Acciones" height=130 subtitle="Pastilla elástica con apretón: el borde que avanza tira y el otro lo sigue 150 ms después" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>Segmented</title>
@@ -20,24 +20,50 @@
 <script>
 (function () {
   var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var anim = !!M && !reduce;
+  function spring(k, d) { return { type: 'spring', stiffness: k, damping: d, velocity: 0 }; }
   function wire(segId, pillId) {
     var pill = document.getElementById(pillId), tabs = document.querySelectorAll('#' + segId + ' button');
+    var curL = 0, curW = 0, timer = null;
     function place(b, animate) {
-      var x = b.offsetLeft - 4, w = b.offsetWidth;
-      if (animate && M && !reduce) {
-        M.animate(pill, { x: x, width: w + 'px' }, { type: 'spring', stiffness: 520, damping: 34 });
-        M.animate(pill, { scaleY: [0.9, 1] }, { type: 'spring', stiffness: 600, damping: 18 });
-      } else { pill.style.transform = 'translateX(' + x + 'px)'; pill.style.width = w + 'px'; }
+      var l = b.offsetLeft - 4, w = b.offsetWidth;
+      clearTimeout(timer);
+      if (animate && anim) {
+        if (l > curL) {
+          // Hacia la derecha: tira el borde derecho, después llega el izquierdo
+          M.animate(pill, { x: curL, width: (l + w - curL) + 'px' }, spring(520, 36));
+          timer = setTimeout(function () {
+            M.animate(pill, { x: l, width: w + 'px' }, spring(340, 28));
+            M.animate(pill, { scaleY: [0.86, 1] }, spring(420, 16));
+          }, 150);
+        } else {
+          // Hacia la izquierda: tira el borde izquierdo, después llega el derecho
+          M.animate(pill, { x: l, width: (curL + curW - l) + 'px' }, spring(520, 36));
+          timer = setTimeout(function () {
+            M.animate(pill, { width: w + 'px' }, spring(340, 28));
+            M.animate(pill, { scaleY: [0.86, 1] }, spring(420, 16));
+          }, 150);
+        }
+      } else if (anim) {
+        M.animate(pill, { x: l, width: w + 'px' }, { duration: 0 });
+      } else {
+        pill.style.transform = 'translateX(' + l + 'px)';
+        pill.style.width = w + 'px';
+      }
+      curL = l;
+      curW = w;
     }
     tabs.forEach(function (b) {
       b.addEventListener('click', function () {
+        if (b.getAttribute('aria-selected') === 'true') return;
         tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === b)); });
         place(b, true);
       });
     });
     tabs.forEach(function (b) { if (b.getAttribute('aria-selected') === 'true') place(b, false); });
   }
-  wire('seg', 'pill'); wire('seg2', 'pill2');
+  wire('seg', 'pill');
+  wire('seg2', 'pill2');
 })();
 </script>
 </body>

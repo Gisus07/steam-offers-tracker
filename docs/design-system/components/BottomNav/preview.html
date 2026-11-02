@@ -1,11 +1,14 @@
-<!-- @dsCard group="Navegación" height=170 subtitle="Solo íconos: toca un destino, o guarda un juego para ver latir Guardados" -->
+<!-- @dsCard group="Navegación" height=190 subtitle="Círculo elástico e ícono que se rellena; guarda un juego para ver latir Guardados" -->
 <!doctype html>
 <html lang="es">
 <head><meta charset="utf-8"><title>BottomNav</title>
 <script src="https://cdn.jsdelivr.net/npm/lucide@1.57.0/dist/umd/lucide.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script></head>
+<script src="https://cdn.jsdelivr.net/npm/motion@14.3.0/dist/motion.js"></script>
+<style>
+  .spark{position:absolute;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:var(--good);opacity:0;pointer-events:none;z-index:2}
+</style></head>
 <body class="ot-root">
-<div class="ot-pad ot-col" id="root" style="align-items:flex-start">
+<div class="ot-pad ot-col" id="root" style="align-items:flex-start;gap:20px">
   <nav class="ot-nav" aria-label="Principal" id="nav">
     <span class="ot-nav__pill" id="pill" aria-hidden="true"></span>
     <button type="button" aria-label="Para ti" aria-current="page"><i data-lucide="sparkles"></i></button>
@@ -13,30 +16,63 @@
     <button type="button" aria-label="Guardados" id="saved"><i data-lucide="bookmark"></i></button>
     <button type="button" aria-label="Ajustes"><i data-lucide="settings"></i></button>
   </nav>
-  <button class="ot-btn ot-btn--secondary" type="button" id="bump" style="border-radius:24px">Guardar un juego</button>
+  <button class="ot-btn ot-btn--secondary" type="button" id="bump">Guardar un juego</button>
 </div>
 <script>
 (function () {
   if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } });
   var M = window.Motion, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var pill = document.getElementById('pill'), items = document.querySelectorAll('#nav button');
-  function place(b, animate) {
-    var x = b.offsetLeft - 5;
-    if (animate && M && !reduce) { M.animate(pill, { x: x }, { type: 'spring', stiffness: 520, damping: 34 }); }
-    else { pill.style.transform = 'translateX(' + x + 'px)'; }
+  var anim = !!M && !reduce;
+  var nav = document.getElementById('nav'), pill = document.getElementById('pill'), saved = document.getElementById('saved');
+  var items = Array.prototype.slice.call(nav.querySelectorAll('button'));
+  var W = 52, cur = 0, timers = [];
+  function spring(k, d) { return { type: 'spring', stiffness: k, damping: d, velocity: 0 }; }
+  function left(i) { return items[i].offsetLeft - 5; }
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+
+  // El borde que avanza tira (520/36) y el otro lo sigue 150 ms después (340/28); a los 300 ms el ícono rebota
+  function go(i) {
+    if (i === cur) return;
+    var from = left(cur), to = left(i);
+    items.forEach(function (b, k) { if (k === i) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+    cur = i;
+    timers.forEach(clearTimeout);
+    timers = [];
+    if (!anim) { pill.style.transform = 'translateX(' + to + 'px)'; pill.style.width = W + 'px'; return; }
+    if (to > from) {
+      M.animate(pill, { x: from, width: (to + W - from) + 'px' }, spring(520, 36));
+      later(function () { M.animate(pill, { x: to, width: W + 'px' }, spring(340, 28)); }, 150);
+    } else {
+      M.animate(pill, { x: to, width: (from + W - to) + 'px' }, spring(520, 36));
+      later(function () { M.animate(pill, { width: W + 'px' }, spring(340, 28)); }, 150);
+    }
+    var svg = items[i].querySelector('svg');
+    later(function () {
+      if (!svg) return;
+      M.animate(svg, { scale: [1, 0.8] }, { duration: 0.12, ease: 'easeOut' }).then(function () { M.animate(svg, { scale: 1 }, spring(380, 16)); });
+    }, 300);
   }
-  items.forEach(function (b) {
-    b.addEventListener('click', function () {
-      items.forEach(function (i) { if (i === b) i.setAttribute('aria-current', 'page'); else i.removeAttribute('aria-current'); });
-      place(b, true);
-    });
-  });
-  place(items[0], false);
+  items.forEach(function (b, i) { b.addEventListener('click', function () { go(i); }); });
+  if (anim) M.animate(pill, { x: 0, width: W + 'px' }, { duration: 0 });
+
+  // Al guardar: Guardados se rellena un momento, late y suelta 5 puntos
+  var sparks = [];
+  for (var s = 0; s < 5; s++) { var e = document.createElement('span'); e.className = 'spark'; nav.appendChild(e); sparks.push(e); }
+  var unfill = null;
   document.getElementById('bump').addEventListener('click', function () {
-    var icon = document.querySelector('#saved svg');
-    if (!icon || !M || reduce) return;
-    M.animate(icon, { scale: 1.3 }, { duration: 0.15, ease: 'easeOut' }).then(function () {
-      M.animate(icon, { scale: 1 }, { type: 'spring', stiffness: 420, damping: 14 });
+    var svg = saved.querySelector('svg');
+    if (!svg) return;
+    svg.style.fill = 'currentColor';
+    clearTimeout(unfill);
+    unfill = setTimeout(function () { svg.style.fill = ''; }, 900);
+    if (!anim) return;
+    M.animate(svg, { scale: [1, 1.3] }, { duration: 0.18, ease: 'easeOut' }).then(function () { M.animate(svg, { scale: 1 }, spring(380, 14)); });
+    var cx = saved.offsetLeft + saved.offsetWidth / 2, cy = saved.offsetTop + saved.offsetHeight / 2;
+    sparks.forEach(function (el, k) {
+      var a = (Math.PI * 2 * k) / sparks.length - Math.PI / 2;
+      el.style.left = cx + 'px';
+      el.style.top = cy + 'px';
+      M.animate(el, { x: [0, Math.cos(a) * 24], y: [0, Math.sin(a) * 24], opacity: [1, 0] }, { duration: 0.46, ease: 'easeOut' });
     });
   });
 })();

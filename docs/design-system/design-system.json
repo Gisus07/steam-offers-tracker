@@ -11,9 +11,9 @@
   },
   "groups": [],
   "lastChange": {
-    "at": "2026-11-02T00:34:38Z",
+    "at": "2026-11-02T02:09:56Z",
     "by": "Gisus",
-    "note": "Forma en evaluación (cápsula o relieve), barra solo con íconos, aviso dentro de la barra, Zustand para el estado del cliente y recetas de movimiento nuevas (detalle, esqueleto a tarjetas, bienvenida).",
+    "note": "Movimiento elegido en el catálogo (14 detalles, 13 combinados), botón en estilo control con canto (tokens accent-lip, raised-lip e ink-lip), size-button de 52px y previews nuevos de botón, barra, aviso, segmentado, calcomanía y tarjeta.",
     "via": "Claude Code"
   },
   "layout": "files",

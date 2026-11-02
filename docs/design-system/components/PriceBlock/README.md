@@ -11,4 +11,8 @@ El precio anterior tachado, el precio final grande y, en el detalle, cuánto aho
 - Si el precio final es 0: "Gratis" en lugar del número, y la calcomanía dice "−100%".
 
 ## Movimiento
-- En el detalle, la cifra del ahorro cuenta desde 0 en 800 ms con `[.16, 1, .3, 1]`. Con "reducir movimiento", aparece directo.
+- **En el detalle, al abrirlo:** rodillo, ahorro que cuenta y tachado.
+  - Cada dígito del precio rueda del anterior al final, con muelle 200/24 y 90 ms entre dígitos.
+  - El ahorro cuenta desde 0 en 1100 ms con `[.16, 1, .3, 1]`.
+  - El precio anterior se tacha con una línea que se dibuja en 360 ms.
+- **Con "reducir movimiento":** aparece directo.
