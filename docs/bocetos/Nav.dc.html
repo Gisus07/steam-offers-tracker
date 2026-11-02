@@ -31,7 +31,7 @@ body{margin:0}
       <span aria-hidden="true" style="{{indicatorStyle}}"></span>
       <a href="Main.dc.html" aria-label="Para ti" aria-current="{{cur0}}" style="{{item0}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{ic0}}"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg></a>
       <a href="Explorar.dc.html" aria-label="Explorar" aria-current="{{cur1}}" style="{{item1}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{ic1}}"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></a>
-      <a href="Guardados.dc.html" aria-label="Guardados" aria-current="{{cur2}}" style="{{item2}}"><span style="{{bumpStyle}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{ic2}}"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"></path></svg></span></a>
+      <a href="Guardados.dc.html" aria-label="Guardados" aria-current="{{cur2}}" style="{{item2}}"><span style="{{bumpStyle}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{ic2}}"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"></path></svg></span><sc-for list="{{sparks}}" as="sp" hint-placeholder-count="5"><span aria-hidden="true" style="{{sp.style}}"></span></sc-for></a>
       <a href="Ajustes.dc.html" aria-label="Ajustes" aria-current="{{cur3}}" style="{{item3}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{ic3}}"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
     </div>
   </nav>
@@ -44,14 +44,18 @@ class Component extends DCLogic {
     if (this.props.bump && this.props.bump !== prev.bump) {
       clearTimeout(this.bumpT);
       clearTimeout(this.glowT);
-      // Guardados se rellena un momento y late: 1,3 en 180 ms
-      this.setState({ bumping: true, glow: true });
+      clearTimeout(this.sparkA);
+      clearTimeout(this.sparkB);
+      // Guardados se rellena un momento, late (1,3 en 180 ms) y suelta 5 puntos (460 ms)
+      this.setState({ bumping: true, glow: true, spark: 1 });
       this.bumpT = setTimeout(function () { self.setState({ bumping: false }); }, 180);
       this.glowT = setTimeout(function () { self.setState({ glow: false }); }, 900);
+      this.sparkA = setTimeout(function () { self.setState({ spark: 2 }); }, 30);
+      this.sparkB = setTimeout(function () { self.setState({ spark: 0 }); }, 520);
     }
     if (this.props.toast && this.props.toast !== prev.toast) this.setState({ last: this.props.toast });
   }
-  componentWillUnmount() { clearTimeout(this.bumpT); clearTimeout(this.glowT); }
+  componentWillUnmount() { clearTimeout(this.bumpT); clearTimeout(this.glowT); clearTimeout(this.sparkA); clearTimeout(this.sparkB); }
   renderVals() {
     var s = this.state || {};
     var keys = ['parati', 'explorar', 'guardados', 'ajustes'];
@@ -74,7 +78,17 @@ class Component extends DCLogic {
       return 'width: 24px; height: 24px; fill: ' + (filled ? 'currentColor' : 'none') + '; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;';
     }
     function cur(n) { return n === i ? 'page' : undefined; }
+    var sparks = [];
+    for (var k = 0; k < 5; k++) {
+      var a = (Math.PI * 2 * k) / 5 - Math.PI / 2;
+      var sp = 'position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: var(--good); pointer-events: none; ';
+      if (s.spark === 1) sp += 'opacity: 1; transform: translate(0px, 0px); transition: none;';
+      else if (s.spark === 2) sp += 'opacity: 0; transform: translate(' + (Math.cos(a) * 24).toFixed(1) + 'px, ' + (Math.sin(a) * 24).toFixed(1) + 'px); transition: transform 460ms ease-out, opacity 460ms ease-out;';
+      else sp += 'opacity: 0; transition: none;';
+      sparks.push({ style: sp });
+    }
     return {
+      sparks: sparks,
       panelStyle: panel,
       msgStyle: 'position: absolute; left: 0; right: 0; top: 0; height: 60px; box-sizing: border-box; padding: 8px 8px 0 16px; display: flex; align-items: center; gap: 10px; opacity: ' + (open ? 1 : 0) + '; transition: opacity ' + (open ? '260ms ease 200ms' : '180ms ease') + '; pointer-events: ' + (open ? 'auto' : 'none') + ';',
       hasMsg: !!msg,

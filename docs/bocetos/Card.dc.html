@@ -14,52 +14,64 @@ body{margin:0}
 </style>
 </helmet>
 <article aria-label="{{label}}" style="{{cardStyle}}">
-  <button type="button" aria-label="{{openLabel}}" onClick="{{open}}" onPointerDown="{{downCard}}" onPointerUp="{{up}}" onPointerLeave="{{up}}" onPointerCancel="{{up}}" style="display: block; width: 100%; margin: 0; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent;">
-    <span style="position: relative; display: block; height: 205px; background: var(--surface-raised);">
+  <button type="button" aria-label="{{openLabel}}" onClick="{{open}}" onPointerDown="{{downCard}}" onPointerMove="{{moveCard}}" onPointerUp="{{upCard}}" onPointerLeave="{{leaveCard}}" onPointerCancel="{{upCard}}" style="display: block; width: 100%; margin: 0; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; touch-action: pan-y; -webkit-tap-highlight-color: transparent;">
+    <span data-part="media" style="{{mediaStyle}}">
       <span aria-hidden="true" style="position: absolute; inset: 0; display: flex; align-items: flex-end; box-sizing: border-box; padding: 0 16px 26px 104px; font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 28px; color: var(--ink-3);">{{item.name}}</span>
-      <span aria-hidden="true" style="position: absolute; left: 12px; bottom: -14px; display: inline-flex; padding: 6px 8px 5px; background: var(--deal); color: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 20px; line-height: 20px; letter-spacing: 0.01em; border-radius: 6px; transform: rotate(-3deg); box-shadow: var(--shadow-sticker);">−{{item.pct}}%</span>
+      <span aria-hidden="true" style="{{stickOuter}}"><span style="{{stickInner}}">−{{item.pct}}%</span></span>
     </span>
     <span style="display: flex; flex-direction: column; gap: 8px; padding: 22px 16px 0;">
-      <span style="display: block; font-weight: 700; font-size: 17px; line-height: 22px;">{{item.name}}</span>
-      <span style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <span data-part="title" style="display: block; align-self: flex-start; font-weight: 700; font-size: 17px; line-height: 22px; {{pTitle}}">{{item.name}}</span>
+      <span data-part="tags" style="display: flex; flex-wrap: wrap; gap: 6px;">
         <sc-if value="{{item.explore}}" hint-placeholder-val="{{false}}">
-          <span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--info-soft); color: var(--info); font-weight: 600; font-size: 12px; line-height: 16px;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="10"></circle><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"></path></svg>Algo distinto</span>
+          <span data-tag="1" style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--info-soft); color: var(--info); font-weight: 600; font-size: 12px; line-height: 16px; {{exploreReveal}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="10"></circle><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"></path></svg>Algo distinto</span>
         </sc-if>
-        <sc-for list="{{item.tags}}" as="tag" hint-placeholder-count="3">
-          <span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--surface-raised); color: var(--ink-2); font-weight: 600; font-size: 11px; line-height: 16px; letter-spacing: 0.04em; text-transform: uppercase;">{{tag}}</span>
+        <sc-for list="{{tagItems}}" as="tg" hint-placeholder-count="3">
+          <span data-tag="1" style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--surface-raised); color: var(--ink-2); font-weight: 600; font-size: 11px; line-height: 16px; letter-spacing: 0.04em; text-transform: uppercase; {{tg.reveal}}">{{tg.text}}</span>
         </sc-for>
       </span>
     </span>
   </button>
   <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 12px 16px 14px;">
     <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
-      <span style="display: inline-flex; align-self: flex-start; align-items: center; gap: 4px; height: 26px; padding: 0 10px; border-radius: 999px; font-weight: 500; font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums; {{chipColors}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>{{item.ends}}</span>
-      <div style="display: flex; align-items: baseline; gap: 8px;">
+      <span data-part="chip" style="display: inline-flex; align-self: flex-start; align-items: center; gap: 4px; height: 26px; padding: 0 10px; border-radius: 999px; font-weight: 500; font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums; {{chipColors}} {{pChip}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>{{item.ends}}</span>
+      <div data-part="price" style="display: flex; align-self: flex-start; align-items: baseline; gap: 8px; {{pPrice}}">
         <span style="font-family: var(--font-display); font-weight: 800; font-size: 26px; line-height: 26px; font-variant-numeric: tabular-nums;">{{item.now}}</span>
         <span style="font-size: 13px; line-height: 18px; color: var(--ink-3); text-decoration: line-through; font-variant-numeric: tabular-nums;">{{item.was}}</span>
       </div>
     </div>
     <div style="display: flex; gap: 8px;">
-      <button type="button" aria-label="No me interesa" onClick="{{dismiss}}" onPointerDown="{{downDismiss}}" onPointerUp="{{up}}" onPointerLeave="{{up}}" onPointerCancel="{{up}}" style="{{dismissStyle}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
-      <button type="button" aria-label="{{saveLabel}}" aria-pressed="{{saved}}" onClick="{{save}}" onPointerDown="{{downSave}}" onPointerUp="{{up}}" onPointerLeave="{{up}}" onPointerCancel="{{up}}" style="{{saveStyle}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{saveIcon}}"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"></path></svg></button>
+      <button type="button" data-part="b0" aria-label="No me interesa" onClick="{{dismiss}}" onPointerDown="{{downDismiss}}" onPointerUp="{{up}}" onPointerLeave="{{up}}" onPointerCancel="{{up}}" style="{{dismissStyle}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+      <button type="button" data-part="b1" aria-label="{{saveLabel}}" aria-pressed="{{saved}}" onClick="{{save}}" onPointerDown="{{downSave}}" onPointerUp="{{up}}" onPointerLeave="{{up}}" onPointerCancel="{{up}}" style="{{saveStyle}}"><svg viewBox="0 0 24 24" aria-hidden="true" style="{{saveIcon}}"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"></path></svg><sc-for list="{{dots}}" as="dt" hint-placeholder-count="8"><span aria-hidden="true" style="{{dt.style}}"></span></sc-for></button>
     </div>
   </div>
 </article>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"item":{"editor":null},"$preview":{"width":358,"height":400}}'>
 class Component extends DCLogic {
-  componentDidUpdate(prev) {
-    var a = prev.item, b = this.props.item;
-    if (a && b && a.id === b.id && !a.saved && b.saved) this.pop();
+  componentDidMount() {
+    var it = this.props.item;
+    if (it && it.stamp) this.runStamp(it.stampDelay || 0);
   }
-  componentWillUnmount() { clearTimeout(this.popA); clearTimeout(this.popB); }
-  pop() {
+  componentDidUpdate(prev) {
+    var a = prev.item || {}, b = this.props.item || {};
+    // Calcomanía: sello que se asienta cuando la tarjeta aparece por primera vez
+    if (b.stamp && b.stamp !== a.stamp) this.runStamp(b.stampDelay || 0);
+  }
+  componentWillUnmount() { this.clearAll(); }
+  clearAll() {
+    (this.stampTs || []).forEach(function (t) { clearTimeout(t); });
+    (this.saveTs || []).forEach(function (t) { clearTimeout(t); });
+    clearTimeout(this.backT);
+    clearTimeout(this.handT);
+  }
+  // Escala 1,8 → 1 (curva del muelle 340/26) y giro 16° → −3° bamboleando (muelle 260/9, en pasos); la imagen recibe un golpe de 4px
+  runStamp(delay) {
     var self = this;
-    clearTimeout(this.popA);
-    clearTimeout(this.popB);
-    this.setState({ pop: 1 });
-    this.popA = setTimeout(function () { self.setState({ pop: 2 }); }, 30);
-    this.popB = setTimeout(function () { self.setState({ pop: 0 }); }, 480);
+    (this.stampTs || []).forEach(function (t) { clearTimeout(t); });
+    this.stampTs = [];
+    this.setState({ stamp: 1, knock: 0 });
+    var steps = [[30, { stamp: 2 }], [170, { knock: 1 }], [230, { stamp: 3 }], [250, { knock: 0 }], [430, { stamp: 4 }], [630, { stamp: 5 }], [870, { stamp: 0 }]];
+    steps.forEach(function (st) { self.stampTs.push(setTimeout(function () { self.setState(st[1]); }, delay + st[0])); });
   }
   renderVals() {
     var s = this.state || {};
@@ -70,37 +82,162 @@ class Component extends DCLogic {
     };
     var item = this.props.item ?? demo;
     var press = s.press || null;
-    var pop = s.pop || 0;
-    // Botones de ícono en estilo control: círculo con canto de 4px; al presionar bajan 4px y el canto desaparece
     var RAISED = 'var(--raised-lip, color-mix(in srgb, var(--line) 85%, var(--line-strong)))';
     var release = 'cubic-bezier(.3, 1.4, .5, 1)';
-    function iconBtn(kind, on) {
-      var pr = press === kind;
-      return 'width: 44px; height: 44px; box-sizing: border-box; display: grid; place-items: center; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 22px; background: ' + (on ? 'var(--good-soft)' : 'var(--surface-raised)') + '; color: ' + (on ? 'var(--good)' : 'var(--ink-2)') + '; cursor: pointer; -webkit-tap-highlight-color: transparent; transform: translateY(' + (pr ? 4 : 0) + 'px); box-shadow: 0 ' + (pr ? 0 : 4) + 'px 0 ' + RAISED + '; transition: ' + (pr ? 'transform 120ms ease-out, box-shadow 120ms ease-out' : 'transform 300ms ' + release + ', box-shadow 160ms ease-out') + ', background-color 200ms ease, color 200ms ease;';
+
+    // Aparición por piezas: Main decide cuándo aparece cada una (se cruza con su bloque del esqueleto)
+    var rv = item.reveal || null;
+    function part(name) {
+      if (!rv) return { op: 1, tr: '' };
+      if (!rv.on) return { op: 0, tr: '' };
+      var d = (rv.d && rv.d[name]) || 0;
+      return { op: 1, tr: 'opacity 220ms ease ' + d + 'ms' };
     }
+    function partStyle(name) {
+      var p = part(name);
+      return 'opacity: ' + p.op + '; transition: ' + (p.tr || 'none') + ';';
+    }
+    // Cada etiqueta aparece con su bloque; las que no tienen bloque, con la última
+    var tagD = (rv && rv.d && rv.d.tags) || [];
+    var tagMax = tagD.reduce(function (m, v) { return Math.max(m, v || 0); }, 0);
+    function tagReveal(j) {
+      if (!rv) return '';
+      if (!rv.on) return 'opacity: 0; transition: none;';
+      var d = tagD[j] != null ? tagD[j] : tagMax;
+      return 'opacity: 1; transition: opacity 220ms ease ' + d + 'ms;';
+    }
+    var off = item.explore ? 1 : 0;
+    var tagItems = (item.tags || []).map(function (t, j) { return { text: t, reveal: tagReveal(j + off) }; });
+
+    // Botones de ícono en estilo control: círculo con canto de 4px; al presionar bajan 4px y el canto desaparece
+    function iconBtn(kind, on, key) {
+      var pr = press === kind;
+      var p = part(key);
+      return 'opacity: ' + p.op + '; position: relative; width: 44px; height: 44px; box-sizing: border-box; display: grid; place-items: center; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 22px; background: ' + (on ? 'var(--good-soft)' : 'var(--surface-raised)') + '; color: ' + (on ? 'var(--good)' : 'var(--ink-2)') + '; cursor: pointer; -webkit-tap-highlight-color: transparent; transform: translateY(' + (pr ? 4 : 0) + 'px); box-shadow: 0 ' + (pr ? 0 : 4) + 'px 0 ' + RAISED + '; transition: ' + (pr ? 'transform 120ms ease-out, box-shadow 120ms ease-out' : 'transform 300ms ' + release + ', box-shadow 160ms ease-out') + ', background-color 200ms ease, color 200ms ease' + (p.tr ? ', ' + p.tr : '') + ';';
+    }
+
+    // Tarjeta: se aprieta al tocarla; al arrastrarla se levanta (1,03 y más sombra) y sigue al dedo
+    var drag = s.drag;
+    var lifted = drag !== undefined && drag !== null;
+    var tf, tr;
+    if (lifted) { tf = 'translateX(' + drag.toFixed(1) + 'px) rotate(' + (drag / 30).toFixed(2) + 'deg) scale(1.03)'; tr = 'transform 60ms linear, box-shadow 200ms ease'; }
+    else if (s.handoff) { tf = 'none'; tr = 'none'; }
+    else if (press === 'card') { tf = 'scale(.98)'; tr = 'transform 120ms ease-out, box-shadow 200ms ease'; }
+    else { tf = 'none'; tr = s.back ? 'transform 420ms cubic-bezier(.3, 1.1, .5, 1), box-shadow 200ms ease' : 'transform 300ms ' + release + ', box-shadow 200ms ease'; }
+    var shadow = lifted ? 'var(--shadow-card), 0 18px 30px rgba(0, 0, 0, 0.42)' : 'var(--shadow-card)';
+
+    // Imagen: aparece con su bloque y recibe el golpe del sello
+    var pm = part('media');
+    var mediaTr = [pm.tr, 'transform ' + (s.knock ? '80ms ease-out' : '180ms ease-out')].filter(Boolean).join(', ');
+    var mediaStyle = 'position: relative; display: block; height: 205px; background: var(--surface-raised); opacity: ' + pm.op + '; transform: translateY(' + (s.knock ? 4 : 0) + 'px); transition: ' + mediaTr + ';';
+
+    // Sello: la escala va en el contenedor y el giro en la calcomanía, para darles curvas distintas
+    var st = s.stamp || 0;
+    var ROT = { 0: -3, 1: 16, 2: -10.7, 3: 0.1, 4: -4.2, 5: -3 };
+    var ROT_TR = { 0: 'none', 1: 'none', 2: 'transform 200ms cubic-bezier(.2, .6, .35, 1)', 3: 'transform 200ms ease-in-out', 4: 'transform 200ms ease-in-out', 5: 'transform 220ms ease-out' };
+    var stickOuter = 'position: absolute; left: 12px; bottom: -14px; display: inline-flex; transform: scale(' + (st === 1 ? 1.8 : 1) + '); opacity: ' + (st === 1 ? 0 : 1) + '; transition: ' + (st >= 2 ? 'transform 380ms cubic-bezier(.3, 1.2, .5, 1), opacity 120ms linear' : 'none') + ';';
+    var stickInner = 'display: inline-flex; padding: 6px 8px 5px; background: var(--deal); color: var(--on-deal); font-family: var(--font-display); font-weight: 800; font-size: 20px; line-height: 20px; letter-spacing: 0.01em; border-radius: 6px; box-shadow: var(--shadow-sticker); transform: rotate(' + ROT[st] + 'deg); transition: ' + ROT_TR[st] + ';';
+
+    // Guardar: se aplasta (140 ms), rebota rellena (curva del muelle 420/14) y suelta 8 puntos (600 ms)
+    var sv = s.sv || 0;
+    var savedNow = !!item.saved;
+    var iconT = sv === 1 ? 'scale(1.22, 0.72)' : 'scale(1, 1)';
+    var iconTr = sv === 1 ? 'transform 140ms ease-in, fill 200ms ease' : (sv === 2 ? 'transform 500ms cubic-bezier(.3, 1.9, .5, 1), fill 200ms ease' : 'fill 200ms ease');
+    var burst = s.burst || 0;
+    var dots = [];
+    for (var k = 0; k < 8; k++) {
+      var a = (Math.PI * 2 * k) / 8;
+      var dx = (Math.cos(a) * 34).toFixed(1), dy = (Math.sin(a) * 34).toFixed(1);
+      var ds = 'position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--good); pointer-events: none; ';
+      if (burst === 1) ds += 'opacity: 1; transform: translate(0px, 0px) scale(1); transition: none;';
+      else if (burst === 2) ds += 'opacity: 0; transform: translate(' + dx + 'px, ' + dy + 'px) scale(0.4); transition: transform 600ms ease-out, opacity 600ms ease-out;';
+      else ds += 'opacity: 0; transform: none; transition: none;';
+      dots.push({ style: ds });
+    }
+    function toggle(el) {
+      if (typeof item.onSave === 'function') item.onSave({ el: el });
+      else self.setState({ demoSaved: !(self.state || {}).demoSaved });
+    }
+
     return {
       item: item,
       label: item.name + ', ' + item.pct + ' por ciento de descuento',
       openLabel: 'Ver el detalle de ' + item.name,
-      cardStyle: 'width: 358px; box-sizing: border-box; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-card); overflow: hidden; font-family: var(--font-sans); color: var(--ink); transform: scale(' + (press === 'card' ? 0.98 : 1) + '); transition: transform ' + (press === 'card' ? '120ms ease-out' : '300ms ' + release) + ';',
+      cardStyle: 'width: 358px; box-sizing: border-box; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: ' + shadow + '; overflow: hidden; font-family: var(--font-sans); color: var(--ink); transform: ' + tf + '; transition: ' + tr + ';',
+      mediaStyle: mediaStyle,
+      stickOuter: stickOuter,
+      stickInner: stickInner,
+      pTitle: partStyle('title'),
+      exploreReveal: tagReveal(0),
+      tagItems: tagItems,
+      pChip: partStyle('chip'),
+      pPrice: partStyle('price'),
       chipColors: item.hot ? 'background: var(--hot-soft); color: var(--hot);' : 'background: var(--surface-raised); color: var(--ink-2);',
-      saved: !!item.saved,
-      saveLabel: item.saved ? 'Guardado' : 'Guardar',
-      dismissStyle: iconBtn('dismiss', false),
-      saveStyle: iconBtn('save', !!item.saved),
-      saveIcon: 'width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: ' + (item.saved ? 'currentColor' : 'none') + '; transform: scale(' + (pop === 1 ? 0.55 : 1) + '); transition: ' + (pop === 1 ? 'none' : (pop === 2 ? 'transform 420ms cubic-bezier(.34, 1.56, .64, 1)' : 'fill 200ms ease')) + ';',
-      open: function (e) { if (typeof item.onOpen === 'function') item.onOpen(e); },
-      save: function () {
-        if (typeof item.onSave === 'function') { item.onSave(); return; }
-        var now = !s.demoSaved;
-        self.setState({ demoSaved: now });
-        if (now) self.pop();
+      saved: savedNow,
+      saveLabel: savedNow ? 'Guardado' : 'Guardar',
+      dismissStyle: iconBtn('dismiss', false, 'b0'),
+      saveStyle: iconBtn('save', savedNow, 'b1'),
+      saveIcon: 'width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: ' + (savedNow ? 'currentColor' : 'none') + '; transform: ' + iconT + '; transition: ' + iconTr + ';',
+      dots: dots,
+      open: function (e) {
+        if (self.dragged) { self.dragged = false; return; }
+        if (typeof item.onOpen === 'function') item.onOpen(e);
       },
-      dismiss: function () { if (typeof item.onDismiss === 'function') item.onDismiss(); },
-      downCard: function () { self.setState({ press: 'card' }); },
+      save: function (e) {
+        var el = e && e.currentTarget;
+        var turningOn = !savedNow;
+        (self.saveTs || []).forEach(function (t) { clearTimeout(t); });
+        self.saveTs = [];
+        if (!turningOn) { self.setState({ sv: 0, burst: 0 }); toggle(el); return; }
+        self.setState({ sv: 1, burst: 0 });
+        self.saveTs.push(setTimeout(function () { self.setState({ sv: 2, burst: 1 }); toggle(el); }, 140));
+        self.saveTs.push(setTimeout(function () { self.setState({ burst: 2 }); }, 170));
+        self.saveTs.push(setTimeout(function () { self.setState({ sv: 0, burst: 0 }); }, 900));
+      },
+      dismiss: function () { if (typeof item.onDismiss === 'function') item.onDismiss({ dx: 0, lifted: false }); },
+      downCard: function (e) {
+        self.drag0 = { x: e.clientX, y: e.clientY, id: e.pointerId, el: e.currentTarget };
+        self.dragging = false;
+        self.dragged = false;
+        self.setState({ press: 'card' });
+      },
+      moveCard: function (e) {
+        var d0 = self.drag0;
+        if (!d0 || e.pointerId !== d0.id) return;
+        var art = d0.el && d0.el.closest ? d0.el.closest('article') : null;
+        var host = art && art.parentNode ? art.parentNode : art;
+        var k = host ? (host.getBoundingClientRect().width / 358 || 1) : 1;
+        var dx = (e.clientX - d0.x) / k, dy = (e.clientY - d0.y) / k;
+        if (!self.dragging) {
+          if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+          self.dragging = true;
+          self.dragged = true;
+          try { d0.el.setPointerCapture(e.pointerId); } catch (err) {}
+        }
+        self.setState({ press: null, drag: Math.min(24, dx) });
+      },
+      upCard: function () {
+        self.drag0 = null;
+        if (!self.dragging) { if ((self.state || {}).press) self.setState({ press: null }); return; }
+        self.dragging = false;
+        var dx = (self.state || {}).drag || 0;
+        if (dx < -90 && typeof item.onDismiss === 'function') {
+          // Pasado el umbral, Main lanza la tarjeta desde donde quedó
+          self.setState({ drag: null, press: null, handoff: true });
+          item.onDismiss({ dx: dx, lifted: true });
+          clearTimeout(self.handT);
+          self.handT = setTimeout(function () { self.setState({ handoff: false }); }, 80);
+          return;
+        }
+        // Si no llegó, vuelve a su lugar con la curva del muelle 300/30
+        self.setState({ drag: null, press: null, back: true });
+        clearTimeout(self.backT);
+        self.backT = setTimeout(function () { self.setState({ back: false }); }, 450);
+      },
+      leaveCard: function () { if (!self.dragging && (self.state || {}).press) self.setState({ press: null }); },
       downSave: function () { self.setState({ press: 'save' }); },
       downDismiss: function () { self.setState({ press: 'dismiss' }); },
-      up: function () { if (self.state && self.state.press) self.setState({ press: null }); }
+      up: function () { if (self.state && self.state.press && !self.dragging) self.setState({ press: null }); }
     };
   }
 }

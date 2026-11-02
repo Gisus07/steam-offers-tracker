@@ -37,9 +37,14 @@ body{margin:0}
         </div>
       </div>
       <div style="display: flex; flex-direction: column; gap: 2px;">
-        <span style="font-size: 15px; line-height: 22px; color: var(--ink-3); text-decoration: line-through; font-variant-numeric: tabular-nums;">{{d.was}}</span>
-        <span style="font-family: var(--font-display); font-weight: 800; font-size: 44px; line-height: 44px; font-variant-numeric: tabular-nums;">{{d.now}}</span>
-        <span style="font-weight: 600; font-size: 12px; line-height: 16px; color: var(--good);">Ahorras {{d.save}}</span>
+        <span style="position: relative; align-self: flex-start; font-size: 15px; line-height: 22px; color: var(--ink-3); font-variant-numeric: tabular-nums;">{{d.was}}<span aria-hidden="true" style="{{strikeStyle}}"></span></span>
+        <span aria-label="{{d.now}}" style="display: flex; align-self: flex-start; height: 44px; overflow: hidden; font-family: var(--font-display); font-weight: 800; font-size: 44px; line-height: 44px; font-variant-numeric: tabular-nums; white-space: pre;">
+          <span aria-hidden="true">{{pricePrefix}}</span>
+          <sc-for list="{{cols}}" as="c" hint-placeholder-count="4">
+            <span aria-hidden="true" style="{{c.box}}"><span style="{{c.strip}}"><sc-for list="{{c.cells}}" as="cell" hint-placeholder-count="11"><span style="display: block; height: 44px; line-height: 44px; text-align: center;">{{cell}}</span></sc-for></span></span>
+          </sc-for>
+        </span>
+        <span style="font-weight: 600; font-size: 12px; line-height: 16px; color: var(--good); font-variant-numeric: tabular-nums;">Ahorras {{saveText}}</span>
       </div>
       <span style="display: inline-flex; align-self: flex-start; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; background: var(--surface-raised); color: var(--ink-2); font-weight: 500; font-size: 13px; line-height: 16px; font-variant-numeric: tabular-nums;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>Termina el {{d.endAbs}}</span>
       <section style="display: flex; flex-direction: column; gap: 8px; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px;">
@@ -60,6 +65,32 @@ body{margin:0}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"item":{"editor":null},"saved":{"editor":null},"onSave":{"editor":null},"onClose":{"editor":null},"onDismiss":{"editor":null},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
+  // Precio: rodillo (muelle 200/24, 90 ms entre dígitos), ahorro que cuenta en 1100 ms y tachado que se dibuja en 360 ms
+  componentDidMount() {
+    var self = this;
+    this.rollT = setTimeout(function () {
+      self.t0 = Date.now();
+      self.setState({ roll: 1, t: 0 });
+      self.tick = setInterval(function () {
+        var t = Date.now() - self.t0;
+        self.setState({ t: Math.min(1100, t) });
+        if (t >= 1100) clearInterval(self.tick);
+      }, 33);
+    }, 300);
+  }
+  componentWillUnmount() { clearTimeout(this.rollT); clearInterval(this.tick); }
+  ease(x) {
+    // cubic-bezier(.16, 1, .3, 1)
+    var x1 = 0.16, y1 = 1, x2 = 0.3, y2 = 1;
+    function A(a, b) { return 1 - 3 * b + 3 * a; }
+    function B(a, b) { return 3 * b - 6 * a; }
+    function C(a) { return 3 * a; }
+    function f(t, a, b) { return ((A(a, b) * t + B(a, b)) * t + C(a)) * t; }
+    function df(t, a, b) { return 3 * A(a, b) * t * t + 2 * B(a, b) * t + C(a); }
+    var t = x;
+    for (var i = 0; i < 8; i++) { var sl = df(t, x1, x2); if (sl === 0) break; t -= (f(t, x1, x2) - x) / sl; }
+    return f(Math.min(1, Math.max(0, t)), y1, y2);
+  }
   renderVals() {
     var s = this.state || {};
     var self = this;
@@ -68,9 +99,44 @@ class Component extends DCLogic {
     var d = p.item ?? DEF;
     var external = typeof p.onSave === 'function';
     var saved = external ? !!p.saved : (s.saved ?? true);
+
+    function parse(str) {
+      var m = /([0-9.]+),([0-9]{2})\s*$/.exec(str || '');
+      return m ? { int: m[1].replace(/\./g, ''), dec: m[2], val: parseFloat(m[1].replace(/\./g, '') + '.' + m[2]) } : null;
+    }
+    var nowP = parse(d.now), wasP = parse(d.was), saveP = parse(d.save);
+    var roll = !!s.roll;
+    var cols = [];
+    var prefix = (d.now || '').replace(/[0-9.,]+\s*$/, '');
+    if (nowP && wasP) {
+      var n = Math.max(nowP.int.length, wasP.int.length);
+      var oldI = Array(n - wasP.int.length + 1).join(' ') + wasP.int;
+      var newI = Array(n - nowP.int.length + 1).join(' ') + nowP.int;
+      var oldD = (oldI + wasP.dec).split(''), newD = (newI + nowP.dec).split('');
+      var CELLS = ['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+      for (var i = 0; i < oldD.length; i++) {
+        if (i === n) cols.push({ box: 'display: inline-block;', strip: 'display: block;', cells: [','] });
+        var o = oldD[i] === ' ' ? 0 : parseInt(oldD[i], 10) + 1;
+        var w = newD[i] === ' ' ? 0 : parseInt(newD[i], 10) + 1;
+        var idx = roll ? w : o;
+        var blankAfter = roll && w === 0;
+        var blankBefore = !roll && o === 0;
+        cols.push({
+          box: 'display: inline-block; height: 44px; overflow: hidden; width: ' + ((blankAfter || blankBefore) ? '0ch' : '1ch') + '; transition: ' + (roll ? 'width 300ms ease ' + (520 + i * 90) + 'ms' : 'none') + ';',
+          strip: 'display: block; transform: translateY(' + (-idx * 44) + 'px); transition: ' + (roll ? 'transform 520ms cubic-bezier(.3, 1.15, .45, 1) ' + (i * 90) + 'ms' : 'none') + ';',
+          cells: CELLS
+        });
+      }
+    }
+    var progress = roll ? self.ease(Math.min(1, (s.t || 0) / 1100)) : 0;
+    var saveText = saveP ? (d.save || '').replace(/[0-9.,]+\s*$/, '') + (saveP.val * progress).toFixed(2).replace('.', ',') : d.save;
     return {
       theme: p.theme ?? 'dark',
       d: d,
+      pricePrefix: cols.length ? prefix : d.now,
+      cols: cols,
+      saveText: saveText,
+      strikeStyle: 'position: absolute; left: -2px; right: -2px; top: 50%; height: 1.5px; margin-top: -0.75px; background: var(--ink-3); transform-origin: left center; transform: scaleX(' + (roll ? 1 : 0) + '); transition: ' + (roll ? 'transform 360ms ease-in-out 300ms' : 'none') + ';',
       reviewsLine: d.dev + ' · ' + d.reviewPct + '% positivas de ' + d.reviews + ' reseñas',
       stickerLabel: d.pct + ' por ciento de descuento',
       storeUrl: 'https://store.steampowered.com/app/' + d.id + '/',

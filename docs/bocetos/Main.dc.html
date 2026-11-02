@@ -13,8 +13,8 @@
 body{margin:0}
 </style>
 </helmet>
-<div data-theme="{{theme}}" data-proto-root="1" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans);">
-  <div style="height: 844px; overflow-y: auto; box-sizing: border-box; padding: 28px 16px 120px; display: flex; flex-direction: column; gap: 16px;">
+<div data-theme="{{theme}}" data-proto-root="{{uid}}" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-sans);">
+  <div style="{{scrollStyle}}">
     <header style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
       <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
         <h1 style="margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 36px; letter-spacing: 0.005em;">Para ti</h1>
@@ -30,70 +30,121 @@ body{margin:0}
     <sc-if value="{{isSoon}}" hint-placeholder-val="{{false}}">
       <p style="margin: 0; font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hot);">Terminan en menos de 24 horas</p>
     </sc-if>
-    <div style="position: relative; display: flex; flex-direction: column; gap: 16px;">
-      <sc-if value="{{showSkeleton}}" hint-placeholder-val="{{false}}">
-        <div aria-hidden="true" style="{{skelStyle}}">
-          <sc-for list="{{skelRows}}" as="r" hint-placeholder-count="2">
-            <div style="width: 358px; box-sizing: border-box; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;">
-              <div style="height: 205px; background: var(--surface-raised);"></div>
-              <div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 16px 14px;">
-                <div style="height: 18px; width: 72%; border-radius: 8px; background: var(--surface-raised);"></div>
-                <div style="display: flex; gap: 6px;">
-                  <div style="height: 26px; width: 84px; border-radius: 999px; background: var(--surface-raised);"></div>
-                  <div style="height: 26px; width: 96px; border-radius: 999px; background: var(--surface-raised);"></div>
-                  <div style="height: 26px; width: 70px; border-radius: 999px; background: var(--surface-raised);"></div>
-                </div>
-                <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 2px;">
-                  <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <div style="height: 26px; width: 120px; border-radius: 999px; background: var(--surface-raised);"></div>
-                    <div style="height: 26px; width: 150px; border-radius: 8px; background: var(--surface-raised);"></div>
-                  </div>
-                  <div style="display: flex; gap: 8px;">
-                    <div style="width: 44px; height: 44px; border-radius: 22px; background: var(--surface-raised);"></div>
-                    <div style="width: 44px; height: 44px; border-radius: 22px; background: var(--surface-raised);"></div>
-                  </div>
-                </div>
-              </div>
+    <div data-list="1" style="position: relative; display: flex; flex-direction: column; gap: 16px;">
+      <sc-for list="{{cards}}" as="item" hint-placeholder-count="3">
+        <div data-card-wrap="1" data-id="{{item.id}}" style="{{item.wrapStyle}}">
+          <dc-import name="Card" item="{{item}}" hint-size="358px,400px"></dc-import>
+        </div>
+      </sc-for>
+      <sc-if value="{{showSkel}}" hint-placeholder-val="{{false}}">
+        <div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; z-index: 2; pointer-events: none;">
+          <sc-for list="{{skel}}" as="sk" hint-placeholder-count="2">
+            <div style="{{sk.box}}">
+              <sc-for list="{{sk.blocks}}" as="b" hint-placeholder-count="8">
+                <span style="{{b.style}}"></span>
+              </sc-for>
+              <span style="{{sk.band}}"></span>
             </div>
           </sc-for>
         </div>
-      </sc-if>
-      <sc-if value="{{showContent}}" hint-placeholder-val="{{true}}">
-        <sc-for list="{{cards}}" as="item" hint-placeholder-count="3">
-          <div style="{{item.wrapStyle}}">
-            <dc-import name="Card" item="{{item}}" hint-size="358px,400px"></dc-import>
-          </div>
-        </sc-for>
       </sc-if>
     </div>
   </div>
   <div style="position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 10;">
     <dc-import name="Nav" active="parati" bump="{{bump}}" toast="{{toast}}" hint-size="358px,64px"></dc-import>
   </div>
+  <sc-if value="{{hasFly}}" hint-placeholder-val="{{false}}">
+    <svg viewBox="0 0 24 24" aria-hidden="true" style="{{flyStyle}}"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"></path></svg>
+  </sc-if>
   <sc-if value="{{hasDetail}}" hint-placeholder-val="{{false}}">
-    <div style="{{detailStyle}}">
-      <dc-import name="Detalle" theme="{{theme}}" item="{{detailItem}}" saved="{{detailSaved}}" onSave="{{detailSave}}" onClose="{{closeDetail}}" onDismiss="{{detailDismiss}}" hint-size="390px,844px"></dc-import>
+    <div aria-hidden="true" style="{{scrimStyle}}"></div>
+    <div style="{{boxStyle}}">
+      <div aria-hidden="true" style="{{faceStyle}}">
+        <dc-import name="Card" item="{{detailCard}}" hint-size="358px,400px"></dc-import>
+      </div>
+      <div style="{{detStyle}}">
+        <dc-import name="Detalle" theme="{{theme}}" item="{{detailItem}}" saved="{{detailSaved}}" onSave="{{detailSave}}" onClose="{{closeDetail}}" onDismiss="{{detailDismiss}}" hint-size="390px,844px"></dc-import>
+      </div>
     </div>
   </sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark","section":"Tema"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
-  componentDidMount() { this.timers = []; this.tok = {}; this.load(); }
+  componentDidMount() { this.timers = []; this.tok = {}; this.fx = {}; this.hgt = {}; this.load(); }
   componentWillUnmount() { (this.timers || []).forEach(function (t) { clearTimeout(t); }); clearTimeout(this.toastT); }
   later(ms, fn) { if (!this.timers) this.timers = []; this.timers.push(setTimeout(fn, ms)); }
+  rootEl() { return this.uid ? document.querySelector('[data-proto-root="' + this.uid + '"]') : null; }
+
+  // Mide las piezas de las tres primeras tarjetas (relativas a la lista) para que el esqueleto se transforme en ellas
+  measure() {
+    var root = this.rootEl();
+    if (!root) return null;
+    var list = root.querySelector('[data-list]');
+    if (!list) return null;
+    var k = root.getBoundingClientRect().width / 390 || 1;
+    var lr = list.getBoundingClientRect();
+    function R(el) {
+      if (!el) return null;
+      var r = el.getBoundingClientRect();
+      return { x: (r.left - lr.left) / k, y: (r.top - lr.top) / k, w: r.width / k, h: r.height / k };
+    }
+    var wraps = root.querySelectorAll('[data-card-wrap]');
+    var out = [];
+    for (var i = 0; i < Math.min(3, wraps.length); i++) {
+      var w = wraps[i];
+      var tc = w.querySelector('[data-part="tags"]');
+      var media = w.querySelector('[data-part="media"]');
+      if (!tc || !media) return null;
+      var tags = [];
+      var tl = tc.querySelectorAll('[data-tag]');
+      for (var j = 0; j < tl.length && j < 3; j++) tags.push(R(tl[j]));
+      out.push({
+        card: R(w), media: R(media), title: R(w.querySelector('[data-part="title"]')), tagsRow: R(tc), tags: tags,
+        chip: R(w.querySelector('[data-part="chip"]')), price: R(w.querySelector('[data-part="price"]')),
+        b0: R(w.querySelector('[data-part="b0"]')), b1: R(w.querySelector('[data-part="b1"]'))
+      });
+    }
+    return out.length ? out : null;
+  }
+  tryMeasure(n, cb) {
+    var self = this;
+    var g = this.measure();
+    if (g || n <= 0) { cb(g); return; }
+    this.later(60, function () { self.tryMeasure(n - 1, cb); });
+  }
+
+  // Carga: esqueleto con brillo en bucle (1,6 s) y después el brillo va formando cada tarjeta (900 ms)
   load() {
     var self = this;
-    this.setState({ phase: 'loading', skel: true });
-    this.later(900, function () { self.reveal(); });
+    var n = (this.loadN || 0) + 1;
+    this.loadN = n;
+    this.setState({ phase: 'loading', band: 'a', geo: null });
+    this.later(60, function () {
+      if (self.loadN !== n) return;
+      self.tryMeasure(12, function (g) {
+        if (self.loadN !== n || !g) return;
+        self.setState({ geo: g, band: 'a2' });
+        self.later(30, function () { if (self.loadN === n) self.setState({ band: 'b' }); });
+      });
+    });
+    this.later(1700, function () {
+      if (self.loadN !== n) return;
+      var g = self.measure() || (self.state || {}).geo;
+      if (!g) { self.swap(); return; }
+      self.setState({ phase: 'form0', band: 'fa', geo: g });
+      self.later(40, function () { if (self.loadN === n) self.setState({ phase: 'form', band: 'fb', stamp: n }); });
+      self.later(40 + 1900, function () { if (self.loadN === n) self.setState({ phase: 'done' }); });
+    });
   }
-  reveal() {
+  // Cambio de pestaña: los datos ya están; las tarjetas suben 12px con fundido, escalonadas
+  swap() {
     var self = this;
-    this.rev = (this.rev || 0) + 1;
-    var n = this.rev;
-    this.setState({ phase: 'enter' });
-    this.later(40, function () { if (self.rev === n) self.setState({ phase: 'shown' }); });
-    this.later(900, function () { if (self.rev === n) self.setState({ phase: 'done', skel: false }); });
+    var n = (this.loadN || 0) + 1;
+    this.loadN = n;
+    this.setState({ phase: 'swap0' });
+    this.later(30, function () { if (self.loadN === n) self.setState({ phase: 'swap' }); });
+    this.later(30 + 380 + 90 * 6, function () { if (self.loadN === n) self.setState({ phase: 'done' }); });
   }
   refresh() {
     var cur = this.state || {};
@@ -102,44 +153,82 @@ class Component extends DCLogic {
     this.setState({ spin: (cur.spin || 0) + 1, fresh: true });
     this.load();
   }
+  // Segmentado: pastilla elástica con apretón. Tira el borde que avanza (520/36) y el otro lo sigue 150 ms después (340/28)
   showTab(t) {
+    var self = this;
     var cur = this.state || {};
-    if ((cur.tab || 'foryou') === t) return;
+    var from = cur.tab || 'foryou';
+    if (from === t) return;
     this.hideToast();
-    this.setState({ tab: t, skel: false });
-    this.reveal();
+    var n = (this.segN || 0) + 1;
+    this.segN = n;
+    this.setState({ tab: t, seg: { stage: 'stretch', to: t, squish: 0 } });
+    this.later(150, function () { if (self.segN === n) self.setState({ seg: { stage: 'settle', to: t, squish: 1 } }); });
+    this.later(180, function () { if (self.segN === n) self.setState({ seg: { stage: 'settle', to: t, squish: 2 } }); });
+    this.later(700, function () { if (self.segN === n) self.setState({ seg: null }); });
+    this.swap();
   }
   savedOf(cur) { return Object.assign({ 588650: true }, cur.saved); }
-  toggleSave(id) {
+  // Guardar: la tarjeta se aplasta y estalla; a los 180 ms una copia vuela a Guardados (700 ms) y la barra late al llegar
+  toggleSave(id, info) {
+    var self = this;
     var cur = this.state || {};
     var sv = this.savedOf(cur);
     var now = !sv[id];
     sv[id] = now;
-    this.setState({ saved: sv, bump: now ? (cur.bump || 0) + 1 : (cur.bump || 0) });
+    this.setState({ saved: sv });
+    if (!now) return;
+    var el = info && info.el;
+    var root = el && el.closest ? el.closest('[data-proto-root]') : null;
+    var target = root ? root.querySelector('a[aria-label="Guardados"]') : null;
+    if (!root || !target) { this.setState({ bump: (cur.bump || 0) + 1 }); return; }
+    var rr = root.getBoundingClientRect(), k = rr.width / 390 || 1;
+    var a = el.getBoundingClientRect(), b = target.getBoundingClientRect();
+    var from = { x: (a.left - rr.left + a.width / 2) / k, y: (a.top - rr.top + a.height / 2) / k };
+    var to = { x: (b.left - rr.left + b.width / 2) / k, y: (b.top - rr.top + b.height / 2) / k };
+    var n = (this.flyN || 0) + 1;
+    this.flyN = n;
+    this.later(180, function () { if (self.flyN === n) self.setState({ fly: { n: n, stage: 'start', from: from, to: to } }); });
+    this.later(210, function () { if (self.flyN === n) self.setState({ fly: { n: n, stage: 'go', from: from, to: to } }); });
+    this.later(910, function () {
+      if (self.flyN !== n) return;
+      self.setState({ fly: null, bump: ((self.state || {}).bump || 0) + 1 });
+    });
   }
   setSt(id, v) {
     var m = Object.assign({}, (this.state || {}).st);
     if (v) m[id] = v; else delete m[id];
     this.setState({ st: m });
   }
-  dismiss(id) {
+  // No me interesa: se lanza desde donde quedó (320 ms), el hueco se cierra (340 ms) y la barra muestra Deshacer
+  dismiss(id, info) {
     var self = this;
+    info = info || {};
     if (!this.tok) this.tok = {};
     var t = this.tok[id] = (this.tok[id] || 0) + 1;
-    this.setSt(id, 'out');
-    this.later(220, function () {
+    var root = this.rootEl();
+    var w = root ? root.querySelector('[data-card-wrap][data-id="' + id + '"]') : null;
+    var k = root ? (root.getBoundingClientRect().width / 390 || 1) : 1;
+    this.hgt[id] = w ? w.getBoundingClientRect().height / k : 369;
+    var dx = info.dx || 0;
+    this.fx[id] = { dx: dx, rot: dx / 30, sc: info.lifted ? 1.03 : 1 };
+    this.setSt(id, 'fs');
+    this.later(30, function () { if (self.tok[id] === t) self.setSt(id, 'fl'); });
+    this.later(350, function () {
       if (self.tok[id] !== t) return;
       self.setSt(id, 'gone');
       self.showToast({ kind: 'undo', text: 'No te mostraremos más este juego', action: 'Deshacer', onAction: function () { self.undo(id); } });
     });
   }
+  // Deshacer: el hueco se abre (340 ms) y la tarjeta vuelve con la curva del muelle 300/30
   undo(id) {
     var self = this;
     if (!this.tok) this.tok = {};
     var t = this.tok[id] = (this.tok[id] || 0) + 1;
     this.hideToast();
-    this.setSt(id, 'out');
-    this.later(280, function () { if (self.tok[id] === t) self.setSt(id, null); });
+    this.setSt(id, 'bs');
+    this.later(340, function () { if (self.tok[id] === t) self.setSt(id, 'bk'); });
+    this.later(340 + 460, function () { if (self.tok[id] === t) self.setSt(id, null); });
   }
   showToast(t) {
     var self = this;
@@ -151,31 +240,36 @@ class Component extends DCLogic {
     clearTimeout(this.toastT);
     if ((this.state || {}).toast) this.setState({ toast: null });
   }
+  // Detalle: contenedor que crece desde la tarjeta (curva del muelle 240/28) mientras la lista se aleja a .94
   openDetail(g, e) {
     var self = this;
-    var origin = '50% 40%';
+    if ((this.state || {}).detail) return;
+    var rect = { x: 16, y: 130, w: 358, h: 369 };
     try {
       var el = e && e.currentTarget;
-      var root = el && el.closest ? el.closest('[data-proto-root]') : null;
-      if (el && root) {
-        var r = el.getBoundingClientRect();
-        var rr = root.getBoundingClientRect();
-        var k = rr.width / 390 || 1;
-        origin = Math.round((r.left - rr.left + r.width / 2) / k) + 'px ' + Math.round((r.top - rr.top + r.height * 0.35) / k) + 'px';
+      var w = el && el.closest ? el.closest('[data-card-wrap]') : null;
+      var root = this.rootEl();
+      if (w && root) {
+        var rr = root.getBoundingClientRect(), k = rr.width / 390 || 1, r = w.getBoundingClientRect();
+        rect = { x: (r.left - rr.left) / k, y: (r.top - rr.top) / k, w: r.width / k, h: r.height / k };
       }
     } catch (err) {}
-    this.setState({ detail: { id: g.id, stage: 'enter', origin: origin } });
+    var n = (this.detN || 0) + 1;
+    this.detN = n;
+    this.setState({ detail: { id: g.id, stage: 'start', rect: rect } });
     this.later(30, function () {
       var d = (self.state || {}).detail;
-      if (d && d.stage === 'enter') self.setState({ detail: Object.assign({}, d, { stage: 'open' }) });
+      if (d && self.detN === n && d.stage === 'start') self.setState({ detail: Object.assign({}, d, { stage: 'open' }) });
     });
   }
   closeDetail(then) {
     var self = this;
     var d = (this.state || {}).detail;
-    if (!d || d.stage === 'exit') return;
-    this.setState({ detail: Object.assign({}, d, { stage: 'exit' }) });
-    this.later(220, function () {
+    if (!d || d.stage === 'closing') return;
+    var n = this.detN;
+    this.setState({ detail: Object.assign({}, d, { stage: 'closing' }) });
+    this.later(480, function () {
+      if (self.detN !== n) return;
       self.setState({ detail: null });
       if (typeof then === 'function') then();
     });
@@ -183,10 +277,15 @@ class Component extends DCLogic {
   renderVals() {
     var s = this.state || {};
     var self = this;
+    if (!this.uid) this.uid = 'p' + Math.random().toString(36).slice(2, 9);
     var tab = s.tab || 'foryou';
     var phase = s.phase || 'loading';
     var saved = this.savedOf(s);
     var st = s.st || {};
+    var fx = this.fx || {};
+    var hgt = this.hgt || {};
+    var geo = s.geo || null;
+    var det = s.detail || null;
     var FEED = [
       { id: 452060, name: 'Caveblazers', pct: 91, was: 'USD 5,79', now: 'USD 0,52', save: 'USD 5,27', ends: 'Termina en 7 d 17 h', endAbs: '9 de noviembre, 13:00', hot: false, explore: false, reviewPct: 85, reviews: '3.437', dev: 'Deadpan Games', tags: ['Roguelike de acción', 'Plataformas', 'Pixelados'] },
       { id: 588650, name: 'Dead Cells', pct: 50, was: 'USD 12,49', now: 'USD 6,24', save: 'USD 6,25', ends: 'Termina en 2 d 18 h', endAbs: '4 de noviembre, 14:00', hot: false, explore: false, reviewPct: 97, reviews: '157.300', dev: 'Motion Twin', tags: ['Aventura', 'Roguelike', 'Metroidvania'] },
@@ -202,35 +301,140 @@ class Component extends DCLogic {
       { id: 48000, name: 'LIMBO', pct: 90, was: 'USD 6,69', now: 'USD 0,66', save: 'USD 6,03', ends: 'Termina mañana, 14:00', endAbs: '2 de noviembre, 14:00', hot: true, explore: false, reviewPct: 91, reviews: '40.941', dev: 'Playdead', tags: ['Plataformas de puzles', 'Indie'] }
     ];
     var list = tab === 'soon' ? SOON : FEED;
+
+    // Esqueleto: un bloque por pieza, que pasa de su forma de esqueleto a la de la pieza real cuando el brillo lo alcanza
+    var CBM = 'cubic-bezier(.25, 1.05, .4, 1)';
+    var skelOn = (phase === 'loading' || phase === 'form0' || phase === 'form') && !!geo;
+    var formed = phase === 'form';
+    var skel = [];
+    var partD = [];
+    if (geo) geo.forEach(function (gi, i) {
+      if (!gi || !gi.card) return;
+      var c = gi.card;
+      function rel(r) { return r ? { x: r.x - c.x, y: r.y - c.y, w: r.w, h: r.h } : null; }
+      var BL = [];
+      var m = rel(gi.media);
+      if (m) BL.push({ from: m, to: m, r0: 0, r1: 0, part: 'media' });
+      var t = rel(gi.title);
+      if (t) BL.push({ from: { x: t.x, y: t.y + (t.h - 14) / 2, w: (c.w - 32) * 0.72, h: 14 }, to: t, r0: 7, r1: 6, part: 'title', extra: 0.06 });
+      var tr = rel(gi.tagsRow);
+      if (tr) {
+        var xs = tr.x;
+        [84, 96, 70].forEach(function (w, j) {
+          var real = rel(gi.tags[j]);
+          var from = { x: xs, y: tr.y, w: w, h: 26 };
+          xs += w + 6;
+          BL.push({ from: from, to: real || from, r0: 13, r1: 13, part: 'tags', idx: j });
+        });
+      }
+      var ch = rel(gi.chip);
+      if (ch) BL.push({ from: { x: ch.x, y: ch.y, w: 120, h: ch.h }, to: ch, r0: 13, r1: 13, part: 'chip' });
+      var pr = rel(gi.price);
+      if (pr) BL.push({ from: { x: pr.x, y: pr.y + (pr.h - 20) / 2, w: 150, h: 20 }, to: pr, r0: 8, r1: 6, part: 'price', extra: 0.12 });
+      [rel(gi.b0), rel(gi.b1)].forEach(function (bb, j) { if (bb) BL.push({ from: bb, to: bb, r0: 22, r1: 22, part: j ? 'b1' : 'b0' }); });
+      var W = c.w, stag = i * 0.12, pd = { tags: [] };
+      var blocks = BL.map(function (b) {
+        var cx = b.to.x + Math.min(b.to.w, 120) / 2;
+        var at = 0.9 * (Math.min(cx, W) + 40) / (W + 80) + (b.extra || 0) + stag;
+        var fade = at + 0.26;
+        if (b.part === 'tags') pd.tags[b.idx] = Math.round(fade * 1000); else pd[b.part] = Math.max(pd[b.part] || 0, Math.round(fade * 1000));
+        var g = formed ? b.to : b.from;
+        var trn = formed
+          ? ['left', 'top', 'width', 'height', 'border-radius'].map(function (p) { return p + ' 380ms ' + CBM + ' ' + at.toFixed(3) + 's'; }).join(', ') + ', opacity 220ms ease ' + fade.toFixed(3) + 's'
+          : 'none';
+        return { style: 'position: absolute; left: ' + g.x.toFixed(1) + 'px; top: ' + g.y.toFixed(1) + 'px; width: ' + g.w.toFixed(1) + 'px; height: ' + g.h.toFixed(1) + 'px; border-radius: ' + (formed ? b.r1 : b.r0) + 'px; background: var(--surface-raised); opacity: ' + (formed ? 0 : 1) + '; transition: ' + trn + ';' };
+      });
+      partD[i] = pd;
+      var bandForm = s.band === 'fa' || s.band === 'fb';
+      var light = (self.props.theme ?? 'dark') === 'light';
+      var bandColor = bandForm ? (light ? 'var(--surface)' : 'var(--line-strong)') : 'var(--line)';
+      var bandOp = bandForm ? (light ? 1 : 0.55) : 1;
+      var bandEnd = s.band === 'b' || s.band === 'fb';
+      var bandTr = s.band === 'b' ? 'transform 1600ms linear' : (s.band === 'fb' ? 'transform 900ms linear ' + Math.round(stag * 1000) + 'ms' : 'none');
+      skel.push({
+        box: 'position: absolute; left: ' + c.x.toFixed(1) + 'px; top: ' + c.y.toFixed(1) + 'px; width: ' + c.w.toFixed(1) + 'px; height: ' + c.h.toFixed(1) + 'px; border-radius: 16px; overflow: hidden;',
+        blocks: blocks,
+        band: 'position: absolute; top: 0; bottom: 0; left: 0; width: 80px; z-index: 1; background: linear-gradient(90deg, transparent, ' + bandColor + ', transparent); opacity: ' + bandOp + '; transform: translateX(' + (bandEnd ? W : -80) + 'px); transition: ' + bandTr + ';'
+      });
+    });
+
     function wrap(g, i) {
       var k = st[g.id];
-      var away = k === 'out' || k === 'gone';
-      var flat = k === 'gone';
-      var hidden = phase === 'enter';
-      var d = phase === 'shown' ? i * 70 : 0;
-      var tr = hidden ? 'none' : (k
-        ? 'transform 220ms cubic-bezier(.4, 0, 1, 1), opacity 200ms linear, max-height 260ms cubic-bezier(.2, 0, 0, 1), margin-top 260ms cubic-bezier(.2, 0, 0, 1)'
-        : 'transform 320ms cubic-bezier(.2, .8, .2, 1) ' + d + 'ms, opacity 280ms ease ' + d + 'ms, max-height 260ms cubic-bezier(.2, 0, 0, 1), margin-top 260ms cubic-bezier(.2, 0, 0, 1)');
-      return 'max-height: ' + (flat ? 0 : 440) + 'px; margin-top: ' + (flat ? -16 : 0) + 'px; overflow: ' + (k ? 'hidden' : 'visible') + '; opacity: ' + ((away || hidden) ? 0 : 1) + '; transform: translateX(' + (away ? '-110%' : '0') + ') translateY(' + (hidden ? 12 : 0) + 'px); transition: ' + tr + ';' + (flat ? ' pointer-events: none;' : '');
+      var H = hgt[g.id] || 369;
+      var op = 1, tf = 'none', tr = 'none', mh = '440px', mt = '0px', ov = 'visible', pe = '';
+      if (phase === 'loading' || phase === 'form0') { op = i < 3 ? 1 : 0; }
+      else if (phase === 'form') { op = 1; tr = i < 3 ? 'none' : 'opacity 300ms ease ' + (600 + (i - 3) * 80) + 'ms'; }
+      else if (phase === 'swap0') { op = 0; tf = 'translateY(12px)'; }
+      else if (phase === 'swap') { op = 1; tf = 'translateY(0px)'; tr = 'opacity 380ms ease ' + (i * 90) + 'ms, transform 380ms cubic-bezier(.2, .8, .2, 1) ' + (i * 90) + 'ms'; }
+      var FLUNG = 'translateX(-420px) rotate(-10deg) scale(0.92)';
+      var COLLAPSE = 'max-height 340ms cubic-bezier(.2, 0, 0, 1), margin-top 340ms cubic-bezier(.2, 0, 0, 1)';
+      if (k === 'fs') { var f = fx[g.id] || { dx: 0, rot: 0, sc: 1 }; op = 1; tf = 'translateX(' + f.dx.toFixed(1) + 'px) rotate(' + f.rot.toFixed(2) + 'deg) scale(' + f.sc + ')'; tr = 'none'; mh = H + 'px'; }
+      else if (k === 'fl') { op = 0; tf = FLUNG; tr = 'transform 320ms cubic-bezier(.55, 0, 1, .45), opacity 320ms ease-in'; mh = H + 'px'; }
+      else if (k === 'gone') { op = 0; tf = FLUNG; mh = '0px'; mt = '-16px'; ov = 'hidden'; tr = COLLAPSE; pe = ' pointer-events: none;'; }
+      else if (k === 'bs') { op = 0; tf = FLUNG; mh = H + 'px'; ov = 'hidden'; tr = COLLAPSE; pe = ' pointer-events: none;'; }
+      else if (k === 'bk') { op = 1; tf = 'none'; mh = H + 'px'; tr = 'transform 440ms cubic-bezier(.3, 1.1, .5, 1), opacity 300ms ease-out'; }
+      if (det && det.id === g.id) { op = 0; tr = 'none'; }
+      return 'position: relative; max-height: ' + mh + '; margin-top: ' + mt + '; overflow: ' + ov + '; opacity: ' + op + '; transform: ' + tf + '; transition: ' + tr + ';' + pe;
     }
     var cards = list.map(function (g, i) {
+      var reveal = null, stamp, stampDelay;
+      if (i < 3 && (phase === 'loading' || phase === 'form0')) reveal = { on: false };
+      else if (i < 3 && phase === 'form') {
+        reveal = { on: true, d: partD[i] || {} };
+        stamp = s.stamp;
+        stampDelay = (partD[i] || {}).media || 0;
+      }
       return Object.assign({}, g, {
         saved: !!saved[g.id],
         wrapStyle: wrap(g, i),
-        onSave: function () { self.toggleSave(g.id); },
-        onDismiss: function () { self.dismiss(g.id); },
+        reveal: reveal,
+        stamp: stamp,
+        stampDelay: stampDelay,
+        onSave: function (info) { self.toggleSave(g.id, info); },
+        onDismiss: function (info) { self.dismiss(g.id, info); },
         onOpen: function (e) { self.openDetail(g, e); }
       });
     });
-    var spring = 'cubic-bezier(.3, 1.3, .45, 1)';
+
+    // Pastilla del segmentado: posición con left y ancho con width, el apretón con scaleY, cada uno con su curva
+    var seg = s.seg || null;
+    var CW = 175, L0 = 4;
+    var pl, pw, ptr = [], psy = 1;
+    if (seg && seg.stage === 'stretch') {
+      pl = L0; pw = CW * 2;
+      ptr.push('left 320ms ' + CBM, 'width 320ms ' + CBM);
+    } else {
+      pl = L0 + (tab === 'soon' ? CW : 0); pw = CW;
+      ptr.push('left 420ms cubic-bezier(.3, 1.12, .5, 1)', 'width 420ms cubic-bezier(.3, 1.12, .5, 1)');
+      if (seg && seg.squish === 1) psy = 0.86;
+      if (seg && seg.squish === 2) ptr.push('transform 420ms cubic-bezier(.3, 1.6, .5, 1)');
+    }
     var tabBase = 'position: relative; z-index: 1; height: 36px; margin: 0; padding: 0; border: 0; background: transparent; font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 18px; border-radius: 18px; cursor: pointer; transition: color 200ms ease;';
-    var det = s.detail || null;
+
+    // Copia que vuela a Guardados: x con easeOut e y con [.55, 0, .85, .35] dibujan el arco
+    var fly = s.fly || null;
+    var flyStyle = '';
+    if (fly) {
+      var go = fly.stage === 'go';
+      var p = go ? fly.to : fly.from;
+      flyStyle = 'position: absolute; z-index: 40; left: ' + (p.x - 11).toFixed(1) + 'px; top: ' + (p.y - 11).toFixed(1) + 'px; width: 22px; height: 22px; color: var(--good); fill: currentColor; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; transform: scale(' + (go ? 0.55 : 1) + '); transition: ' + (go ? 'left 700ms cubic-bezier(0, 0, .58, 1), top 700ms cubic-bezier(.55, 0, .85, .35), transform 700ms ease-in' : 'none') + ';';
+    }
+
+    // Detalle
     var all = FEED.concat(SOON);
     var dItem = null;
     if (det) { for (var j = 0; j < all.length; j++) { if (all[j].id === det.id) { dItem = all[j]; break; } } }
     var stage = det ? det.stage : null;
+    var openS = stage === 'open';
+    var R = det ? det.rect : null;
+    var CBD = 'cubic-bezier(.25, 1, .4, 1)';
+    var boxTr = stage === 'start' ? 'none' : ['left', 'top', 'width', 'height', 'border-radius'].map(function (q) { return q + ' 460ms ' + CBD; }).join(', ');
+    var recede = !!det && openS;
+
     return {
       theme: this.props.theme ?? 'dark',
+      uid: this.uid,
+      scrollStyle: 'height: 844px; overflow-y: auto; box-sizing: border-box; padding: 28px 16px 120px; display: flex; flex-direction: column; gap: 16px; transform: scale(' + (recede ? 0.94 : 1) + '); transition: transform 460ms ' + CBD + ';',
       updated: phase === 'loading' ? 'Buscando ofertas en Venezuela…' : ((s.fresh ? 'Actualizado ahora' : 'Actualizado hace 2 h') + ' · Venezuela · precios en USD'),
       spinStyle: 'width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transform: rotate(' + ((s.spin || 0) * 360) + 'deg); transition: transform 700ms cubic-bezier(.3, 1.2, .45, 1);',
       refresh: function () { self.refresh(); },
@@ -238,27 +442,31 @@ class Component extends DCLogic {
       isSoon: tab === 'soon',
       forYouSelected: tab === 'foryou',
       soonSelected: tab === 'soon',
-      pillStyle: 'position: absolute; top: 4px; bottom: 4px; left: 4px; width: 175px; border-radius: 18px; background: var(--surface); box-shadow: var(--shadow-card); transform: translateX(' + (tab === 'soon' ? 175 : 0) + 'px); transition: transform 380ms ' + spring + ';',
+      pillStyle: 'position: absolute; top: 4px; bottom: 4px; left: ' + pl + 'px; width: ' + pw + 'px; border-radius: 18px; background: var(--surface); box-shadow: var(--shadow-card); transform: scaleY(' + psy + '); transition: ' + ptr.join(', ') + ';',
       forYouTabStyle: tabBase + ' color: ' + (tab === 'foryou' ? 'var(--ink)' : 'var(--ink-2)') + ';',
       soonTabStyle: tabBase + ' color: ' + (tab === 'soon' ? 'var(--ink)' : 'var(--ink-2)') + ';',
       showForYou: function () { self.showTab('foryou'); },
       showSoon: function () { self.showTab('soon'); },
-      showSkeleton: phase === 'loading' || (!!s.skel && phase !== 'done'),
-      skelStyle: 'position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 16px; pointer-events: none; opacity: ' + (phase === 'shown' ? 0 : 1) + '; transition: opacity 220ms ease;',
-      skelRows: [1, 2],
-      showContent: phase !== 'loading',
+      showSkel: skelOn,
+      skel: skel,
       bump: s.bump || 0,
       toast: s.toast || null,
+      hasFly: !!fly,
+      flyStyle: flyStyle,
       hasDetail: !!(det && dItem),
-      detailStyle: 'position: absolute; inset: 0; z-index: 30; transform-origin: ' + (det ? det.origin : '50% 50%') + '; transform: scale(' + (stage === 'open' ? 1 : (stage === 'exit' ? 0.94 : 0.9)) + '); opacity: ' + (stage === 'open' ? 1 : 0) + '; transition: ' + (stage === 'enter' ? 'none' : (stage === 'open' ? 'opacity 200ms ease-out, transform 340ms cubic-bezier(.3, 1.15, .45, 1)' : 'opacity 180ms ease-in, transform 220ms cubic-bezier(.4, 0, 1, 1)')) + ';' + (stage === 'exit' ? ' pointer-events: none;' : ''),
+      scrimStyle: 'position: absolute; inset: 0; z-index: 25; background: var(--scrim); opacity: ' + (openS ? 1 : 0) + '; transition: ' + (stage === 'start' ? 'none' : 'opacity 300ms ease') + '; pointer-events: none;',
+      boxStyle: R ? 'position: absolute; z-index: 30; overflow: hidden; background: var(--bg); left: ' + (openS ? 0 : R.x).toFixed(1) + 'px; top: ' + (openS ? 0 : R.y).toFixed(1) + 'px; width: ' + (openS ? 390 : R.w).toFixed(1) + 'px; height: ' + (openS ? 844 : R.h).toFixed(1) + 'px; border-radius: ' + (openS ? 0 : 16) + 'px; transition: ' + boxTr + ';' + (stage === 'closing' ? ' pointer-events: none;' : '') : '',
+      faceStyle: 'position: absolute; left: 0; top: 0; width: 358px; pointer-events: none; opacity: ' + (openS ? 0 : 1) + '; transition: ' + (stage === 'start' ? 'none' : (openS ? 'opacity 140ms ease' : 'opacity 240ms ease 120ms')) + ';',
+      detStyle: 'position: absolute; left: 0; top: 0; width: 390px; height: 844px; opacity: ' + (openS ? 1 : 0) + '; transition: ' + (stage === 'start' ? 'none' : (openS ? 'opacity 260ms ease 160ms' : 'opacity 140ms ease')) + ';',
+      detailCard: dItem ? Object.assign({}, dItem, { saved: det ? !!saved[det.id] : false }) : null,
       detailItem: dItem,
       detailSaved: det ? !!saved[det.id] : false,
-      detailSave: function () { if (det) self.toggleSave(det.id); },
+      detailSave: function () { if (det) self.toggleSave(det.id, null); },
       closeDetail: function () { self.closeDetail(); },
       detailDismiss: function () {
         if (!det) return;
         var id = det.id;
-        self.closeDetail(function () { self.dismiss(id); });
+        self.closeDetail(function () { self.dismiss(id, { dx: 0, lifted: false }); });
       }
     };
   }

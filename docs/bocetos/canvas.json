@@ -38,7 +38,7 @@
     "rowLight": {"x": 0, "y": 3452, "text": "Tema claro", "kind": "title1", "maxW": 860},
     "rowParts": {"x": 0, "y": 4696, "text": "Piezas reutilizadas", "kind": "title1", "maxW": 2214},
     "dataNote": {"x": 1410, "y": -240, "w": 420, "text": "Datos reales del barrido de Venezuela del 1 de noviembre de 2026 (precios en USD, fechas en hora de Caracas). Las imágenes de Steam se muestran como placeholder: en la app va la cápsula del juego.", "fill": "teal"},
-    "protoNote": {"x": 470, "y": 1048, "w": 420, "text": "Para ti es un prototipo: toca una tarjeta para abrir el detalle, guarda y descarta (Deshacer sale de la barra). El botón de actualizar repite el paso de esqueleto a tarjetas; en la app eso lo hace tirar hacia abajo.", "fill": "teal"}
+    "protoNote": {"x": 470, "y": 1048, "w": 420, "text": "Para ti es un prototipo con las animaciones elegidas: toca una tarjeta para abrir el detalle, guarda, y descarta con la X o arrastrándola a la izquierda (Deshacer sale de la barra). El botón de actualizar repite el paso de esqueleto a tarjetas; en la app eso lo hace tirar hacia abajo.", "fill": "teal"}
   },
   "designSystems": [
     {"title": "Offers Tracker Design System", "namespace": "offers-tracker", "artifact": "https://claude.ai/artifact/3qWsoSZPWnQgiVQSHeb8zp", "version": "1793575354-9cde", "copiedAt": "2026-11-01T23:35:00Z"}
