@@ -10,6 +10,7 @@
   --bg:#0E1014; --surface:#161920; --raised:#1E222B; --line:#2A2F3A; --line-strong:#6E778A;
   --ink:#EEF1F6; --ink-2:#B3BAC7; --ink-3:#8F98A9;
   --accent:#3DD6C3; --on-accent:#04201C; --accent-soft:#123A35; --accent-lip:#22766B; --accent-on-inverse:#0A7266;
+  --raised-lip:#343A47; --ink-lip:#8B919B;
   --deal:#FFD23F; --on-deal:#1A1405;
   --good:#57D98A; --good-soft:#183626; --bad:#F2555A; --bad-soft:#3D1A23; --hot:#FFA27A; --hot-soft:#3A2318; --info:#8AB4FF; --info-soft:#1C2742;
   --scrim:rgba(5,6,8,.64);
@@ -22,6 +23,7 @@
   --font-display:"Big Shoulders Display","Arial Narrow",sans-serif;
   --font-sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --k:1;
   color-scheme:dark;
 }
 @media (prefers-color-scheme: light){
@@ -29,6 +31,7 @@
     --bg:#E6E9ED; --surface:#F2F4F6; --raised:#DCE0E6; --line:#C9CED6; --line-strong:#6A7282;
     --ink:#14171D; --ink-2:#434B5A; --ink-3:#545C6B;
     --accent:#075F55; --on-accent:#F2F4F6; --accent-soft:#CBE7E1; --accent-lip:#04342F; --accent-on-inverse:#3DD6C3;
+    --raised-lip:#B9BFC9; --ink-lip:#000000;
     --good:#13652F; --good-soft:#D3EBDC; --bad:#8A1330; --bad-soft:#F1D6DE; --hot:#9C380B; --hot-soft:#F4DCCF; --info:#1D4BA8; --info-soft:#D7E1F5;
     --scrim:rgba(20,23,29,.48);
     --shadow-card:0 1px 2px rgba(20,23,29,.05),0 8px 24px -16px rgba(20,23,29,.22);
@@ -41,6 +44,7 @@
   --bg:#E6E9ED; --surface:#F2F4F6; --raised:#DCE0E6; --line:#C9CED6; --line-strong:#6A7282;
   --ink:#14171D; --ink-2:#434B5A; --ink-3:#545C6B;
   --accent:#075F55; --on-accent:#F2F4F6; --accent-soft:#CBE7E1; --accent-lip:#04342F; --accent-on-inverse:#3DD6C3;
+  --raised-lip:#B9BFC9; --ink-lip:#000000;
   --good:#13652F; --good-soft:#D3EBDC; --bad:#8A1330; --bad-soft:#F1D6DE; --hot:#9C380B; --hot-soft:#F4DCCF; --info:#1D4BA8; --info-soft:#D7E1F5;
   --scrim:rgba(20,23,29,.48);
   --shadow-card:0 1px 2px rgba(20,23,29,.05),0 8px 24px -16px rgba(20,23,29,.22);
@@ -50,7 +54,7 @@
 }
 body{background:var(--bg);color:var(--ink);font:400 15px/1.55 var(--font-sans);-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:36px 72px;display:flex;flex-direction:column;gap:40px}
+.wrap{max-width:1480px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:36px 72px;display:flex;flex-direction:column;gap:40px}
 a{color:var(--accent)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
@@ -58,11 +62,16 @@ a{color:var(--accent)}
 .head{display:flex;flex-direction:column;gap:14px}
 .eyebrow{font:600 12px/16px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
 h1{margin:0;font:800 clamp(44px,8vw,72px)/.92 var(--font-display);letter-spacing:.005em;text-wrap:balance}
-.lede{margin:0;max-width:66ch;color:var(--ink-2);font-size:16px}
-.summary{display:flex;flex-direction:column;gap:10px;padding:16px 18px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
-.summary-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+.lede{margin:0;max-width:70ch;color:var(--ink-2);font-size:16px}
+.summary{display:flex;flex-direction:column;gap:12px;padding:16px 18px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.summary-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px}
+.summary-count{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
 .count{font:800 26px/1 var(--font-display);font-variant-numeric:tabular-nums}
 .status{font-size:13px;color:var(--ink-3)}
+.speed{display:inline-flex;align-items:center;gap:4px;padding:4px;border-radius:22px;background:var(--raised)}
+.speed-label{padding:0 8px 0 10px;font:600 12px/1 var(--font-sans);color:var(--ink-2)}
+.speed button{height:32px;min-width:44px;padding:0 10px;border:0;border-radius:16px;background:transparent;color:var(--ink-2);font:700 13px/1 var(--font-sans);cursor:pointer;font-variant-numeric:tabular-nums}
+.speed button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .picked{display:flex;flex-wrap:wrap;gap:6px}
 .picked-empty{margin:0;font-size:14px;color:var(--ink-2)}
 .pill{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:0 12px;border-radius:999px;background:var(--raised);color:var(--ink-2);font:600 12px/16px var(--font-sans);text-decoration:none;white-space:nowrap}
@@ -90,17 +99,21 @@ h1{margin:0;font:800 clamp(44px,8vw,72px)/.92 var(--font-display);letter-spacing
 .detail-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 16px}
 .detail-head > div{display:flex;flex-direction:column;gap:4px;min-width:0}
 .detail h2{margin:0;font:800 36px/1 var(--font-display);letter-spacing:.005em}
-.goal{margin:0;color:var(--ink-2);max-width:60ch}
+.goal{margin:0;color:var(--ink-2);max-width:64ch}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,264px),1fr));gap:16px}
+.grid.wide{grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
 .demo{display:flex;flex-direction:column;gap:12px;min-width:0;padding:10px 10px 14px;border-radius:18px;background:var(--surface);border:1px solid var(--line);transition:border-color .2s ease,box-shadow .2s ease}
 .demo.is-picked{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
 .stage{position:relative;height:226px;border-radius:12px;background:var(--bg);border:1px solid var(--line);overflow:hidden;display:grid;place-items:center;cursor:pointer;isolation:isolate;-webkit-tap-highlight-color:transparent}
+.stage.tall{height:300px}
 .meta{display:flex;flex-direction:column;gap:6px;padding:0 4px;min-width:0}
 .meta-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .demo h3{margin:0;font:700 16px/1.25 var(--font-sans)}
 .tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--raised);color:var(--ink-2);font:600 11px/14px var(--font-sans);letter-spacing:.02em;white-space:nowrap}
 .tag.now{background:transparent;border:1px solid var(--line-strong)}
+.tag.combo{background:var(--info-soft);color:var(--info)}
 .spec{margin:0;font:400 12px/1.5 var(--font-mono);color:var(--ink-3);font-variant-numeric:tabular-nums}
+.uses{margin:0;font-size:13px;color:var(--ink-2)}
 .actions{display:flex;align-items:center;gap:8px;padding:0 4px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 14px;border-radius:18px;border:1px solid var(--line);background:var(--raised);color:var(--ink);font:600 13px/1 var(--font-sans);cursor:pointer}
 .btn svg{width:16px;height:16px}
@@ -124,11 +137,18 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
 .icon.filled{fill:currentColor}
 .u-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border:0;border-radius:22px;background:var(--accent);color:var(--on-accent);font:700 15px/20px var(--font-sans);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
 .u-btn svg{width:18px;height:18px}
-.u-btn.relieve{border-radius:12px;box-shadow:0 4px 0 var(--accent-lip)}
-.ripple{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--on-accent);opacity:0;pointer-events:none}
+.u-btn.relieve{border-radius:12px;box-shadow:0 4px 0 var(--accent-lip);overflow:visible}
+.u-btn.relieve.cap{border-radius:22px}
+.u-ibtn{position:relative;display:grid;place-items:center;width:48px;height:48px;box-sizing:border-box;padding:0;border-radius:24px;background:var(--raised);border:1px solid var(--line);color:var(--ink-2);box-shadow:0 4px 0 var(--raised-lip);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color calc(.2s * var(--k)) ease,color calc(.2s * var(--k)) ease}
+.u-ibtn.on{background:var(--good-soft);color:var(--good)}
+.u-ibtn svg{width:22px;height:22px}
+.u-ibtn.sm{width:40px;height:40px;border-radius:20px}
+.u-ibtn.sm svg{width:19px;height:19px}
+.ctl{display:flex;flex-direction:column;align-items:center;gap:22px}
+.ctl-row{display:flex;align-items:center;gap:16px}
 .u-nav{position:relative;display:grid;grid-template-columns:repeat(4,52px);column-gap:4px;width:232px;height:64px;box-sizing:border-box;padding:5px;border-radius:32px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-float)}
 .u-nav .ind{position:absolute;top:5px;left:5px;width:52px;height:52px;border-radius:26px;background:var(--ink)}
-.u-nav .it{position:relative;z-index:1;display:grid;place-items:center;width:52px;height:52px;color:var(--ink-2);transition:color .2s ease}
+.u-nav .it{position:relative;z-index:1;display:grid;place-items:center;width:52px;height:52px;color:var(--ink-2);transition:color calc(.2s * var(--k)) ease}
 .u-nav .it.on{color:var(--bg)}
 .u-nav svg{width:22px;height:22px}
 .nav-bottom{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center}
@@ -142,6 +162,7 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
 .dmsg svg{width:18px;height:18px;flex:none;color:var(--ink-2)}
 .dmsg .dtx{flex:1;min-width:0}
 .mini-btn{flex:none;display:inline-flex;align-items:center;height:34px;padding:0 12px;border-radius:17px;background:var(--accent);color:var(--on-accent);font:700 12px/1 var(--font-sans)}
+.mini-btn.relieve{box-shadow:0 3px 0 var(--accent-lip)}
 .dtime{position:absolute;left:14px;right:14px;top:52px;height:3px;border-radius:2px;background:var(--accent);transform-origin:left center;opacity:0}
 .ftoast{position:absolute;left:12px;right:12px;bottom:88px;display:flex;justify-content:center}
 .tpill{display:inline-flex;align-items:center;gap:8px;height:40px;padding:3px 3px 3px 12px;box-sizing:border-box;border-radius:20px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-float);font:600 12px/1 var(--font-sans);opacity:0}
@@ -153,22 +174,25 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
 .isla-in span{flex:1}
 .isla-in b{color:var(--accent-on-inverse);font-weight:700}
 .gwrap{position:absolute;left:0;right:0;top:34px;display:flex;justify-content:center}
-.gbtn{position:relative;width:64px;height:64px;border-radius:32px;background:var(--raised);color:var(--ink-2);display:grid;place-items:center;transition:background-color .2s ease,color .2s ease}
+.gbtn{position:relative;width:64px;height:64px;border-radius:32px;background:var(--raised);color:var(--ink-2);display:grid;place-items:center;transition:background-color calc(.2s * var(--k)) ease,color calc(.2s * var(--k)) ease}
 .gbtn.on{background:var(--good-soft);color:var(--good)}
 .gbtn svg{width:28px;height:28px;grid-area:1/1}
 .gbtn .fillclip{clip-path:inset(100% 0 0 0);color:var(--good)}
-.dot-p{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--good);opacity:0}
-.clone{position:absolute;width:28px;height:28px;color:var(--good);opacity:0;pointer-events:none}
+.dot-p{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--good);opacity:0;pointer-events:none}
+.ndot{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--good);opacity:0;pointer-events:none;z-index:4}
+.clone{position:absolute;width:28px;height:28px;color:var(--good);opacity:0;pointer-events:none;z-index:4}
 .col{display:flex;flex-direction:column;gap:10px;width:212px}
+.col.top{position:absolute;top:18px;left:50%;margin-left:-106px}
 .slot{position:relative}
 .u-row{display:flex;align-items:center;gap:10px;width:212px;height:62px;box-sizing:border-box;padding:8px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-card)}
 .u-row .th{position:relative;width:46px;height:46px;flex:none;border-radius:8px;background:var(--raised)}
 .u-row .th .u-sticker{position:absolute;left:-4px;bottom:-5px;font-size:11px;line-height:11px;padding:3px 4px 2px}
-.u-row .tx{display:flex;flex-direction:column;gap:3px;min-width:0}
+.u-row .tx{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
 .u-row b{font:700 13px/16px var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .u-row em{font:800 17px/17px var(--font-display);font-style:normal;font-variant-numeric:tabular-nums}
 .u-sticker{display:inline-flex;padding:4px 6px 3px;background:var(--deal);color:var(--on-deal);font:800 14px/14px var(--font-display);border-radius:5px;box-shadow:var(--shadow-sticker);white-space:nowrap}
 .u-phone{position:relative;width:152px;height:200px;box-sizing:border-box;border-radius:22px;background:var(--bg);border:1px solid var(--line-strong);overflow:hidden}
+.stage.tall .u-phone{width:176px;height:262px}
 .layer{position:absolute;inset:0;background:var(--bg)}
 .pcard{position:absolute;left:10px;width:130px;height:70px;box-sizing:border-box;border-radius:10px;background:var(--surface);border:1px solid var(--line);overflow:hidden}
 .pcard i{position:absolute;left:0;right:0;top:0;height:38px;background:var(--raised)}
@@ -183,16 +207,16 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
 .pdet b{position:absolute;left:12px;right:12px;bottom:12px;height:26px;border-radius:13px;background:var(--accent)}
 .pdet em{position:absolute;left:10px;top:10px;width:22px;height:22px;border-radius:11px;background:var(--surface);box-shadow:var(--shadow-float)}
 .phead{position:absolute;left:12px;top:12px;width:58px;height:10px;border-radius:5px;background:var(--line-strong);opacity:.6}
-.cx{position:absolute;box-sizing:border-box;background:var(--surface);border:1px solid var(--line);overflow:hidden;opacity:0;pointer-events:none}
+.cx{position:absolute;box-sizing:border-box;background:var(--surface);border:1px solid var(--line);overflow:hidden;opacity:0;pointer-events:none;z-index:3}
 .cx > div{position:absolute;inset:0}
 .pchip{position:absolute;left:10px;top:12px;display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;box-sizing:border-box;border-radius:11px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:600 10px/1 var(--font-sans)}
 .pchip svg{width:11px;height:11px}
 .pblock{position:absolute;left:10px;right:10px;height:44px;border-radius:9px;background:var(--surface);border:1px solid var(--line)}
-.scrim{position:absolute;inset:0;background:var(--scrim);opacity:0}
-.sheet{position:absolute;left:0;right:0;bottom:0;height:122px;box-sizing:border-box;border-radius:16px 16px 0 0;background:var(--surface);border-top:1px solid var(--line);transform:translateY(100%)}
-.sheet .grab{position:absolute;left:50%;top:7px;width:28px;height:4px;margin-left:-14px;border-radius:2px;background:var(--line-strong)}
-.sheet .r{position:absolute;left:12px;height:20px;border-radius:10px;border:1px solid var(--line-strong)}
-.sheet .r.on{background:var(--ink);border-color:var(--ink)}
+.scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;pointer-events:none}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:122px;box-sizing:border-box;border-radius:16px 16px 0 0;background:var(--surface);border-top:1px solid var(--line);transform:translateY(100%);z-index:2}
+.sheet .grab,.cx .grab{position:absolute;left:50%;top:7px;width:28px;height:4px;margin-left:-14px;border-radius:2px;background:var(--line-strong)}
+.sheet .r,.cx .r{position:absolute;height:20px;box-sizing:border-box;border-radius:10px;border:1px solid var(--line-strong)}
+.sheet .r.on,.cx .r.on{background:var(--ink);border-color:var(--ink)}
 .screen{position:absolute;inset:0;background:var(--bg);overflow:hidden}
 .mcard{position:relative;width:212px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-card);overflow:hidden}
 .mcard .media{position:relative;height:96px;background:var(--raised)}
@@ -203,8 +227,9 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
 .mcard .chips{display:flex;gap:6px}
 .mcard .chip{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:10px;background:var(--raised);color:var(--ink-2);font:600 9.5px/1 var(--font-sans);letter-spacing:.04em}
 .mcard .pr{font:800 20px/20px var(--font-display);width:max-content;font-variant-numeric:tabular-nums}
-.sk{position:absolute;border-radius:6px;background:var(--raised);pointer-events:none}
-.u-chip{display:inline-flex;align-items:center;height:30px;padding:0 12px;box-sizing:border-box;border-radius:15px;background:var(--surface);border:1px solid var(--line-strong);color:var(--ink);font:600 12px/1 var(--font-sans);white-space:nowrap;transition:background-color .2s ease,color .2s ease,border-color .2s ease}
+.sk{position:absolute;border-radius:6px;background:var(--raised);pointer-events:none;z-index:2}
+.shine{position:absolute;top:0;bottom:0;left:0;width:80px;background:linear-gradient(90deg,transparent,var(--line-strong),transparent);opacity:0;pointer-events:none;z-index:4}
+.u-chip{display:inline-flex;align-items:center;height:30px;padding:0 12px;box-sizing:border-box;border-radius:15px;background:var(--surface);border:1px solid var(--line-strong);color:var(--ink);font:600 12px/1 var(--font-sans);white-space:nowrap;transition:background-color calc(.28s * var(--k)) ease,color calc(.28s * var(--k)) ease,border-color calc(.28s * var(--k)) ease}
 .u-chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .u-chip .ck{display:inline-flex;width:0;overflow:hidden;opacity:0}
 .u-chip .ck svg{width:14px;height:14px;flex:none;margin-right:4px}
@@ -215,13 +240,15 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
 .fitem span{color:var(--ink-3);font-weight:500}
 .u-seg{position:relative;display:grid;grid-template-columns:116px 116px;padding:4px;border-radius:22px;background:var(--raised)}
 .u-seg .pl{position:absolute;top:4px;left:4px;width:116px;height:36px;border-radius:18px;background:var(--surface);box-shadow:var(--shadow-card)}
-.u-seg span{position:relative;z-index:1;display:grid;place-items:center;height:36px;font:600 12.5px/1 var(--font-sans);color:var(--ink-2);transition:color .2s ease}
+.u-seg span{position:relative;z-index:1;display:grid;place-items:center;height:36px;font:600 12.5px/1 var(--font-sans);color:var(--ink-2);transition:color calc(.2s * var(--k)) ease}
 .u-seg span.on{color:var(--ink)}
 .cmedia{position:relative;width:212px;height:118px;border-radius:14px;background:var(--raised);perspective:500px}
 .cmedia .nm{position:absolute;left:84px;bottom:20px;font:800 22px/22px var(--font-display);color:var(--ink-3)}
 .cmedia .u-sticker{position:absolute;left:14px;bottom:-12px;font-size:24px;line-height:24px;padding:6px 8px 5px}
 .price{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:212px}
-.price .was{font:400 14px/18px var(--font-sans);color:var(--ink-3);text-decoration:line-through;opacity:0}
+.price .was{position:relative;font:400 14px/18px var(--font-sans);color:var(--ink-3);text-decoration:line-through;opacity:0}
+.price .was.draw{text-decoration:none}
+.strike{position:absolute;left:-2px;right:-2px;top:50%;height:1.5px;margin-top:-1px;background:var(--ink-3);transform-origin:left center}
 .price .now{position:relative;height:46px;overflow:hidden;font:800 44px/46px var(--font-display);font-variant-numeric:tabular-nums;white-space:nowrap}
 .price .save{font:600 13px/16px var(--font-sans);color:var(--good);font-variant-numeric:tabular-nums}
 .odo{display:inline-flex;height:46px;overflow:hidden;vertical-align:top}
@@ -251,18 +278,26 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
 .wel .mx{position:absolute;display:grid;place-items:center;box-sizing:border-box;background:var(--deal);color:var(--on-deal);font:800 20px/1 var(--font-display);box-shadow:var(--shadow-sticker);overflow:hidden}
 .wel .mx span{position:absolute;inset:0;display:grid;place-items:center;white-space:nowrap}
 .wel .mx .b{font:700 10px/1 var(--font-sans);opacity:0}
-@media (prefers-reduced-motion: reduce){ .u-nav .it,.u-chip,.u-seg span,.gbtn{transition:none} }
+@media (prefers-reduced-motion: reduce){ .u-nav .it,.u-chip,.u-seg span,.gbtn,.u-ibtn{transition:none} }
 </style>
 
 <div class="wrap">
   <header class="head">
     <span class="eyebrow">Offers Tracker · Movimiento</span>
     <h1>Catálogo de movimiento</h1>
-    <p class="lede">Cada detalle de la app con tres o cuatro formas de moverse, lado a lado. Las demos usan los mismos muelles que la app (rigidez y amortiguación) y cada una trae su receta en Reanimated. Toca una demo para repetirla y elige la que va en cada detalle: tu elección queda guardada y la paso a Movimiento en el sistema de diseño.</p>
+    <p class="lede">Cada detalle de la app con varias formas de moverse, lado a lado: las sueltas, una combinada que junta las mejores y, al final, tus elecciones encadenadas como se verían en la app. Los números son los mismos muelles y tiempos que llevaría la app; para mirar algo con calma, baja la velocidad. Toca una demo para repetirla y elige la que va en cada detalle: tu elección queda guardada y la paso a Movimiento en el sistema de diseño.</p>
     <section class="summary" aria-labelledby="sum-title">
       <div class="summary-top">
-        <span class="count" id="sum-title"><span id="pick-count">0</span> de 14 elegidos</span>
-        <span class="status" id="store-status" role="status">Conectando con el guardado de elecciones…</span>
+        <div class="summary-count">
+          <span class="count" id="sum-title"><span id="pick-count">0</span> de 14 elegidos</span>
+          <span class="status" id="store-status" role="status">Conectando con el guardado de elecciones…</span>
+        </div>
+        <div class="speed" role="group" aria-label="Velocidad de las demos">
+          <span class="speed-label">Velocidad</span>
+          <button type="button" data-k="1" aria-pressed="true">1×</button>
+          <button type="button" data-k="2" aria-pressed="false">½×</button>
+          <button type="button" data-k="4" aria-pressed="false">¼×</button>
+        </div>
       </div>
       <div class="picked" id="picked-list"><p class="picked-empty">Todavía no elegiste ningún estilo. Usa “Elegir” debajo de la demo que te guste.</p></div>
       <p class="note" id="motion-note" hidden>Tienes activado “reducir movimiento”: las demos no arrancan solas; tócalas para verlas.</p>
@@ -280,7 +315,8 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     <div class="term"><dt>Escalonado</dt><dd>Varias piezas con el mismo movimiento, una tras otra.</dd></div>
     <div class="term"><dt>Valor</dt><dd>Una cifra cambia mostrando el recorrido.</dd></div>
     <div class="term"><dt>Clonado</dt><dd>Una copia viaja para mostrar a dónde fue algo.</dd></div>
-    <div class="term"><dt>Dimensión</dt><dd>Profundidad: giro en 3D, pliegue o relieve.</dd></div>
+    <div class="term"><dt>Dimensión</dt><dd>Profundidad: giro en 3D, pliegue o relieve que se hunde.</dd></div>
+    <div class="term"><dt>Combinada</dt><dd>Junta dos o más de las anteriores en una sola animación.</dd></div>
   </dl>
 
   <nav class="index" aria-label="Detalles">
@@ -296,7 +332,7 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
       <li><a href="https://uxmag.com/articles/creating-usability-with-motion-the-ux-in-motion-manifesto">UX in Motion · el manifiesto</a><span>Los 12 principios de Issara Willenskomer para animar interfaces: transformación (morph), máscara, valor, clonado, escalonado, dimensión y el resto.</span></li>
       <li><a href="https://docs.swmansion.com/react-native-reanimated/docs/layout-animations/entering-exiting-animations/">Reanimated · animaciones de entrada y salida</a><span>Los presets que ya trae la librería (FadeIn, SlideIn, ZoomIn, FlipIn, StretchIn…) y, en la página vecina, las transiciones de layout (LinearTransition y otras).</span></li>
     </ul>
-    <p class="note">Muelles: los números son rigidez/amortiguación con masa 1, iguales en Motion (estas demos) y en Reanimated (la app). Con “reducir movimiento”, todo pasa a un fundido de 150 ms.</p>
+    <p class="note">Muelles: los números son rigidez/amortiguación con masa 1, iguales en Motion (estas demos) y en Reanimated (la app). A ½× y ¼× se escalan para que el movimiento sea el mismo, más lento. Con “reducir movimiento”, todo pasa a un fundido de 150 ms.</p>
   </section>
 </div>
 
@@ -305,6 +341,12 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
   'use strict';
   var M = window.Motion || null;
   var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ---------- Velocidad: 1 (real), 2 (½×) o 4 (¼×) ---------- */
+  var K = 1;
+  try { var savedK = parseInt(window.localStorage.getItem('ot-velocidad'), 10); if (savedK === 2 || savedK === 4) K = savedK; } catch (e) { /* sin preferencia guardada */ }
+  function applyK() { document.documentElement.style.setProperty('--k', String(K)); }
+  applyK();
 
   var ICONS = {
     sparkles: '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle>',
@@ -346,8 +388,21 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     }
     return el;
   }
-  function S(k, d, extra) { var o = { type: 'spring', stiffness: k, damping: d }; if (extra) for (var x in extra) o[x] = extra[x]; return o; }
-  function T(ms, ease, extra) { var o = { duration: ms / 1000, ease: ease || 'easeOut' }; if (extra) for (var x in extra) o[x] = extra[x]; return o; }
+  function scaleExtra(o, extra) {
+    if (extra) for (var x in extra) {
+      if (!Object.prototype.hasOwnProperty.call(extra, x) || x === 'keepVelocity') continue;
+      o[x] = x === 'delay' ? extra[x] * K : extra[x];
+    }
+    return o;
+  }
+  /* Muelle: a menor velocidad, rigidez/K² y amortiguación/K dan la misma curva K veces más lenta.
+     Arranca quieto salvo que se pida lo contrario: así un reinicio a mitad de camino no hereda el impulso del salto */
+  function S(k, d, extra) {
+    var o = { type: 'spring', stiffness: k / (K * K), damping: d / K };
+    if (!extra || !extra.keepVelocity) o.velocity = 0;
+    return scaleExtra(o, extra);
+  }
+  function T(ms, ease, extra) { return scaleExtra({ duration: (ms * K) / 1000, ease: ease || 'easeOut' }, extra); }
   function A(ctx, el, kf, opts) {
     if (!M) return Promise.resolve();
     var c = M.animate(el, kf, opts || {});
@@ -358,12 +413,21 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     if (!M) return;
     try { M.animate(el, values, { duration: 0 }); } catch (e) { /* sin reinicio */ }
   }
-  function wait(ctx, ms) { return new Promise(function (r) { ctx.timers.push(setTimeout(r, ms)); }); }
+  function wait(ctx, ms) { return new Promise(function (r) { ctx.timers.push(setTimeout(r, ms * K)); }); }
   function tok(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
   function rel(el, base) {
     var a = el.getBoundingClientRect(), b = base.getBoundingClientRect();
-    return { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height, cx: a.left - b.left + a.width / 2, cy: a.top - b.top + a.height / 2 };
+    var x = a.left - b.left - base.clientLeft, y = a.top - b.top - base.clientTop;
+    return { x: x, y: y, w: a.width, h: a.height, cx: x + a.width / 2, cy: y + a.height / 2 };
   }
+  /* Caja de layout (sin transformaciones) relativa al borde interno de base */
+  function offsetIn(el, base) {
+    var x = 0, y = 0, n = el;
+    while (n && n !== base) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    return { x: x, y: y, w: el.offsetWidth, h: el.offsetHeight };
+  }
+  /* Cambios de clase que deben caer en el mismo frame que las animaciones que arrancan junto a ellos */
+  function sync(fn) { if (M && M.frame && typeof M.frame.update === 'function') M.frame.update(fn); else fn(); }
   function money(v) { return 'USD ' + v.toFixed(2).replace('.', ','); }
   function bezier(x1, y1, x2, y2) {
     function a(p1, p2) { return 1 - 3 * p2 + 3 * p1; }
@@ -379,10 +443,10 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
   }
   function tween(ctx, ms, ease, onUpdate) {
     return new Promise(function (resolve) {
-      var start = performance.now(), id = ctx.run;
+      var start = performance.now(), id = ctx.run, total = ms * K;
       function step(now) {
         if (ctx.run !== id) return resolve();
-        var p = Math.min(1, (now - start) / ms);
+        var p = Math.min(1, (now - start) / total);
         onUpdate(ease(p));
         if (p < 1) requestAnimationFrame(step); else resolve();
       }
@@ -403,62 +467,87 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     return { el: n, ind: ind, items: items };
   }
   function setActive(items, i) { items.forEach(function (it, k) { it.classList.toggle('on', k === i); }); }
-  function row(name, price, pct) {
+  function row(name, price, pct, extra) {
     return h('div', { class: 'u-row' },
       h('span', { class: 'th' }, h('span', { class: 'u-sticker', text: '−' + pct + '%' })),
-      h('span', { class: 'tx' }, h('b', { text: name }), h('em', { text: price })));
+      h('span', { class: 'tx' }, h('b', { text: name }), h('em', { text: price })),
+      extra || null);
+  }
+  async function bump(ctx, el) {
+    await A(ctx, el, { scale: [1, 1.3] }, T(180, 'easeOut'));
+    A(ctx, el, { scale: [1.3, 1] }, S(380, 14));
   }
 
-  /* Botón: presión real con el puntero y presión simulada al reproducir */
+  /* Relieve: la cara baja y el canto desaparece; al soltar vuelve con un muelle */
+  function pressRelieve(ctx, el, p, depth, lipVar) {
+    var lip = tok(lipVar);
+    if (p) {
+      A(ctx, el, { y: depth, boxShadow: '0px 0px 0px ' + lip }, T(120, 'easeOut'));
+    } else {
+      A(ctx, el, { y: 0 }, S(500, 26));
+      A(ctx, el, { boxShadow: '0px ' + depth + 'px 0px ' + lip }, T(160, 'easeOut'));
+    }
+  }
+  function wirePress(ctx, el, fn) {
+    var down = false;
+    el.addEventListener('pointerdown', function (e) { e.stopPropagation(); down = true; fn(true, e); });
+    el.addEventListener('pointerup', function (e) { e.stopPropagation(); if (down) { down = false; fn(false, e); } });
+    el.addEventListener('pointerleave', function (e) { if (down) { down = false; fn(false, e); } });
+    el.addEventListener('click', function (e) { e.stopPropagation(); });
+  }
   function buttonScene(ctx, cls) {
     var b = h('button', { class: 'u-btn' + (cls ? ' ' + cls : ''), type: 'button' }, icon('external'), h('span', { text: 'Ir a Steam' }));
     ctx.stage.appendChild(b);
     ctx.btn = b;
-    function down(e) { e.stopPropagation(); ctx.press(true, e); }
-    function up(e) { e.stopPropagation(); ctx.press(false, e); }
-    b.addEventListener('pointerdown', down);
-    b.addEventListener('pointerup', up);
-    b.addEventListener('pointerleave', function (e) { if (ctx.isDown) up(e); });
-    b.addEventListener('click', function (e) { e.stopPropagation(); });
+    wirePress(ctx, b, function (p, e) { ctx.press(p, e); });
     return b;
   }
   async function simulatePress(ctx, alive) {
     ctx.press(true, null);
-    await wait(ctx, 170);
+    await wait(ctx, 260);
     if (alive()) ctx.press(false, null);
   }
 
   /* Aviso en la barra (morph) */
-  function dockScene(ctx, withTime) {
-    var faux = h('div', { class: 'faux' }, h('span', { class: 'bar', style: 'width:62%' }), h('span', { class: 'blk' }));
-    var msg = h('div', { class: 'dmsg' }, icon('eyeOff'), h('span', { class: 'dtx', text: 'No te mostraremos más este juego' }), h('span', { class: 'mini-btn', text: 'Deshacer' }));
+  function dockScene(ctx, withTime, withFaux) {
+    if (withFaux !== false) ctx.stage.appendChild(h('div', { class: 'faux' }, h('span', { class: 'bar', style: 'width:62%' }), h('span', { class: 'blk' })));
+    var undoBtn = h('span', { class: 'mini-btn' + (withFaux === false ? ' relieve' : ''), text: 'Deshacer' });
+    var msg = h('div', { class: 'dmsg' }, icon('eyeOff'), h('span', { class: 'dtx', text: 'No te mostraremos más este juego' }), undoBtn);
     var n = nav(0);
     var dock = h('div', { class: 'dock' }, msg, n.el);
     var time = null;
     if (withTime) { time = h('span', { class: 'dtime' }); dock.appendChild(time); }
     var wrap = h('div', { class: 'dockwrap' }, dock);
-    ctx.stage.appendChild(faux);
     ctx.stage.appendChild(wrap);
-    ctx.dock = dock; ctx.msg = msg; ctx.wrap = wrap; ctx.time = time;
+    ctx.dock = dock; ctx.msg = msg; ctx.wrap = wrap; ctx.time = time; ctx.undoBtn = undoBtn;
   }
   function dockReset(ctx) {
     setNow(ctx.dock, { width: '232px', height: '64px', borderRadius: '32px' });
     setNow(ctx.msg, { opacity: 0 });
     if (ctx.time) setNow(ctx.time, { opacity: 0, scaleX: 1 });
+    setNow(ctx.undoBtn, { y: 0 });
+    ctx.undoBtn.style.boxShadow = '';
+  }
+  function dockOpen(ctx) {
+    var W = Math.min(ctx.wrap.clientWidth, 358);
+    ctx.dockW = W;
+    A(ctx, ctx.dock, { width: ['232px', W + 'px'], height: ['64px', '124px'], borderRadius: ['32px', '28px'] }, S(340, 28));
+    A(ctx, ctx.msg, { opacity: [0, 1] }, T(260, 'easeOut', { delay: 0.2 }));
+    if (ctx.time) {
+      A(ctx, ctx.time, { opacity: [0, 1] }, T(200, 'easeOut', { delay: 0.24 }));
+      A(ctx, ctx.time, { scaleX: [1, 0] }, T(2400, 'linear', { delay: 0.24 }));
+    }
+  }
+  function dockClose(ctx) {
+    var W = ctx.dockW || Math.min(ctx.wrap.clientWidth, 358);
+    A(ctx, ctx.msg, { opacity: [1, 0] }, T(180));
+    if (ctx.time) A(ctx, ctx.time, { opacity: [1, 0] }, T(180));
+    return A(ctx, ctx.dock, { width: [W + 'px', '232px'], height: ['124px', '64px'], borderRadius: ['28px', '32px'] }, S(340, 28, { delay: 0.1 }));
   }
   async function dockPlay(ctx, alive) {
-    var W = Math.min(ctx.wrap.clientWidth, 358);
-    A(ctx, ctx.dock, { width: ['232px', W + 'px'], height: ['64px', '124px'], borderRadius: ['32px', '28px'] }, S(420, 28));
-    A(ctx, ctx.msg, { opacity: [0, 1] }, T(220, 'easeOut', { delay: 0.16 }));
-    if (ctx.time) {
-      A(ctx, ctx.time, { opacity: [0, 1] }, T(150, 'easeOut', { delay: 0.2 }));
-      A(ctx, ctx.time, { scaleX: [1, 0] }, T(2000, 'linear', { delay: 0.2 }));
-    }
-    await wait(ctx, ctx.time ? 2300 : 2000);
-    if (!alive()) return;
-    A(ctx, ctx.msg, { opacity: [1, 0] }, T(120));
-    if (ctx.time) A(ctx, ctx.time, { opacity: [1, 0] }, T(120));
-    A(ctx, ctx.dock, { width: [W + 'px', '232px'], height: ['124px', '64px'], borderRadius: ['28px', '32px'] }, S(420, 28, { delay: 0.08 }));
+    dockOpen(ctx);
+    await wait(ctx, ctx.time ? 2700 : 2600);
+    if (alive()) dockClose(ctx);
   }
 
   /* Guardar */
@@ -470,10 +559,12 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     for (var i = 0; i < 8; i++) { var d = h('span', { class: 'dot-p' }); btn.appendChild(d); dots.push(d); }
     var n = nav(0);
     var clone = icon('bookmark', 'filled clone');
+    var navDots = [];
+    for (var j = 0; j < 5; j++) { var nd = h('span', { class: 'ndot' }); ctx.stage.appendChild(nd); navDots.push(nd); }
     ctx.stage.appendChild(h('div', { class: 'gwrap' }, btn));
     ctx.stage.appendChild(h('div', { class: 'nav-bottom' }, n.el));
     ctx.stage.appendChild(clone);
-    ctx.gbtn = btn; ctx.outline = outline; ctx.filled = filled; ctx.dots = dots; ctx.nav = n; ctx.clone = clone;
+    ctx.gbtn = btn; ctx.outline = outline; ctx.filled = filled; ctx.dots = dots; ctx.nav = n; ctx.clone = clone; ctx.navDots = navDots;
   }
   function saveReset(ctx) {
     ctx.gbtn.classList.remove('on');
@@ -481,20 +572,49 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     setNow(ctx.outline, { scale: 1, scaleX: 1, scaleY: 1 });
     setNow(ctx.filled, { clipPath: 'inset(100% 0% 0% 0%)' });
     ctx.dots.forEach(function (d) { setNow(d, { x: 0, y: 0, opacity: 0, scale: 1 }); });
+    ctx.navDots.forEach(function (d) { setNow(d, { x: 0, y: 0, opacity: 0 }); });
     setNow(ctx.clone, { opacity: 0, x: 0, y: 0, scale: 1 });
     setNow(ctx.nav.items[2], { scale: 1 });
+    ctx.nav.items[2].querySelector('svg').classList.remove('filled');
   }
-  async function bump(ctx, el) {
-    await A(ctx, el, { scale: [1, 1.3] }, T(150, 'easeOut'));
-    A(ctx, el, { scale: [1.3, 1] }, S(420, 14));
+  /* Se aplasta, estalla y vuela a Guardados: lo usan la demo combinada y la secuencia */
+  async function squashBurstFly(ctx, alive, o) {
+    await A(ctx, o.icon, { scaleX: [1, 1.22], scaleY: [1, 0.72] }, T(140, 'easeIn'));
+    if (!alive()) return;
+    o.btn.classList.add('on');
+    o.icon.classList.add('filled');
+    A(ctx, o.icon, { scaleX: [1.22, 1], scaleY: [0.72, 1] }, S(420, 14));
+    o.dots.forEach(function (d, i) {
+      var ang = (Math.PI * 2 * i) / o.dots.length;
+      A(ctx, d, { x: [0, Math.cos(ang) * o.reach], y: [0, Math.sin(ang) * o.reach], opacity: [1, 0], scale: [1, 0.4] }, T(600, 'easeOut'));
+    });
+    await wait(ctx, 180);
+    if (!alive()) return;
+    var from = rel(o.icon, ctx.stage), to = rel(o.target, ctx.stage);
+    o.clone.style.left = (from.cx - 14) + 'px';
+    o.clone.style.top = (from.cy - 14) + 'px';
+    setNow(o.clone, { opacity: 1, x: 0, y: 0, scale: o.cloneScale || 1 });
+    A(ctx, o.clone, { x: [0, to.cx - from.cx] }, T(700, 'easeOut'));
+    A(ctx, o.clone, { scale: [o.cloneScale || 1, 0.55] }, T(700, 'easeIn'));
+    await A(ctx, o.clone, { y: [0, to.cy - from.cy] }, T(700, [0.55, 0, 0.85, 0.35]));
+    if (!alive()) return;
+    setNow(o.clone, { opacity: 0 });
+    o.target.querySelector('svg').classList.add('filled');
+    bump(ctx, o.target);
+    o.navDots.forEach(function (d, i) {
+      d.style.left = (to.cx - 2.5) + 'px';
+      d.style.top = (to.cy - 2.5) + 'px';
+      var ang = (Math.PI * 2 * i) / o.navDots.length - Math.PI / 2;
+      A(ctx, d, { x: [0, Math.cos(ang) * 24], y: [0, Math.sin(ang) * 24], opacity: [1, 0] }, T(460, 'easeOut'));
+    });
   }
 
   /* Descartar */
-  function dismissScene(ctx) {
+  function dismissScene(ctx, top) {
     var a = row('Caveblazers', 'USD 0,52', 91);
     var b = row('Dead Cells', 'USD 6,24', 50);
     var slotA = h('div', { class: 'slot' }, a);
-    var col = h('div', { class: 'col' }, slotA, h('div', { class: 'slot' }, b));
+    var col = h('div', { class: 'col' + (top ? ' top' : '') }, slotA, h('div', { class: 'slot' }, b));
     ctx.stage.appendChild(col);
     ctx.a = a; ctx.slotA = slotA;
   }
@@ -503,12 +623,28 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     ctx.slotA.style.marginBottom = '';
     ctx.slotA.style.perspective = '';
     ctx.slotA.style.overflow = '';
+    ctx.a.style.boxShadow = '';
     setNow(ctx.a, { x: 0, y: 0, scale: 1, rotate: 0, rotateX: 0, opacity: 1 });
   }
   function collapse(ctx) {
     var hgt = ctx.slotA.offsetHeight;
+    ctx.slotH = hgt;
     ctx.slotA.style.overflow = 'hidden';
-    return A(ctx, ctx.slotA, { height: [hgt + 'px', '0px'], marginBottom: ['0px', '-10px'] }, T(260, [0.2, 0, 0, 1]));
+    return A(ctx, ctx.slotA, { height: [hgt + 'px', '0px'], marginBottom: ['0px', '-10px'] }, T(340, [0.2, 0, 0, 1]));
+  }
+  async function dragFling(ctx, alive, lift) {
+    if (lift) {
+      A(ctx, ctx.a, { scale: [1, 1.03] }, S(420, 30));
+      A(ctx, ctx.a, { boxShadow: ['0px 2px 6px rgba(0,0,0,0.18)', '0px 18px 30px rgba(0,0,0,0.42)'] }, T(200));
+    }
+    await A(ctx, ctx.a, { x: [0, -54], rotate: [0, -3.5] }, T(420, 'easeOut'));
+    if (!alive()) return false;
+    await A(ctx, ctx.a, lift
+      ? { x: [-54, -320], rotate: [-3.5, -10], scale: [1.03, 0.92], opacity: [1, 0] }
+      : { x: [-54, -320], rotate: [-3.5, -10], opacity: [1, 0] }, T(320, 'easeIn'));
+    if (!alive()) return false;
+    await collapse(ctx);
+    return true;
   }
 
   /* Detalle: teléfono con lista y detalle */
@@ -531,790 +667,101 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     ctx.stage.appendChild(phone);
     ctx.phone = phone; ctx.list = list.layer; ctx.c1 = list.c1; ctx.det = det;
   }
+  function addContainer(ctx, withScrim) {
+    ctx.det.style.display = 'none';
+    if (withScrim) { ctx.dim = h('div', { class: 'scrim' }); ctx.phone.appendChild(ctx.dim); }
+    var inCard = h('div', { class: 'pcard', style: 'position:absolute;left:-1px;top:-1px;border:0' }, h('i'), h('span', { class: 'u-sticker', text: '−50%' }), h('s'), h('u'));
+    ctx.cxCard = h('div', {}, inCard);
+    ctx.cxDet = detailView();
+    ctx.cx = h('div', { class: 'cx' }, ctx.cxCard, ctx.cxDet);
+    ctx.phone.appendChild(ctx.cx);
+  }
+  function containerReset(ctx) {
+    setNow(ctx.c1, { opacity: 1, scale: 1 });
+    setNow(ctx.cx, { opacity: 0, left: '10px', top: '32px', width: '130px', height: '70px', borderRadius: '10px' });
+    setNow(ctx.cxCard, { opacity: 1 });
+    setNow(ctx.cxDet, { opacity: 0 });
+    setNow(ctx.list, { scale: 1 });
+    if (ctx.dim) setNow(ctx.dim, { opacity: 0 });
+  }
+  async function containerPlay(ctx, alive, recede, pressed) {
+    var W = ctx.phone.clientWidth, H = ctx.phone.clientHeight;
+    /* Si la tarjeta viene apretada (.96), la caja arranca de ese tamaño para no saltar */
+    var k = pressed ? 0.96 : 1, w0 = 130 * k, h0 = 70 * k, l0 = 10 + (130 - w0) / 2, t0 = 32 + (70 - h0) / 2;
+    setNow(ctx.cx, { opacity: 1 });
+    setNow(ctx.c1, { opacity: 0, scale: 1 });
+    A(ctx, ctx.cx, { left: [l0 + 'px', '0px'], top: [t0 + 'px', '0px'], width: [w0 + 'px', W + 'px'], height: [h0 + 'px', H + 'px'], borderRadius: ['10px', '0px'] }, S(240, 28));
+    A(ctx, ctx.cxCard, { opacity: [1, 0] }, T(140));
+    A(ctx, ctx.cxDet, { opacity: [0, 1] }, T(260, 'easeOut', { delay: 0.16 }));
+    if (recede) {
+      A(ctx, ctx.list, { scale: [1, 0.94] }, S(240, 28));
+      A(ctx, ctx.dim, { opacity: [0, 1] }, T(300));
+    }
+    await wait(ctx, 1500);
+    if (!alive()) return;
+    A(ctx, ctx.cxDet, { opacity: [1, 0] }, T(140));
+    A(ctx, ctx.cxCard, { opacity: [0, 1] }, T(240, 'easeOut', { delay: 0.12 }));
+    if (recede) {
+      A(ctx, ctx.list, { scale: [0.94, 1] }, S(240, 28));
+      A(ctx, ctx.dim, { opacity: [1, 0] }, T(300));
+    }
+    await A(ctx, ctx.cx, { left: ['0px', '10px'], top: ['0px', '32px'], width: [W + 'px', '130px'], height: [H + 'px', '70px'], borderRadius: ['0px', '10px'] }, S(240, 28));
+    if (!alive()) return;
+    setNow(ctx.c1, { opacity: 1 });
+    setNow(ctx.cx, { opacity: 0 });
+  }
 
   /* Esqueleto → tarjeta */
   function skelScene(ctx) {
     var sticker = h('span', { class: 'u-sticker', text: '−50%' });
-    var media = h('div', { class: 'media' }, h('span', { class: 'nm', text: 'Dead Cells' }), sticker);
+    var nm = h('span', { class: 'nm', text: 'Dead Cells' });
+    var media = h('div', { class: 'media' }, nm, sticker);
     var ttl = h('span', { class: 'ttl', text: 'Dead Cells' });
-    var chips = h('div', { class: 'chips' }, h('span', { class: 'chip', text: 'ROGUELIKE' }), h('span', { class: 'chip', text: 'ACCIÓN' }));
+    var chip1 = h('span', { class: 'chip', text: 'ROGUELIKE' });
+    var chip2 = h('span', { class: 'chip', text: 'ACCIÓN' });
+    var chips = h('div', { class: 'chips' }, chip1, chip2);
     var pr = h('span', { class: 'pr', text: 'USD 6,24' });
     var body = h('div', { class: 'body' }, ttl, chips, pr);
     var content = h('div', {}, media, body);
     var card = h('div', { class: 'mcard' }, content);
     ctx.stage.appendChild(card);
-    ctx.card = card; ctx.content = content; ctx.parts = [media.querySelector('.nm'), sticker, ttl, chips, pr];
-    ctx.media = media; ctx.ttl = ttl; ctx.chipsEl = chips; ctx.pr = pr;
+    ctx.card = card; ctx.content = content; ctx.media = media; ctx.sticker = sticker;
+    ctx.groups = [[nm, sticker], [ttl], [chip1], [chip2], [pr]];
+    ctx.targets = [media, ttl, chip1, chip2, pr];
+    ctx.parts = [nm, sticker, ttl, chip1, chip2, pr];
     ctx.sk = [];
   }
+  /* Bloques del esqueleto con su tamaño inicial y el de la pieza real */
   function buildSkeleton(ctx) {
     ctx.sk.forEach(function (s) { s.remove(); });
     ctx.sk = [];
-    var base = ctx.card;
-    function add(target, w, radius) {
-      var r = rel(target, base);
+    var base = ctx.card, inner = ctx.card.clientWidth - 24;
+    if (inner <= 0) return [];
+    var starts = [null, { w: Math.round(inner * 0.82), h: 12 }, { w: 86, h: 20 }, { w: 74, h: 20 }, { w: 128, h: 14 }];
+    return ctx.targets.map(function (target, i) {
+      var r = offsetIn(target, base);
+      var st = starts[i] || { w: r.w, h: r.h };
       var s = h('span', { class: 'sk' });
-      s.style.left = r.x + 'px'; s.style.top = r.y + 'px'; s.style.width = (w != null ? w : r.w) + 'px'; s.style.height = r.h + 'px';
-      s.style.borderRadius = (radius != null ? radius : 6) + 'px';
+      var y0 = r.y + (r.h - st.h) / 2;
+      s.style.left = r.x + 'px'; s.style.top = y0 + 'px'; s.style.width = st.w + 'px'; s.style.height = st.h + 'px';
+      s.style.borderRadius = (i === 0 ? 0 : i === 2 || i === 3 ? 10 : 6) + 'px';
       base.appendChild(s);
       ctx.sk.push(s);
-      return { s: s, target: r };
-    }
-    var cardW = ctx.card.clientWidth;
-    var m = add(ctx.media, null, 0);
-    m.s.style.background = 'var(--raised)';
-    var t = add(ctx.ttl, Math.round(cardW * 0.72));
-    var chipEls = ctx.chipsEl.children;
-    var c1 = add(chipEls[0], 64, 10);
-    var c2 = add(chipEls[1], 64, 10);
-    var p = add(ctx.pr, 110);
-    return [m, t, c1, c2, p];
+      return { s: s, r: r, w0: st.w, h0: st.h, y0: y0 };
+    });
+  }
+  function hideParts(ctx) { ctx.parts.forEach(function (p) { setNow(p, { opacity: 0, y: 0, scale: 1, rotate: 0 }); }); setNow(ctx.sticker, { rotate: 0 }); }
+  /* Un bloque toma el tamaño de su pieza y se cruza con ella */
+  function morphBlock(ctx, b, group, delay) {
+    A(ctx, b.s, { width: [b.w0 + 'px', b.r.w + 'px'], height: [b.h0 + 'px', b.r.h + 'px'], top: [b.y0 + 'px', b.r.y + 'px'] }, S(260, 26, { delay: delay }));
+    A(ctx, b.s, { opacity: [1, 0] }, T(220, 'easeOut', { delay: delay + 0.26 }));
+    group.forEach(function (p) {
+      if (p === ctx.sticker) A(ctx, p, { scale: [0.7, 1], opacity: [0, 1] }, S(360, 24, { delay: delay + 0.22 }));
+      else A(ctx, p, { opacity: [0, 1] }, T(220, 'easeOut', { delay: delay + 0.26 }));
+    });
   }
 
-  /* ---------- Los detalles y sus estilos ---------- */
-  var DETAILS = [
-    {
-      id: 'boton', name: 'Botón', goal: 'Confirmar que el toque llegó, sin demorar el siguiente.',
-      demos: [
-        {
-          id: 'boton-escala', name: 'Escala', family: 'Escala', spec: 'escala .97 · muelle 600/18',
-          recipe: "const s = useSharedValue(1);\nconst st = useAnimatedStyle(() => ({ transform: [{ scale: s.value }] }));\nonPressIn:  s.value = withSpring(0.97, { stiffness: 600, damping: 18 });\nonPressOut: s.value = withSpring(1, { stiffness: 600, damping: 18 });",
-          build: function (ctx) {
-            var b = buttonScene(ctx);
-            ctx.press = function (p) { ctx.isDown = p; A(ctx, b, { scale: p ? 0.97 : 1 }, S(600, 18)); };
-          },
-          reset: function (ctx) { setNow(ctx.btn, { scale: 1 }); },
-          play: simulatePress
-        },
-        {
-          id: 'boton-morph', name: 'Se aplana (cápsula)', family: 'Morph', current: true, spec: 'radio 22 → 14 · escala .97 · muelle 600/18',
-          recipe: "const p = useSharedValue(0); // 0 suelto, 1 presionado\nconst st = useAnimatedStyle(() => ({\n  borderRadius: interpolate(p.value, [0, 1], [26, 16]),\n  transform: [{ scale: interpolate(p.value, [0, 1], [1, 0.97]) }],\n}));\nonPressIn:  p.value = withSpring(1, { stiffness: 600, damping: 18 });\nonPressOut: p.value = withSpring(0, { stiffness: 600, damping: 18 });",
-          build: function (ctx) {
-            var b = buttonScene(ctx);
-            ctx.press = function (p) { ctx.isDown = p; A(ctx, b, { borderRadius: p ? '14px' : '22px', scale: p ? 0.97 : 1 }, S(600, 18)); };
-          },
-          reset: function (ctx) { setNow(ctx.btn, { scale: 1, borderRadius: '22px' }); },
-          play: simulatePress
-        },
-        {
-          id: 'boton-relieve', name: 'Se hunde (relieve)', family: 'Dimensión', spec: 'baja 4 px · canto 4 → 0 · 110 ms',
-          recipe: "// El canto es una View debajo del botón: RN no tiene sombras sólidas desplazadas\nconst d = useSharedValue(0);\nconst st = useAnimatedStyle(() => ({ transform: [{ translateY: d.value }] }));\nconst lip = useAnimatedStyle(() => ({ height: 4 - d.value }));\nonPressIn:  d.value = withTiming(4, { duration: 110 });\nonPressOut: d.value = withTiming(0, { duration: 110 });",
-          build: function (ctx) {
-            var b = buttonScene(ctx, 'relieve');
-            ctx.press = function (p) {
-              ctx.isDown = p;
-              var lip = tok('--accent-lip');
-              A(ctx, b, { y: p ? 4 : 0, boxShadow: p ? '0px 0px 0px ' + lip : '0px 4px 0px ' + lip }, T(110, 'easeOut'));
-            };
-          },
-          reset: function (ctx) { setNow(ctx.btn, { y: 0 }); ctx.btn.style.boxShadow = ''; },
-          play: simulatePress
-        },
-        {
-          id: 'boton-onda', name: 'Onda desde el dedo', family: 'Máscara', spec: 'círculo 0 → 2,2× · opacidad .3 → 0 · 450 ms',
-          recipe: "// Nativo de Android, sin Reanimated (en iOS no hay onda)\n<Pressable android_ripple={{ color: 'rgba(4, 32, 28, 0.25)', borderless: false }}>\n  <Text>Ir a Steam</Text>\n</Pressable>",
-          build: function (ctx) {
-            var b = buttonScene(ctx);
-            ctx.press = function (p, e) {
-              ctx.isDown = p;
-              if (!p) return;
-              var r = b.getBoundingClientRect();
-              var x = e && e.clientX ? e.clientX - r.left : r.width / 2;
-              var y = e && e.clientY ? e.clientY - r.top : r.height / 2;
-              var dot = h('span', { class: 'ripple' });
-              dot.style.left = x + 'px'; dot.style.top = y + 'px';
-              b.appendChild(dot);
-              var size = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y)) * 2 / 20;
-              A(ctx, dot, { scale: [0, size], opacity: [0.3, 0] }, T(450, 'easeOut')).then(function () { dot.remove(); });
-            };
-          },
-          reset: function (ctx) { ctx.btn.querySelectorAll('.ripple').forEach(function (d) { d.remove(); }); },
-          play: simulatePress
-        }
-      ]
-    },
-    {
-      id: 'barra', name: 'Barra de navegación', goal: 'Mostrar dónde estás y a dónde fuiste al cambiar de pestaña.',
-      demos: [
-        {
-          id: 'barra-desliza', name: 'Círculo que se desliza', family: 'Desliza', current: true, spec: 'translateX · muelle 520/34',
-          recipe: "const x = useSharedValue(0);\nconst st = useAnimatedStyle(() => ({ transform: [{ translateX: x.value }] }));\nonTab(i): x.value = withSpring(i * 56, { stiffness: 520, damping: 34 });",
-          build: function (ctx) { ctx.nav = nav(0); ctx.stage.appendChild(ctx.nav.el); },
-          reset: function (ctx) { setNow(ctx.nav.ind, { x: 0, width: '52px', opacity: 1 }); setActive(ctx.nav.items, 0); },
-          play: async function (ctx) { setActive(ctx.nav.items, 2); A(ctx, ctx.nav.ind, { x: [0, 112] }, S(520, 34)); }
-        },
-        {
-          id: 'barra-elastico', name: 'Círculo elástico', family: 'Morph', spec: 'borde delantero 700/40 · trasero 420/30',
-          recipe: "// Dos bordes con muelles distintos: el que avanza tira, el otro lo sigue\nconst left = useSharedValue(0), right = useSharedValue(52);\nconst st = useAnimatedStyle(() => ({ left: left.value, width: right.value - left.value }));\nonTab(i): const to = i * 56;\n  right.value = withSpring(to + 52, { stiffness: 700, damping: 40 });\n  left.value  = withDelay(80, withSpring(to, { stiffness: 420, damping: 30 }));\n  // hacia la izquierda, al revés: left primero, right después",
-          build: function (ctx) { ctx.nav = nav(0); ctx.stage.appendChild(ctx.nav.el); },
-          reset: function (ctx) { setNow(ctx.nav.ind, { x: 0, width: '52px', opacity: 1 }); setActive(ctx.nav.items, 0); },
-          play: async function (ctx, alive) {
-            setActive(ctx.nav.items, 2);
-            await A(ctx, ctx.nav.ind, { width: ['52px', '164px'] }, S(700, 40));
-            if (!alive()) return;
-            A(ctx, ctx.nav.ind, { x: [0, 112], width: ['164px', '52px'] }, S(420, 30));
-          }
-        },
-        {
-          id: 'barra-fundido', name: 'Fundido a través', family: 'Fundido', spec: 'sale 120 ms · entra 160 ms',
-          recipe: "// Material 3 lo usa para la navegación inferior\nonTab(i): o.value = withTiming(0, { duration: 120 }, () => {\n  x.value = i * 56;                              // el círculo salta sin verse\n  o.value = withTiming(1, { duration: 160 });\n});",
-          build: function (ctx) { ctx.nav = nav(0); ctx.stage.appendChild(ctx.nav.el); },
-          reset: function (ctx) { setNow(ctx.nav.ind, { x: 0, width: '52px', opacity: 1 }); setActive(ctx.nav.items, 0); },
-          play: async function (ctx, alive) {
-            await A(ctx, ctx.nav.ind, { opacity: [1, 0] }, T(120));
-            if (!alive()) return;
-            setActive(ctx.nav.items, 2);
-            setNow(ctx.nav.ind, { x: 112 });
-            A(ctx, ctx.nav.ind, { opacity: [0, 1] }, T(160));
-          }
-        },
-        {
-          id: 'barra-icono', name: 'Ícono que se rellena', family: 'Morph', spec: 'sin círculo · escala .8 → 1 · muelle 420/14',
-          recipe: "// Sin círculo: el ícono activo se rellena y rebota\nonTab(i): s.value = withSequence(withTiming(0.8, { duration: 80 }),\n                                 withSpring(1, { stiffness: 420, damping: 14 }));\n<Bookmark color={c.ink} fill={active ? c.ink : 'none'} /> // lucide-react-native",
-          build: function (ctx) {
-            ctx.nav = nav(0);
-            ctx.nav.ind.style.display = 'none';
-            ctx.nav.items.forEach(function (it) { it.style.color = 'var(--ink-3)'; });
-            ctx.stage.appendChild(ctx.nav.el);
-          },
-          reset: function (ctx) {
-            ctx.nav.items.forEach(function (it, k) { var s = it.querySelector('svg'); s.classList.toggle('filled', k === 0 && false); it.style.color = k === 0 ? 'var(--ink)' : 'var(--ink-3)'; setNow(s, { scale: 1 }); });
-          },
-          play: async function (ctx, alive) {
-            var from = ctx.nav.items[0], to = ctx.nav.items[2];
-            from.style.color = 'var(--ink-3)';
-            to.style.color = 'var(--ink)';
-            var s = to.querySelector('svg');
-            s.classList.add('filled');
-            await A(ctx, s, { scale: [1, 0.8] }, T(80));
-            if (!alive()) return;
-            A(ctx, s, { scale: [0.8, 1] }, S(420, 14));
-          }
-        }
-      ]
-    },
-    {
-      id: 'aviso', name: 'Aviso', goal: 'Decir qué pasó y ofrecer deshacer, sin tapar la lista ni la navegación.',
-      demos: [
-        {
-          id: 'aviso-morph', name: 'Sale de la barra', family: 'Morph', current: true, spec: 'ancho, alto y radio · muelle 420/28 · mensaje a los 160 ms',
-          recipe: "const open = useSharedValue(0);\nconst panel = useAnimatedStyle(() => ({\n  width: interpolate(open.value, [0, 1], [232, 358]),\n  height: interpolate(open.value, [0, 1], [64, 124]),\n  borderRadius: interpolate(open.value, [0, 1], [32, 28]),\n}));\nshow: open.value = withSpring(1, { stiffness: 420, damping: 28 });\n      msg.value = withDelay(160, withTiming(1, { duration: 220 }));",
-          build: function (ctx) { dockScene(ctx, false); },
-          reset: dockReset,
-          play: dockPlay
-        },
-        {
-          id: 'aviso-desliza', name: 'Flota sobre la barra', family: 'Desliza', spec: 'sube 24 px · muelle 420/26 · sale en 150 ms',
-          recipe: "<Animated.View\n  entering={FadeInDown.springify().stiffness(420).damping(26)}\n  exiting={FadeOut.duration(150)}\n/>",
-          build: function (ctx) {
-            ctx.stage.appendChild(h('div', { class: 'faux' }, h('span', { class: 'bar', style: 'width:62%' }), h('span', { class: 'blk' })));
-            ctx.pill = h('div', { class: 'tpill' }, icon('eyeOff'), h('span', { text: 'Juego oculto' }), h('span', { class: 'mini-btn', text: 'Deshacer' }));
-            ctx.stage.appendChild(h('div', { class: 'ftoast' }, ctx.pill));
-            ctx.stage.appendChild(h('div', { class: 'nav-bottom' }, nav(0).el));
-          },
-          reset: function (ctx) { setNow(ctx.pill, { y: 24, opacity: 0 }); },
-          play: async function (ctx, alive) {
-            A(ctx, ctx.pill, { y: [24, 0], opacity: [0, 1] }, S(420, 26));
-            await wait(ctx, 2000);
-            if (alive()) A(ctx, ctx.pill, { opacity: [1, 0] }, T(150));
-          }
-        },
-        {
-          id: 'aviso-isla', name: 'Isla de arriba', family: 'Morph', spec: '64×22 → 248×44 · muelle 420/28',
-          recipe: "// Sobre el contenido, arriba: crece desde una pastilla chica\nconst st = useAnimatedStyle(() => ({\n  width: interpolate(open.value, [0, 1], [64, 280]),\n  height: interpolate(open.value, [0, 1], [22, 44]),\n  borderRadius: interpolate(open.value, [0, 1], [11, 22]),\n}));\nshow: open.value = withSpring(1, { stiffness: 420, damping: 28 });",
-          build: function (ctx) {
-            ctx.stage.appendChild(h('div', { class: 'faux', style: 'top:48px' }, h('span', { class: 'bar', style: 'width:62%' }), h('span', { class: 'blk' })));
-            ctx.inner = h('div', { class: 'isla-in' }, icon('eyeOff'), h('span', { text: 'Juego oculto' }), h('b', { text: 'Deshacer' }));
-            ctx.isla = h('div', { class: 'isla' }, ctx.inner);
-            ctx.stage.appendChild(ctx.isla);
-            ctx.stage.appendChild(h('div', { class: 'nav-bottom' }, nav(0).el));
-          },
-          reset: function (ctx) { setNow(ctx.isla, { width: '64px', height: '22px', borderRadius: '11px' }); setNow(ctx.inner, { opacity: 0 }); },
-          play: async function (ctx, alive) {
-            var W = Math.min(ctx.stage.clientWidth - 24, 248);
-            A(ctx, ctx.isla, { width: ['64px', W + 'px'], height: ['22px', '44px'], borderRadius: ['11px', '22px'] }, S(420, 28));
-            A(ctx, ctx.inner, { opacity: [0, 1] }, T(200, 'easeOut', { delay: 0.14 }));
-            await wait(ctx, 2000);
-            if (!alive()) return;
-            A(ctx, ctx.inner, { opacity: [1, 0] }, T(120));
-            A(ctx, ctx.isla, { width: [W + 'px', '64px'], height: ['44px', '22px'], borderRadius: ['22px', '11px'] }, S(420, 28, { delay: 0.08 }));
-          }
-        },
-        {
-          id: 'aviso-tiempo', name: 'Sale de la barra, con tiempo', family: 'Morph', spec: 'como “Sale de la barra” · línea que se vacía (aquí 2 s, en la app 5 s)',
-          recipe: "// Igual que el morph, más una línea que muestra cuánto queda para deshacer\nconst t = useSharedValue(1);\nconst bar = useAnimatedStyle(() => ({ transform: [{ scaleX: t.value }], transformOrigin: 'left' }));\nshow: t.value = 1; t.value = withTiming(0, { duration: 5000, easing: Easing.linear });",
-          build: function (ctx) { dockScene(ctx, true); },
-          reset: dockReset,
-          play: dockPlay
-        }
-      ]
-    },
-    {
-      id: 'guardar', name: 'Guardar', goal: 'Confirmar que se guardó y mostrar dónde quedó.',
-      demos: [
-        {
-          id: 'guardar-pop', name: 'Salta y late Guardados', family: 'Escala', current: true, spec: 'ícono .6 → 1 · muelle 420/28 · Guardados 1,3 → 1',
-          recipe: "s.value = 0.6;\ns.value = withSpring(1, { stiffness: 420, damping: 28 });\ntab.value = withSequence(withTiming(1.3, { duration: 150 }),\n                         withSpring(1, { stiffness: 420, damping: 14 })); // Guardados en la barra\nHaptics.performAndroidHapticsAsync(AndroidHaptics.Confirm);",
-          build: saveScene, reset: saveReset,
-          play: async function (ctx) {
-            ctx.gbtn.classList.add('on');
-            ctx.outline.classList.add('filled');
-            A(ctx, ctx.outline, { scale: [0.6, 1] }, S(420, 28));
-            bump(ctx, ctx.nav.items[2]);
-          }
-        },
-        {
-          id: 'guardar-relleno', name: 'Se llena desde abajo', family: 'Máscara', spec: 'recorte 100% → 0 · 320 ms',
-          recipe: "// Ícono relleno encima del contorno, dentro de una View que crece desde abajo\nconst f = useSharedValue(0);\nconst clip = useAnimatedStyle(() => ({ height: f.value * 24 })); // overflow: 'hidden', bottom: 0\nonSave: f.value = withTiming(1, { duration: 320, easing: Easing.out(Easing.cubic) });",
-          build: saveScene, reset: saveReset,
-          play: async function (ctx) {
-            ctx.gbtn.classList.add('on');
-            A(ctx, ctx.filled, { clipPath: ['inset(100% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'] }, T(320, [0.33, 1, 0.68, 1]));
-          }
-        },
-        {
-          id: 'guardar-estallido', name: 'Se aplasta y estalla', family: 'Morph', spec: 'aplasta 90 ms · rebota 500/12 · 8 puntos en 420 ms',
-          recipe: "s.value = withSequence(withTiming(0.7, { duration: 90 }),\n                       withSpring(1, { stiffness: 500, damping: 12 }));\n// 8 puntos: cada uno va hacia afuera y se apaga\ndots.forEach((d) => { d.value = 0; d.value = withTiming(1, { duration: 420, easing: Easing.out(Easing.quad) }); });",
-          build: saveScene, reset: saveReset,
-          play: async function (ctx, alive) {
-            await A(ctx, ctx.outline, { scaleX: [1, 1.2], scaleY: [1, 0.72] }, T(90, 'easeIn'));
-            if (!alive()) return;
-            ctx.gbtn.classList.add('on');
-            ctx.outline.classList.add('filled');
-            A(ctx, ctx.outline, { scaleX: [1.2, 1], scaleY: [0.72, 1] }, S(500, 12));
-            ctx.dots.forEach(function (d, i) {
-              var ang = (Math.PI * 2 * i) / 8;
-              A(ctx, d, { x: [0, Math.cos(ang) * 40], y: [0, Math.sin(ang) * 40], opacity: [1, 0], scale: [1, 0.4] }, T(420, 'easeOut'));
-            });
-          }
-        },
-        {
-          id: 'guardar-clon', name: 'Vuela a Guardados', family: 'Clonado', spec: 'copia en arco 520 ms · Guardados late al llegar',
-          recipe: "// Una copia del ícono vuela hasta la pestaña Guardados\nconst a = measure(saveRef), b = measure(tabRef); // en un worklet\nx.value = withTiming(b.pageX - a.pageX, { duration: 520, easing: Easing.out(Easing.quad) });\ny.value = withTiming(b.pageY - a.pageY, { duration: 520, easing: Easing.in(Easing.quad) });\n// x e y con curvas distintas dibujan el arco",
-          build: saveScene, reset: saveReset,
-          play: async function (ctx, alive) {
-            ctx.gbtn.classList.add('on');
-            ctx.outline.classList.add('filled');
-            var from = rel(ctx.outline, ctx.stage), to = rel(ctx.nav.items[2], ctx.stage);
-            ctx.clone.style.left = (from.cx - 14) + 'px';
-            ctx.clone.style.top = (from.cy - 14) + 'px';
-            setNow(ctx.clone, { opacity: 1, x: 0, y: 0, scale: 1 });
-            A(ctx, ctx.clone, { x: [0, to.cx - from.cx] }, T(520, 'easeOut'));
-            A(ctx, ctx.clone, { scale: [1, 0.55] }, T(520, 'easeIn'));
-            await A(ctx, ctx.clone, { y: [0, to.cy - from.cy] }, T(520, [0.55, 0, 0.85, 0.35]));
-            if (!alive()) return;
-            setNow(ctx.clone, { opacity: 0 });
-            ctx.nav.items[2].querySelector('svg').classList.add('filled');
-            bump(ctx, ctx.nav.items[2]);
-          }
-        }
-      ]
-    },
-    {
-      id: 'descartar', name: 'Descartar', goal: 'Mostrar que la tarjeta se fue y cerrar el hueco que deja.',
-      demos: [
-        {
-          id: 'descartar-desliza', name: 'Sale a la izquierda', family: 'Desliza', current: true, spec: 'sale en 220 ms · el hueco se cierra en 260 ms',
-          recipe: "<Animated.View\n  exiting={SlideOutLeft.duration(220)}\n  layout={LinearTransition.duration(260)}  // la lista que queda se acomoda\n/>",
-          build: dismissScene, reset: dismissReset,
-          play: async function (ctx, alive) {
-            await A(ctx, ctx.a, { x: [0, -260], opacity: [1, 0] }, T(220, [0.4, 0, 1, 1]));
-            if (alive()) collapse(ctx);
-          }
-        },
-        {
-          id: 'descartar-encoge', name: 'Se achica y se va', family: 'Escala', spec: 'escala .9 y fundido en 200 ms · cierre 260 ms',
-          recipe: "<Animated.View\n  exiting={ZoomOut.duration(200)}\n  layout={LinearTransition.duration(260)}\n/>",
-          build: dismissScene, reset: dismissReset,
-          play: async function (ctx, alive) {
-            await A(ctx, ctx.a, { scale: [1, 0.9], opacity: [1, 0] }, T(200, 'easeIn'));
-            if (alive()) collapse(ctx);
-          }
-        },
-        {
-          id: 'descartar-arrastre', name: 'Arrastre y lanzamiento', family: 'Desliza', spec: 'sigue al dedo con resistencia · sale en 240 ms',
-          recipe: "// Gesture Handler 3: sigue al dedo; pasado el umbral, sale sola\n<ReanimatedSwipeable onSwipeableOpen={dismiss}>\n  <OfferCard />\n</ReanimatedSwipeable>",
-          build: dismissScene, reset: dismissReset,
-          play: async function (ctx, alive) {
-            await A(ctx, ctx.a, { x: [0, -46], rotate: [0, -3] }, T(320, 'easeOut'));
-            if (!alive()) return;
-            await A(ctx, ctx.a, { x: [-46, -300], rotate: [-3, -9], opacity: [1, 0] }, T(240, 'easeIn'));
-            if (alive()) collapse(ctx);
-          }
-        },
-        {
-          id: 'descartar-pliega', name: 'Se pliega', family: 'Dimensión', spec: 'gira 90° sobre su borde superior · 260 ms',
-          recipe: "const r = useSharedValue(0);\nconst st = useAnimatedStyle(() => ({\n  transform: [{ perspective: 600 }, { rotateX: `${r.value}deg` }],\n  transformOrigin: 'top',\n}));\nonDismiss: r.value = withTiming(-90, { duration: 260, easing: Easing.in(Easing.quad) });",
-          build: dismissScene, reset: dismissReset,
-          play: async function (ctx) {
-            ctx.slotA.style.perspective = '600px';
-            ctx.a.style.transformOrigin = 'top center';
-            A(ctx, ctx.a, { rotateX: [0, -90], opacity: [1, 0] }, T(260, 'easeIn'));
-            collapse(ctx);
-          }
-        }
-      ]
-    },
-    {
-      id: 'detalle', name: 'Abrir y cerrar el detalle', goal: 'Que se entienda de dónde viene el detalle y a dónde vuelve.',
-      demos: [
-        {
-          id: 'detalle-escala', name: 'Crece desde la tarjeta', family: 'Escala', current: true, spec: 'escala .9 → 1 y fundido · muelle 300/30 · cierra en 180 ms',
-          recipe: "const p = useSharedValue(0);\nconst st = useAnimatedStyle(() => ({\n  opacity: p.value,\n  transform: [{ scale: interpolate(p.value, [0, 1], [0.9, 1]) }],\n  transformOrigin: origin, // centro de la tarjeta tocada, medido con measure()\n}));\nopen:  p.value = withSpring(1, { stiffness: 300, damping: 30 });\nclose: p.value = withTiming(0, { duration: 180 });",
-          build: phoneScene,
-          reset: function (ctx) { ctx.det.style.transformOrigin = '50% 34%'; setNow(ctx.det, { opacity: 0, scale: 0.9 }); },
-          play: async function (ctx, alive) {
-            A(ctx, ctx.det, { opacity: [0, 1] }, T(200));
-            A(ctx, ctx.det, { scale: [0.9, 1] }, S(300, 30));
-            await wait(ctx, 1100);
-            if (!alive()) return;
-            A(ctx, ctx.det, { opacity: [1, 0], scale: [1, 0.94] }, T(180, 'easeIn'));
-          }
-        },
-        {
-          id: 'detalle-contenedor', name: 'Contenedor que se transforma', family: 'Morph', spec: 'caja de la tarjeta → pantalla · muelle 300/30 · contenido cruzado',
-          recipe: "// Material: container transform\nconst r = measure(cardRef);\nconst box = useAnimatedStyle(() => ({\n  left: interpolate(p.value, [0, 1], [r.pageX, 0]),\n  top: interpolate(p.value, [0, 1], [r.pageY, 0]),\n  width: interpolate(p.value, [0, 1], [r.width, W]),\n  height: interpolate(p.value, [0, 1], [r.height, H]),\n  borderRadius: interpolate(p.value, [0, 1], [16, 0]),\n}));\nopen: p.value = withSpring(1, { stiffness: 300, damping: 30 });\n// tarjeta: opacity 1 → 0 al principio; detalle: 0 → 1 al final",
-          build: function (ctx) {
-            phoneScene(ctx);
-            ctx.det.style.display = 'none';
-            var inCard = h('div', { class: 'pcard', style: 'position:absolute;left:-1px;top:-1px;border:0' }, h('i'), h('span', { class: 'u-sticker', text: '−50%' }), h('s'), h('u'));
-            var inDet = detailView();
-            ctx.cxCard = h('div', {}, inCard);
-            ctx.cxDet = inDet;
-            ctx.cx = h('div', { class: 'cx' }, ctx.cxCard, inDet);
-            ctx.phone.appendChild(ctx.cx);
-          },
-          reset: function (ctx) {
-            ctx.c1.style.visibility = '';
-            setNow(ctx.cx, { opacity: 0, left: '10px', top: '32px', width: '130px', height: '70px', borderRadius: '10px' });
-            setNow(ctx.cxCard, { opacity: 1 });
-            setNow(ctx.cxDet, { opacity: 0 });
-          },
-          play: async function (ctx, alive) {
-            var W = ctx.phone.clientWidth, H = ctx.phone.clientHeight;
-            setNow(ctx.cx, { opacity: 1 });
-            ctx.c1.style.visibility = 'hidden';
-            A(ctx, ctx.cx, { left: ['10px', '0px'], top: ['32px', '0px'], width: ['130px', W + 'px'], height: ['70px', H + 'px'], borderRadius: ['10px', '0px'] }, S(300, 30));
-            A(ctx, ctx.cxCard, { opacity: [1, 0] }, T(90));
-            A(ctx, ctx.cxDet, { opacity: [0, 1] }, T(200, 'easeOut', { delay: 0.12 }));
-            await wait(ctx, 1200);
-            if (!alive()) return;
-            A(ctx, ctx.cxDet, { opacity: [1, 0] }, T(90));
-            A(ctx, ctx.cxCard, { opacity: [0, 1] }, T(200, 'easeOut', { delay: 0.1 }));
-            await A(ctx, ctx.cx, { left: ['0px', '10px'], top: ['0px', '32px'], width: [W + 'px', '130px'], height: [H + 'px', '70px'], borderRadius: ['0px', '10px'] }, S(300, 30));
-            if (!alive()) return;
-            ctx.c1.style.visibility = '';
-            setNow(ctx.cx, { opacity: 0 });
-          }
-        },
-        {
-          id: 'detalle-ejez', name: 'Eje Z', family: 'Escala', spec: 'lista 1 → 1,08 y se va · detalle .85 → 1 · muelle 300/30',
-          recipe: "// Material: eje compartido Z. La lista se acerca y se va; el detalle llega desde atrás\nlist.value = withTiming(1, { duration: 180 });   // opacity 1 − v, scale 1 + 0.08·v\ndetail.value = withDelay(60, withSpring(1, { stiffness: 300, damping: 30 })); // opacity v, scale 0.85 + 0.15·v",
-          build: phoneScene,
-          reset: function (ctx) { setNow(ctx.list, { opacity: 1, scale: 1 }); setNow(ctx.det, { opacity: 0, scale: 0.85 }); },
-          play: async function (ctx, alive) {
-            A(ctx, ctx.list, { scale: [1, 1.08], opacity: [1, 0] }, T(180));
-            A(ctx, ctx.det, { opacity: [0, 1] }, T(200, 'easeOut', { delay: 0.06 }));
-            A(ctx, ctx.det, { scale: [0.85, 1] }, S(300, 30, { delay: 0.06 }));
-            await wait(ctx, 1200);
-            if (!alive()) return;
-            A(ctx, ctx.det, { scale: [1, 0.85], opacity: [1, 0] }, T(180, 'easeIn'));
-            A(ctx, ctx.list, { opacity: [0, 1] }, T(200, 'easeOut', { delay: 0.06 }));
-            A(ctx, ctx.list, { scale: [1.08, 1] }, S(300, 30, { delay: 0.06 }));
-          }
-        },
-        {
-          id: 'detalle-hoja', name: 'Sube como hoja', family: 'Desliza', spec: 'translateY 100% → 0 · muelle 300/30 · baja en 220 ms',
-          recipe: "// expo-router: el detalle como hoja nativa\n<Stack.Screen name=\"oferta/[appid]\" options={{ presentation: 'formSheet' }} />",
-          build: phoneScene,
-          reset: function (ctx) { setNow(ctx.det, { y: '100%', opacity: 1 }); },
-          play: async function (ctx, alive) {
-            A(ctx, ctx.det, { y: ['100%', '0%'] }, S(300, 30));
-            await wait(ctx, 1200);
-            if (!alive()) return;
-            A(ctx, ctx.det, { y: ['0%', '100%'] }, T(220, 'easeIn'));
-          }
-        }
-      ]
-    },
-    {
-      id: 'esqueleto', name: 'Esqueleto → tarjeta', goal: 'Pasar de “cargando” a la tarjeta sin corte seco.',
-      demos: [
-        {
-          id: 'esqueleto-fundido', name: 'Fundido escalonado', family: 'Escalonado', current: true, spec: 'esqueleto se va en 220 ms · piezas suben 12 px, 280 ms, cada 70 ms',
-          recipe: "<Animated.View entering={FadeInDown.duration(280).delay(index * 70)}>\n  <OfferCard />\n</Animated.View>\n// El esqueleto: exiting={FadeOut.duration(220)}. Solo en la primera página.",
-          build: skelScene,
-          reset: function (ctx) { buildSkeleton(ctx); ctx.parts.forEach(function (p) { setNow(p, { opacity: 0, y: 12 }); }); },
-          play: async function (ctx) {
-            ctx.sk.forEach(function (s) { A(ctx, s, { opacity: [1, 0] }, T(220)); });
-            ctx.parts.forEach(function (p, i) { A(ctx, p, { opacity: [0, 1], y: [12, 0] }, T(280, 'easeOut', { delay: 0.07 * i })); });
-          }
-        },
-        {
-          id: 'esqueleto-morph', name: 'Los bloques se vuelven la tarjeta', family: 'Morph', spec: 'cada bloque toma el tamaño real · muelle 420/32 · cruce 150 ms',
-          recipe: "// Cada bloque del esqueleto mide lo mismo que su pieza; al llegar el dato\n// se estira hasta el tamaño real (onLayout del texto) y se cruza con ella\nw.value = withSpring(textWidth, { stiffness: 420, damping: 32 });\nskel.value = withDelay(220, withTiming(0, { duration: 150 })); // opacity del bloque\ntext.value = withDelay(220, withTiming(1, { duration: 150 })); // opacity del texto",
-          build: skelScene,
-          reset: function (ctx) { ctx.blocks = buildSkeleton(ctx); ctx.parts.forEach(function (p) { setNow(p, { opacity: 0, y: 0 }); }); },
-          play: async function (ctx, alive) {
-            var raised = tok('--raised');
-            ctx.blocks.forEach(function (b, i) {
-              if (i === 0) return;
-              A(ctx, b.s, { width: [b.s.style.width, b.target.w + 'px'] }, S(420, 32, { delay: 0.04 * i }));
-            });
-            await wait(ctx, 230);
-            if (!alive()) return;
-            ctx.blocks.forEach(function (b) { A(ctx, b.s, { opacity: [1, 0] }, T(150)); });
-            ctx.parts.forEach(function (p) { A(ctx, p, { opacity: [0, 1] }, T(150)); });
-            void raised;
-          }
-        },
-        {
-          id: 'esqueleto-barrido', name: 'Barrido', family: 'Máscara', spec: 'recorte de izquierda a derecha · 520 ms',
-          recipe: "// MaskedView (@react-native-masked-view/masked-view 0.3.2, fijado por el SDK 58)\n<MaskedView maskElement={<Animated.View style={[{ height: '100%', backgroundColor: '#000' }, mask]} />}>\n  <OfferCard />\n</MaskedView>\nw.value = withTiming(cardWidth, { duration: 520, easing: Easing.bezier(0.2, 0.8, 0.2, 1) }); // mask: width",
-          build: skelScene,
-          reset: function (ctx) { buildSkeleton(ctx); ctx.parts.forEach(function (p) { setNow(p, { opacity: 1, y: 0 }); }); setNow(ctx.content, { clipPath: 'inset(0% 100% 0% 0%)' }); ctx.content.style.position = 'relative'; ctx.content.style.zIndex = '2'; ctx.content.style.background = 'var(--surface)'; },
-          play: async function (ctx, alive) {
-            await A(ctx, ctx.content, { clipPath: ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)'] }, T(520, [0.2, 0.8, 0.2, 1]));
-            if (alive()) ctx.sk.forEach(function (s) { s.style.opacity = '0'; });
-          }
-        },
-        {
-          id: 'esqueleto-nitido', name: 'De borroso a nítido', family: 'Fundido', spec: 'desenfoque 10 px → 0 y fundido · 380 ms',
-          recipe: "// expo-image: el thumbhash hace de borroso y la imagen entra encima\n<Image\n  source={{ uri }}\n  placeholder={{ thumbhash }}\n  transition={{ duration: 300, effect: 'cross-dissolve' }}\n/>",
-          build: skelScene,
-          reset: function (ctx) { buildSkeleton(ctx); ctx.parts.forEach(function (p) { setNow(p, { opacity: 1, y: 0 }); }); setNow(ctx.content, { opacity: 0, filter: 'blur(10px)' }); ctx.content.style.position = 'relative'; ctx.content.style.zIndex = '2'; },
-          play: async function (ctx) {
-            ctx.sk.forEach(function (s) { A(ctx, s, { opacity: [1, 0] }, T(220)); });
-            A(ctx, ctx.content, { opacity: [0, 1], filter: ['blur(10px)', 'blur(0px)'] }, T(380, 'easeOut'));
-          }
-        }
-      ]
-    },
-    {
-      id: 'segmentado', name: 'Segmentado', goal: 'Mostrar qué vista está activa al cambiar entre Para ti y Terminan pronto.',
-      demos: [
-        {
-          id: 'seg-desliza', name: 'Pastilla que se desliza', family: 'Desliza', current: true, spec: 'muelle 520/34 · apretón vertical 600/18',
-          recipe: "x.value = withSpring(i * w, { stiffness: 520, damping: 34 });\nsy.value = withSequence(withTiming(0.88, { duration: 60 }),\n                        withSpring(1, { stiffness: 600, damping: 18 }));",
-          build: function (ctx) { segScene(ctx); },
-          reset: segReset,
-          play: async function (ctx) {
-            segLabels(ctx, 1);
-            A(ctx, ctx.pl, { x: [0, 116] }, S(520, 34));
-            A(ctx, ctx.pl, { scaleY: [0.88, 1] }, S(600, 18));
-          }
-        },
-        {
-          id: 'seg-elastico', name: 'Pastilla elástica', family: 'Morph', spec: 'borde delantero 700/40 · trasero 420/30',
-          recipe: "// Igual que el círculo elástico de la barra: dos bordes, dos muelles\nright.value = withSpring(to + w, { stiffness: 700, damping: 40 });\nleft.value = withDelay(80, withSpring(to, { stiffness: 420, damping: 30 }));",
-          build: function (ctx) { segScene(ctx); },
-          reset: segReset,
-          play: async function (ctx, alive) {
-            segLabels(ctx, 1);
-            await A(ctx, ctx.pl, { width: ['116px', '232px'] }, S(700, 40));
-            if (!alive()) return;
-            A(ctx, ctx.pl, { x: [0, 116], width: ['232px', '116px'] }, S(420, 30));
-          }
-        },
-        {
-          id: 'seg-fundido', name: 'Fundido', family: 'Fundido', spec: 'sale 110 ms · entra 160 ms',
-          recipe: "o.value = withTiming(0, { duration: 110 }, () => {\n  x.value = i * w;\n  o.value = withTiming(1, { duration: 160 });\n});",
-          build: function (ctx) { segScene(ctx); },
-          reset: segReset,
-          play: async function (ctx, alive) {
-            await A(ctx, ctx.pl, { opacity: [1, 0] }, T(110));
-            if (!alive()) return;
-            segLabels(ctx, 1);
-            setNow(ctx.pl, { x: 116 });
-            A(ctx, ctx.pl, { opacity: [0, 1] }, T(160));
-          }
-        }
-      ]
-    },
-    {
-      id: 'calcomania', name: 'Calcomanía', goal: 'Que el descuento sea lo primero que se note.',
-      demos: [
-        {
-          id: 'calco-escala', name: 'Aparece', family: 'Escala', current: true, spec: 'escala .85 → 1 · muelle 420/32',
-          recipe: "const s = useSharedValue(0.85);\nuseEffect(() => { s.value = withSpring(1, { stiffness: 420, damping: 32 }); }, []);\nconst st = useAnimatedStyle(() => ({\n  opacity: interpolate(s.value, [0.85, 1], [0, 1]),\n  transform: [{ rotate: '-3deg' }, { scale: s.value }],\n}));",
-          build: calcoScene, reset: calcoReset,
-          play: async function (ctx) { A(ctx, ctx.st, { scale: [0.85, 1], opacity: [0, 1], rotate: [-3, -3] }, S(420, 32)); }
-        },
-        {
-          id: 'calco-sello', name: 'Sello', family: 'Escala', spec: 'escala 1,8 → 1 · giro 12° → −3° · golpe en la tarjeta',
-          recipe: "s.value = 1.8; r.value = 12;\ns.value = withSpring(1, { stiffness: 420, damping: 32 });\nr.value = withSpring(-3, { stiffness: 420, damping: 32 });\ncard.value = withDelay(120, withSequence(withTiming(3, { duration: 70 }),\n                                        withTiming(0, { duration: 130 }))); // golpe",
-          build: calcoScene, reset: calcoReset,
-          play: async function (ctx) {
-            A(ctx, ctx.st, { scale: [1.8, 1], rotate: [12, -3] }, S(420, 32));
-            A(ctx, ctx.st, { opacity: [0, 1] }, T(90));
-            A(ctx, ctx.media, { y: [0, 3, 0] }, T(220, 'easeOut', { delay: 0.12 }));
-          }
-        },
-        {
-          id: 'calco-volteo', name: 'Volteo', family: 'Dimensión', spec: 'gira 90° → 0 en Y · muelle 300/22',
-          recipe: "<Animated.View entering={FlipInEasyY.springify().stiffness(300).damping(22)}>\n  <DealSticker pct={50} />\n</Animated.View>",
-          build: calcoScene, reset: calcoReset,
-          play: async function (ctx) {
-            A(ctx, ctx.st, { rotateY: [90, 0], rotate: [-3, -3] }, S(300, 22));
-            A(ctx, ctx.st, { opacity: [0, 1] }, T(120));
-          }
-        },
-        {
-          id: 'calco-bamboleo', name: 'Bamboleo', family: 'Escala', spec: 'giro 14° → −3° · muelle 300/7, poco amortiguado',
-          recipe: "r.value = 14;\nr.value = withSpring(-3, { stiffness: 300, damping: 7 }); // oscila y se asienta",
-          build: calcoScene, reset: calcoReset,
-          play: async function (ctx) {
-            A(ctx, ctx.st, { rotate: [14, -3], scale: [1.1, 1] }, S(300, 7));
-            A(ctx, ctx.st, { opacity: [0, 1] }, T(120));
-          }
-        }
-      ]
-    },
-    {
-      id: 'cifras', name: 'Precio y ahorro', goal: 'Que la baja de precio se lea como un cambio, no como un número nuevo.',
-      demos: [
-        {
-          id: 'cifras-cuenta', name: 'Cuenta', family: 'Valor', current: true, spec: '800 ms · curva (.16, 1, .3, 1)',
-          recipe: "// Texto animado: TextInput con animatedProps (patrón ReText)\nv.value = withTiming(0.52, { duration: 800, easing: Easing.bezier(0.16, 1, 0.3, 1) });\nconst props = useAnimatedProps(() => ({ text: fmt(v.value) })); // 'USD 0,52'",
-          build: function (ctx) { priceScene(ctx, 'plain'); },
-          reset: function (ctx) { ctx.nowEl.textContent = money(5.79); ctx.saveEl.textContent = 'Ahorras ' + money(0); setNow(ctx.wasEl, { opacity: 0 }); },
-          play: async function (ctx) {
-            var ease = bezier(0.16, 1, 0.3, 1);
-            A(ctx, ctx.wasEl, { opacity: [0, 1] }, T(300, 'easeOut', { delay: 0.3 }));
-            await tween(ctx, 800, ease, function (p) {
-              ctx.nowEl.textContent = money(5.79 + (0.52 - 5.79) * p);
-              ctx.saveEl.textContent = 'Ahorras ' + money(5.27 * p);
-            });
-          }
-        },
-        {
-          id: 'cifras-rodillo', name: 'Rodillo', family: 'Valor', spec: 'cada dígito rueda · muelle 300/30 · 40 ms entre dígitos',
-          recipe: "// Una columna 0–9 por dígito; cada una se corre hasta su dígito\ncol[i].value = withDelay(i * 40, withSpring(-digit[i] * LINE, { stiffness: 300, damping: 30 }));\n// number-flow-react-native (0.5.1) lo trae hecho; falta probar su API",
-          build: function (ctx) { priceScene(ctx, 'odo'); },
-          reset: function (ctx) { ctx.strips.forEach(function (s, i) { setNow(s, { y: -[5, 7, 9][i] * 46 }); }); ctx.saveEl.textContent = 'Ahorras ' + money(5.27); setNow(ctx.wasEl, { opacity: 0 }); },
-          play: async function (ctx) {
-            var from = [5, 7, 9], to = [0, 5, 2];
-            ctx.strips.forEach(function (s, i) { A(ctx, s, { y: [-from[i] * 46, -to[i] * 46] }, S(300, 30, { delay: 0.04 * i })); });
-            A(ctx, ctx.wasEl, { opacity: [0, 1] }, T(300, 'easeOut', { delay: 0.3 }));
-          }
-        },
-        {
-          id: 'cifras-cruce', name: 'Cruce vertical', family: 'Fundido', spec: 'el viejo sube y se va (180 ms) · el nuevo entra desde abajo (220 ms)',
-          recipe: "<Animated.Text key={price} entering={FadeInDown.duration(220)} exiting={FadeOutUp.duration(180)}>\n  {price}\n</Animated.Text>",
-          build: function (ctx) { priceScene(ctx, 'cross'); },
-          reset: function (ctx) { setNow(ctx.oldV, { y: 0, opacity: 1 }); setNow(ctx.newV, { y: 14, opacity: 0 }); ctx.saveEl.textContent = 'Ahorras ' + money(5.27); setNow(ctx.wasEl, { opacity: 0 }); },
-          play: async function (ctx) {
-            A(ctx, ctx.oldV, { y: [0, -14], opacity: [1, 0] }, T(180, 'easeIn'));
-            A(ctx, ctx.newV, { y: [14, 0], opacity: [0, 1] }, T(220, 'easeOut', { delay: 0.06 }));
-            A(ctx, ctx.wasEl, { opacity: [0, 1] }, T(300, 'easeOut', { delay: 0.3 }));
-          }
-        }
-      ]
-    },
-    {
-      id: 'filtros', name: 'Filtros', goal: 'Mostrar qué filtro está activo y cómo cambia la lista.',
-      demos: [
-        {
-          id: 'filtro-invierte', name: 'Se invierte', family: 'Fundido', current: true, spec: 'fondo y texto en 200 ms · la lista cambia de golpe',
-          recipe: "const on = useSharedValue(0);\nconst st = useAnimatedStyle(() => ({\n  backgroundColor: interpolateColor(on.value, [0, 1], [c.surface, c.ink]),\n}));\ntoggle: on.value = withTiming(active ? 1 : 0, { duration: 200 });",
-          build: filterScene, reset: filterReset,
-          play: async function (ctx) { ctx.chip.classList.add('on'); ctx.gone.style.display = 'none'; }
-        },
-        {
-          id: 'filtro-check', name: 'Crece con un check', family: 'Morph', spec: 'el chip se ensancha para el check · muelle 520/34',
-          recipe: "<Animated.View layout={LinearTransition.springify().stiffness(520).damping(34)}>\n  {active && <Animated.View entering={ZoomIn.duration(160)}><Check size={14} /></Animated.View>}\n  <Text>Roguelike</Text>\n</Animated.View>",
-          build: filterScene, reset: filterReset,
-          play: async function (ctx) {
-            ctx.chip.classList.add('on');
-            A(ctx, ctx.ck, { width: ['0px', '18px'], opacity: [0, 1] }, S(520, 34));
-            ctx.gone.style.display = 'none';
-          }
-        },
-        {
-          id: 'filtro-rebote', name: 'Rebote', family: 'Escala', spec: 'escala 1,08 → 1 · muelle 500/14',
-          recipe: "s.value = withSequence(withTiming(1.08, { duration: 100 }),\n                       withSpring(1, { stiffness: 500, damping: 14 }));",
-          build: filterScene, reset: filterReset,
-          play: async function (ctx, alive) {
-            ctx.chip.classList.add('on');
-            ctx.gone.style.display = 'none';
-            await A(ctx, ctx.chip, { scale: [1, 1.08] }, T(100));
-            if (alive()) A(ctx, ctx.chip, { scale: [1.08, 1] }, S(500, 14));
-          }
-        },
-        {
-          id: 'filtro-lista', name: 'La lista se reacomoda', family: 'Escalonado', spec: 'la fila sale en 160 ms · las otras se corren con muelle 420/34',
-          recipe: "// Cada fila: layout anima el reacomodo y exiting la salida\n<Animated.View\n  layout={LinearTransition.springify().stiffness(420).damping(34)}\n  exiting={FadeOut.duration(160)}\n/>\n// Con FlashList falta probarlo",
-          build: filterScene, reset: filterReset,
-          play: async function (ctx, alive) {
-            ctx.chip.classList.add('on');
-            await A(ctx, ctx.gone, { opacity: [1, 0], scale: [1, 0.96] }, T(160));
-            if (!alive()) return;
-            var after = ctx.rows.filter(function (r) { return r !== ctx.gone; });
-            var first = after.map(function (r) { return r.getBoundingClientRect().top; });
-            ctx.gone.style.display = 'none';
-            after.forEach(function (r, i) {
-              var dy = first[i] - r.getBoundingClientRect().top;
-              if (dy) A(ctx, r, { y: [dy, 0] }, S(420, 34));
-            });
-          }
-        }
-      ]
-    },
-    {
-      id: 'tema', name: 'Cambio de tema', goal: 'Pasar de oscuro a claro sin parpadeo.',
-      demos: [
-        {
-          id: 'tema-fundido', name: 'Fundido', family: 'Fundido', current: true, spec: 'la pantalla clara aparece encima en 250 ms',
-          recipe: "// Captura la pantalla, cambia el tema y apaga la captura\nconst uri = await captureScreen({ format: 'png' }); // react-native-view-shot 6.1.1 (fijado por el SDK 58)\nsetSnapshot(uri);\nUnistylesRuntime.setTheme('light');\no.value = withTiming(0, { duration: 250 });\nsetTimeout(() => setSnapshot(null), 260);",
-          build: themeScene, reset: themeReset,
-          play: async function (ctx, alive) {
-            A(ctx, ctx.over, { opacity: [0, 1] }, T(250));
-            await wait(ctx, 1200);
-            if (alive()) A(ctx, ctx.over, { opacity: [1, 0] }, T(250));
-          }
-        },
-        {
-          id: 'tema-circular', name: 'Círculo desde el botón', family: 'Máscara', spec: 'círculo de 0 a toda la pantalla · 520 ms',
-          recipe: "// Captura + máscara: la captura del tema viejo se recorta con un círculo que crece\nconst uri = await captureScreen({ format: 'png' });\nsetSnapshot(uri); UnistylesRuntime.setTheme('light');\nr.value = withTiming(diagonal, { duration: 520, easing: Easing.bezier(0.4, 0, 0.2, 1) });\n// MaskedView (@react-native-masked-view/masked-view 0.3.2). Es el más caro: una captura por cambio",
-          build: themeScene, reset: function (ctx) { themeReset(ctx); setNow(ctx.over, { opacity: 1, clipPath: 'circle(0px at 129px 20px)' }); },
-          play: async function (ctx, alive) {
-            await A(ctx, ctx.over, { clipPath: ['circle(0px at 129px 20px)', 'circle(260px at 129px 20px)'] }, T(520, [0.4, 0, 0.2, 1]));
-            await wait(ctx, 900);
-            if (alive()) A(ctx, ctx.over, { clipPath: ['circle(260px at 129px 20px)', 'circle(0px at 129px 20px)'] }, T(520, [0.4, 0, 0.2, 1]));
-          }
-        },
-        {
-          id: 'tema-barrido', name: 'Barrido de arriba abajo', family: 'Máscara', spec: 'recorte vertical · 420 ms',
-          recipe: "// Misma captura, con una máscara rectangular que baja\nh.value = withTiming(screenHeight, { duration: 420, easing: Easing.bezier(0.4, 0, 0.2, 1) });",
-          build: themeScene, reset: function (ctx) { themeReset(ctx); setNow(ctx.over, { opacity: 1, clipPath: 'inset(0% 0% 100% 0%)' }); },
-          play: async function (ctx, alive) {
-            await A(ctx, ctx.over, { clipPath: ['inset(0% 0% 100% 0%)', 'inset(0% 0% 0% 0%)'] }, T(420, [0.4, 0, 0.2, 1]));
-            await wait(ctx, 900);
-            if (alive()) A(ctx, ctx.over, { clipPath: ['inset(0% 0% 0% 0%)', 'inset(100% 0% 0% 0%)'] }, T(420, [0.4, 0, 0.2, 1]));
-          }
-        }
-      ]
-    },
-    {
-      id: 'hoja', name: 'Hoja de filtros', goal: 'Mostrar de dónde salen los filtros y volver al mismo lugar.',
-      demos: [
-        {
-          id: 'hoja-sube', name: 'Sube desde abajo', family: 'Desliza', current: true, spec: 'muelle 300/30 · fondo oscurece en 200 ms',
-          recipe: "<Stack.Screen\n  name=\"filtros\"\n  options={{ presentation: 'formSheet', sheetAllowedDetents: [0.5, 1] }}\n/>",
-          build: sheetScene, reset: sheetReset,
-          play: async function (ctx, alive) {
-            A(ctx, ctx.scrim, { opacity: [0, 1] }, T(200));
-            A(ctx, ctx.sheet, { y: ['100%', '0%'] }, S(300, 30));
-            await wait(ctx, 1200);
-            if (!alive()) return;
-            A(ctx, ctx.sheet, { y: ['0%', '100%'] }, T(220, 'easeIn'));
-            A(ctx, ctx.scrim, { opacity: [1, 0] }, T(200));
-          }
-        },
-        {
-          id: 'hoja-contenedor', name: 'Crece desde el chip', family: 'Morph', spec: 'caja del chip → hoja · muelle 300/30',
-          recipe: "// La misma receta del contenedor que se transforma, desde la pastilla \"Filtros\"\nconst r = measure(chipRef);\nopen: p.value = withSpring(1, { stiffness: 300, damping: 30 });\n// left/top/width/height/borderRadius interpolados de la pastilla a la hoja",
-          build: function (ctx) {
-            sheetScene(ctx);
-            var chipLook = h('div', { style: 'position:absolute;inset:0;display:flex;align-items:center;gap:4px;padding:0 9px;font:600 10px/1 var(--font-sans);color:var(--ink)' }, icon('sliders'), 'Filtros');
-            chipLook.querySelector('svg').style.cssText = 'width:11px;height:11px';
-            var sheetLook = h('div', { style: 'position:absolute;inset:0' });
-            sheetLook.innerHTML = '<span class="grab"></span>';
-            [['on', 22, 60], ['', 22, 86], ['', 52, 70], ['on', 52, 50]].forEach(function (r, i) {
-              var s = h('span', { class: 'r ' + r[0] });
-              s.style.top = r[1] + 'px'; s.style.left = (12 + (i % 2) * (i === 1 ? 70 : 0) + (i === 3 ? 82 : 0)) + 'px'; s.style.width = r[2] + 'px';
-              sheetLook.appendChild(s);
-            });
-            ctx.cxChip = chipLook; ctx.cxSheet = sheetLook;
-            ctx.cx = h('div', { class: 'cx', style: 'border-color:var(--line-strong)' }, chipLook, sheetLook);
-            ctx.phone.appendChild(ctx.cx);
-          },
-          reset: function (ctx) {
-            sheetReset(ctx);
-            ctx.chip.style.visibility = '';
-            setNow(ctx.cx, { opacity: 0, left: '10px', top: '12px', width: '64px', height: '22px', borderRadius: '11px' });
-            setNow(ctx.cxChip, { opacity: 1 });
-            setNow(ctx.cxSheet, { opacity: 0 });
-          },
-          play: async function (ctx, alive) {
-            var W = ctx.phone.clientWidth, H = ctx.phone.clientHeight;
-            ctx.chip.style.visibility = 'hidden';
-            setNow(ctx.cx, { opacity: 1 });
-            A(ctx, ctx.scrim, { opacity: [0, 1] }, T(200));
-            A(ctx, ctx.cx, { left: ['10px', '0px'], top: ['12px', (H - 122) + 'px'], width: ['64px', W + 'px'], height: ['22px', '122px'], borderRadius: ['11px', '16px'] }, S(300, 30));
-            A(ctx, ctx.cxChip, { opacity: [1, 0] }, T(90));
-            A(ctx, ctx.cxSheet, { opacity: [0, 1] }, T(200, 'easeOut', { delay: 0.12 }));
-            await wait(ctx, 1200);
-            if (!alive()) return;
-            A(ctx, ctx.scrim, { opacity: [1, 0] }, T(200));
-            A(ctx, ctx.cxSheet, { opacity: [1, 0] }, T(90));
-            A(ctx, ctx.cxChip, { opacity: [0, 1] }, T(200, 'easeOut', { delay: 0.1 }));
-            await A(ctx, ctx.cx, { left: ['0px', '10px'], top: [(H - 122) + 'px', '12px'], width: [W + 'px', '64px'], height: ['122px', '22px'], borderRadius: ['16px', '11px'] }, S(300, 30));
-            if (!alive()) return;
-            ctx.chip.style.visibility = '';
-            setNow(ctx.cx, { opacity: 0 });
-          }
-        },
-        {
-          id: 'hoja-fondo', name: 'El fondo se achica', family: 'Escala', spec: 'pantalla de atrás .92 y radio 14 · hoja con muelle 300/30',
-          recipe: "const back = useAnimatedStyle(() => ({\n  transform: [{ scale: interpolate(p.value, [0, 1], [1, 0.92]) }],\n  borderRadius: interpolate(p.value, [0, 1], [0, 14]),\n}));\nopen: p.value = withSpring(1, { stiffness: 300, damping: 30 });",
-          build: sheetScene,
-          reset: function (ctx) { sheetReset(ctx); setNow(ctx.screen, { scale: 1, y: 0, borderRadius: '0px' }); },
-          play: async function (ctx, alive) {
-            A(ctx, ctx.scrim, { opacity: [0, 1] }, T(200));
-            A(ctx, ctx.screen, { scale: [1, 0.92], y: [0, 4], borderRadius: ['0px', '14px'] }, S(300, 30));
-            A(ctx, ctx.sheet, { y: ['100%', '0%'] }, S(300, 30));
-            await wait(ctx, 1200);
-            if (!alive()) return;
-            A(ctx, ctx.sheet, { y: ['0%', '100%'] }, T(220, 'easeIn'));
-            A(ctx, ctx.scrim, { opacity: [1, 0] }, T(200));
-            A(ctx, ctx.screen, { scale: [0.92, 1], y: [4, 0], borderRadius: ['14px', '0px'] }, S(300, 30));
-          }
-        }
-      ]
-    },
-    {
-      id: 'bienvenida', name: 'Bienvenida', goal: 'La primera impresión: que el descuento mande desde el primer segundo.',
-      demos: [
-        {
-          id: 'bienv-secuencia', name: 'Se acomoda y se pega', family: 'Escalonado', current: true, spec: 'tarjetas 300/24 · calcomanías desde 1,8 con 420/32 · texto a los 900 ms',
-          recipe: "cards.forEach((v, i) => (v.value = withDelay(i * 90, withSpring(1, { stiffness: 300, damping: 24 }))));\nstickers.forEach((v, i) => (v.value = withDelay(520 + i * 120, withSpring(1, { stiffness: 420, damping: 32 }))));\ntext.value = withDelay(900, withTiming(1, { duration: 440 }));",
-          build: function (ctx) { welcomeScene(ctx, false); },
-          reset: welcomeReset,
-          play: welcomeSequence
-        },
-        {
-          id: 'bienv-calma', name: 'Todo sube en orden', family: 'Escalonado', spec: 'cada pieza sube 10 px y aparece · 320 ms · cada 80 ms',
-          recipe: "// Cada pieza, en orden\n<Animated.View entering={FadeInDown.duration(320).delay(i * 80)} />",
-          build: function (ctx) { welcomeScene(ctx, false); },
-          reset: welcomeReset,
-          play: async function (ctx) {
-            ctx.order.forEach(function (o, i) {
-              A(ctx, o.el, { opacity: [0, 1], y: [10, 0], rotate: [o.rot, o.rot], scale: [1, 1] }, T(320, 'easeOut', { delay: 0.08 * i }));
-            });
-          }
-        },
-        {
-          id: 'bienv-morph', name: 'La calcomanía se vuelve el botón', family: 'Morph', spec: 'después de pegarse, la −91% toma la caja, el radio y el color del botón · muelle 300/30',
-          recipe: "// Misma View: cambian caja, radio, color y giro\nconst st = useAnimatedStyle(() => ({\n  width: interpolate(p.value, [0, 1], [96, 300]),\n  borderRadius: interpolate(p.value, [0, 1], [6, 26]),\n  backgroundColor: interpolateColor(p.value, [0, 1], [c.deal, c.ink]),\n  transform: [{ rotate: `${interpolate(p.value, [0, 1], [-3, 0])}deg` }],\n}));\np.value = withDelay(1100, withSpring(1, { stiffness: 300, damping: 30 }));",
-          build: function (ctx) { welcomeScene(ctx, true); },
-          reset: welcomeReset,
-          play: async function (ctx, alive) {
-            await welcomeSequence(ctx, alive);
-            await wait(ctx, 700);
-            if (!alive()) return;
-            var W = ctx.phone.clientWidth - 24, top = ctx.phone.clientHeight - 40;
-            var ink = tok('--ink'), bg = tok('--bg'), deal = tok('--deal'), onDeal = tok('--on-deal');
-            A(ctx, ctx.mx, { left: ['48px', '12px'], top: ['118px', top + 'px'], width: ['64px', W + 'px'], height: ['30px', '28px'], borderRadius: ['5px', '14px'], backgroundColor: [deal, ink], color: [onDeal, bg], rotate: [-3, 0] }, S(300, 30));
-            A(ctx, ctx.mxA, { opacity: [1, 0] }, T(120));
-            A(ctx, ctx.mxB, { opacity: [0, 1] }, T(200, 'easeOut', { delay: 0.14 }));
-          }
-        }
-      ]
-    }
-  ];
-
-  /* ---------- Escenas que usan helpers de abajo ---------- */
+  /* Escenas de los demás detalles */
   function segScene(ctx) {
     var a = h('span', { class: 'on', text: 'Para ti' }), b = h('span', { text: 'Terminan pronto' });
     var pl = h('span', { class: 'pl' });
@@ -1323,6 +770,14 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
   }
   function segReset(ctx) { setNow(ctx.pl, { x: 0, width: '116px', opacity: 1, scaleY: 1 }); segLabels(ctx, 0); }
   function segLabels(ctx, i) { ctx.labels.forEach(function (l, k) { l.classList.toggle('on', k === i); }); }
+  async function elastic(ctx, alive, el, w, total, to, squish) {
+    A(ctx, el, { width: [w + 'px', total + 'px'] }, S(520, 36));
+    await wait(ctx, 150);
+    if (!alive()) return;
+    A(ctx, el, { x: [0, to] }, S(340, 28));
+    A(ctx, el, { width: w + 'px' }, S(340, 28, { keepVelocity: true }));
+    if (squish) A(ctx, el, { scaleY: [0.86, 1] }, S(420, 16));
+  }
 
   function calcoScene(ctx) {
     var st = h('span', { class: 'u-sticker', text: '−50%' });
@@ -1332,15 +787,14 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
   }
   function calcoReset(ctx) { setNow(ctx.st, { opacity: 0, scale: 1, rotate: -3, rotateY: 0 }); setNow(ctx.media, { y: 0 }); }
 
-  function priceScene(ctx, mode) {
-    var was = h('span', { class: 'was', text: 'USD 5,79' });
+  function priceScene(ctx, mode, draw) {
+    var was = h('span', { class: 'was' + (draw ? ' draw' : ''), text: 'USD 5,79' });
+    if (draw) { ctx.strike = h('span', { class: 'strike' }); was.appendChild(ctx.strike); }
     var now;
     if (mode === 'odo') {
       ctx.strips = [];
-      var odo = h('span', { class: 'odo' });
-      function strip() { var s = h('span', { class: 'strip' }); for (var d = 0; d <= 9; d++) s.appendChild(h('span', { text: String(d) })); ctx.strips.push(s); return h('span', { class: 'odo' }, s); }
+      var strip = function () { var s = h('span', { class: 'strip' }); for (var d = 0; d <= 9; d++) s.appendChild(h('span', { text: String(d) })); ctx.strips.push(s); return h('span', { class: 'odo' }, s); };
       now = h('span', { class: 'now' }, 'USD ', strip(), ',', strip(), strip());
-      void odo;
     } else if (mode === 'cross') {
       ctx.oldV = h('span', { text: 'USD 5,79' });
       ctx.newV = h('span', { text: 'USD 0,52' });
@@ -1352,6 +806,9 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     var save = h('span', { class: 'save', text: 'Ahorras USD 0,00' });
     ctx.stage.appendChild(h('div', { class: 'price' }, was, now, save));
     ctx.wasEl = was; ctx.saveEl = save;
+  }
+  function rollDigits(ctx, from, to) {
+    ctx.strips.forEach(function (s, i) { A(ctx, s, { y: [-from[i] * 46, -to[i] * 46] }, S(200, 24, { delay: 0.09 * i })); });
   }
 
   function filterScene(ctx) {
@@ -1371,6 +828,19 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     ctx.gone.style.display = '';
     ctx.rows.forEach(function (r) { setNow(r, { y: 0, opacity: 1, scale: 1 }); });
   }
+  async function reflow(ctx, alive) {
+    await A(ctx, ctx.gone, { opacity: [1, 0], scale: [1, 0.96] }, T(240));
+    if (!alive()) return;
+    var after = ctx.rows.filter(function (r) { return r !== ctx.gone; });
+    var first = after.map(function (r) { return r.getBoundingClientRect().top; });
+    ctx.gone.style.display = 'none';
+    after.forEach(function (r, i) {
+      var dy = first[i] - r.getBoundingClientRect().top;
+      if (!dy) return;
+      r.style.transform = 'translateY(' + dy + 'px)';
+      A(ctx, r, { y: [dy, 0] }, S(320, 30));
+    });
+  }
 
   function themeLayer(pal) {
     var l = h('div', { class: 'tlayer ' + pal });
@@ -1386,12 +856,20 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
   }
   function themeScene(ctx) {
     var phone = h('div', { class: 'u-phone' });
-    phone.appendChild(themeLayer('pal-d'));
+    var dark = themeLayer('pal-d');
+    phone.appendChild(dark);
     ctx.over = themeLayer('pal-l');
     phone.appendChild(ctx.over);
     ctx.stage.appendChild(phone);
+    ctx.darkIcon = dark.querySelector('.tg svg');
+    ctx.lightIcon = ctx.over.querySelector('.tg svg');
   }
-  function themeReset(ctx) { setNow(ctx.over, { opacity: 0, clipPath: 'inset(0% 0% 0% 0%)' }); }
+  function themeReset(ctx) {
+    setNow(ctx.over, { opacity: 0, clipPath: 'inset(0% 0% 0% 0%)' });
+    setNow(ctx.darkIcon, { rotate: 0, opacity: 1 });
+    setNow(ctx.lightIcon, { rotate: 0, opacity: 1 });
+  }
+  var CIRCLE_0 = 'circle(0px at 129px 20px)', CIRCLE_1 = 'circle(260px at 129px 20px)';
 
   function sheetScene(ctx) {
     var phone = h('div', { class: 'u-phone' });
@@ -1401,12 +879,51 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     [44, 96, 148].forEach(function (top) { var b = h('span', { class: 'pblock' }); b.style.top = top + 'px'; screen.appendChild(b); });
     var scrim = h('div', { class: 'scrim' });
     var sheet = h('div', { class: 'sheet' });
-    sheet.innerHTML = '<span class="grab"></span><span class="r on" style="top:22px;width:60px"></span><span class="r" style="top:22px;left:82px;width:56px"></span><span class="r" style="top:52px;width:70px"></span><span class="r on" style="top:52px;left:94px;width:44px"></span><span class="r" style="top:82px;width:126px;border-radius:6px"></span>';
+    sheet.innerHTML = sheetMarkup();
     phone.appendChild(screen); phone.appendChild(scrim); phone.appendChild(sheet);
     ctx.stage.appendChild(phone);
     ctx.phone = phone; ctx.screen = screen; ctx.chip = chip; ctx.scrim = scrim; ctx.sheet = sheet;
   }
-  function sheetReset(ctx) { setNow(ctx.scrim, { opacity: 0 }); setNow(ctx.sheet, { y: '100%' }); }
+  function sheetMarkup() {
+    return '<span class="grab"></span><span class="r on" style="left:12px;top:22px;width:60px"></span><span class="r" style="left:82px;top:22px;width:56px"></span><span class="r" style="left:12px;top:52px;width:70px"></span><span class="r on" style="left:94px;top:52px;width:44px"></span><span class="r" style="left:12px;top:82px;width:126px;border-radius:6px"></span>';
+  }
+  function sheetReset(ctx) { setNow(ctx.scrim, { opacity: 0 }); setNow(ctx.sheet, { y: '100%' }); setNow(ctx.screen, { scale: 1, y: 0, borderRadius: '0px' }); }
+  function addChipContainer(ctx) {
+    var chipLook = h('div', { style: 'position:absolute;inset:0;display:flex;align-items:center;gap:4px;padding:0 9px;font:600 10px/1 var(--font-sans);color:var(--ink)' }, icon('sliders'), 'Filtros');
+    chipLook.querySelector('svg').style.cssText = 'width:11px;height:11px';
+    var sheetLook = h('div', { style: 'position:absolute;inset:0' });
+    sheetLook.innerHTML = sheetMarkup();
+    ctx.cxChip = chipLook; ctx.cxSheet = sheetLook;
+    ctx.cx = h('div', { class: 'cx', style: 'border-color:var(--line-strong)' }, chipLook, sheetLook);
+    ctx.phone.appendChild(ctx.cx);
+  }
+  function chipContainerReset(ctx) {
+    sheetReset(ctx);
+    setNow(ctx.chip, { opacity: 1 });
+    setNow(ctx.cx, { opacity: 0, left: '10px', top: '12px', width: (ctx.chip.offsetWidth || 64) + 'px', height: '22px', borderRadius: '11px' });
+    setNow(ctx.cxChip, { opacity: 1 });
+    setNow(ctx.cxSheet, { opacity: 0 });
+  }
+  async function chipContainerPlay(ctx, alive, shrinkBack) {
+    var W = ctx.phone.clientWidth, H = ctx.phone.clientHeight, cw = ctx.chip.offsetWidth || 64;
+    setNow(ctx.chip, { opacity: 0 });
+    setNow(ctx.cx, { opacity: 1 });
+    A(ctx, ctx.scrim, { opacity: [0, 1] }, T(280));
+    if (shrinkBack) A(ctx, ctx.screen, { scale: [1, 0.92], y: [0, 4], borderRadius: ['0px', '14px'] }, S(240, 28));
+    A(ctx, ctx.cx, { left: ['10px', '0px'], top: ['12px', (H - 122) + 'px'], width: [cw + 'px', W + 'px'], height: ['22px', '122px'], borderRadius: ['11px', '16px'] }, S(240, 28));
+    A(ctx, ctx.cxChip, { opacity: [1, 0] }, T(140));
+    A(ctx, ctx.cxSheet, { opacity: [0, 1] }, T(260, 'easeOut', { delay: 0.16 }));
+    await wait(ctx, 1500);
+    if (!alive()) return;
+    A(ctx, ctx.scrim, { opacity: [1, 0] }, T(280));
+    if (shrinkBack) A(ctx, ctx.screen, { scale: [0.92, 1], y: [4, 0], borderRadius: ['14px', '0px'] }, S(240, 28));
+    A(ctx, ctx.cxSheet, { opacity: [1, 0] }, T(140));
+    A(ctx, ctx.cxChip, { opacity: [0, 1] }, T(240, 'easeOut', { delay: 0.12 }));
+    await A(ctx, ctx.cx, { left: ['0px', '10px'], top: [(H - 122) + 'px', '12px'], width: [W + 'px', cw + 'px'], height: ['122px', '22px'], borderRadius: ['16px', '11px'] }, S(240, 28));
+    if (!alive()) return;
+    setNow(ctx.chip, { opacity: 1 });
+    setNow(ctx.cx, { opacity: 0 });
+  }
 
   function welcomeScene(ctx, morph) {
     var phone = h('div', { class: 'u-phone wel' });
@@ -1437,58 +954,970 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
   }
   function welcomeReset(ctx) {
     ctx.cards.forEach(function (c) { setNow(c.el, { opacity: 0, y: 30, rotate: c.rot + 6, scale: 1 }); });
-    ctx.stickers.forEach(function (s) { setNow(s.el, { opacity: 0, scale: 1.8, rotate: s.rot + 12 }); });
+    ctx.stickers.forEach(function (s) { setNow(s.el, { opacity: 0, scale: 1.8, rotate: s.rot + 12, y: 0 }); });
     ctx.texts.forEach(function (t) { setNow(t, { opacity: 0, y: 12 }); });
     if (ctx.morph) {
       setNow(ctx.mx, { left: '48px', top: '118px', width: '64px', height: '30px', borderRadius: '5px', backgroundColor: tok('--deal'), color: tok('--on-deal') });
+      ctx.mx.style.boxShadow = '';
       setNow(ctx.mxA, { opacity: 1 });
       setNow(ctx.mxB, { opacity: 0 });
     }
   }
-  async function welcomeSequence(ctx, alive) {
+  async function welcomeSequence(ctx) {
     ctx.cards.forEach(function (c, i) {
-      A(ctx, c.el, { y: [30, 0], rotate: [c.rot + 6, c.rot], scale: [1, 1] }, S(300, 24, { delay: 0.09 * i }));
-      A(ctx, c.el, { opacity: [0, 1] }, T(240, 'easeOut', { delay: 0.09 * i }));
+      A(ctx, c.el, { y: [30, 0], rotate: [c.rot + 6, c.rot], scale: [1, 1] }, S(240, 22, { delay: 0.12 * i }));
+      A(ctx, c.el, { opacity: [0, 1] }, T(300, 'easeOut', { delay: 0.12 * i }));
     });
     ctx.stickers.forEach(function (s, i) {
-      A(ctx, s.el, { scale: [1.8, 1], rotate: [s.rot + 12, s.rot] }, S(420, 32, { delay: 0.52 + 0.12 * i }));
-      A(ctx, s.el, { opacity: [0, 1] }, T(120, 'linear', { delay: 0.52 + 0.12 * i }));
+      var at = [0.7, 0.86, 1.04][i];
+      A(ctx, s.el, { scale: [1.8, 1], rotate: [s.rot + 12, s.rot] }, S(340, 26, { delay: at }));
+      A(ctx, s.el, { opacity: [0, 1] }, T(140, 'linear', { delay: at }));
     });
-    ctx.texts.forEach(function (t, i) { A(ctx, t, { opacity: [0, 1], y: [12, 0] }, T(440, [0.2, 0.8, 0.2, 1], { delay: 0.9 + 0.08 * i })); });
-    await wait(ctx, 1300);
-    void alive;
+    ctx.texts.forEach(function (t, i) { A(ctx, t, { opacity: [0, 1], y: [12, 0] }, T(520, [0.2, 0.8, 0.2, 1], { delay: 1.3 + 0.1 * i })); });
+    await wait(ctx, 1700);
+  }
+  async function stickerToButton(ctx, alive, relieve) {
+    await welcomeSequence(ctx);
+    await wait(ctx, 900);
+    if (!alive()) return;
+    var W = ctx.phone.clientWidth - 24, top = ctx.phone.clientHeight - 44;
+    var ink = tok('--ink'), bg = tok('--bg'), deal = tok('--deal'), onDeal = tok('--on-deal');
+    A(ctx, ctx.mx, { left: ['48px', '12px'], top: ['118px', top + 'px'], width: ['64px', W + 'px'], height: ['30px', '28px'], borderRadius: ['5px', '14px'], backgroundColor: [deal, ink], color: [onDeal, bg], rotate: [-3, 0] }, S(220, 26));
+    A(ctx, ctx.mxA, { opacity: [1, 0] }, T(160));
+    A(ctx, ctx.mxB, { opacity: [0, 1] }, T(260, 'easeOut', { delay: 0.18 }));
+    if (!relieve) return;
+    var lip = tok('--ink-lip');
+    await A(ctx, ctx.mx, { boxShadow: ['0px 0px 0px ' + lip, '0px 4px 0px ' + lip] }, T(200, 'easeOut', { delay: 0.5 }));
+    await wait(ctx, 500);
+    if (!alive()) return;
+    pressRelieve(ctx, ctx.mx, true, 4, '--ink-lip');
+    await wait(ctx, 260);
+    if (alive()) pressRelieve(ctx, ctx.mx, false, 4, '--ink-lip');
   }
 
+  /* ---------- Los detalles y sus estilos ---------- */
+  var DETAILS = [
+    {
+      id: 'boton', name: 'Botón', goal: 'Confirmar que el toque llegó, con la sensación de apretar un botón de verdad.',
+      demos: [
+        {
+          id: 'boton-escala', name: 'Escala', family: 'Escala', spec: 'escala .96 · muelle 500/22',
+          recipe: "const s = useSharedValue(1);\nconst st = useAnimatedStyle(() => ({ transform: [{ scale: s.value }] }));\nonPressIn:  s.value = withSpring(0.96, { stiffness: 500, damping: 22 });\nonPressOut: s.value = withSpring(1, { stiffness: 500, damping: 22 });",
+          build: function (ctx) {
+            var b = buttonScene(ctx);
+            ctx.press = function (p) { A(ctx, b, { scale: p ? 0.96 : 1 }, S(500, 22)); };
+          },
+          reset: function (ctx) { setNow(ctx.btn, { scale: 1 }); },
+          play: simulatePress
+        },
+        {
+          id: 'boton-relieve', name: 'Se hunde (relieve)', family: 'Dimensión', spec: 'baja 4 px en 120 ms · vuelve con muelle 500/26',
+          recipe: "// El canto es una View debajo de la cara: RN no tiene sombras sólidas desplazadas\nconst d = useSharedValue(0);\nconst face = useAnimatedStyle(() => ({ transform: [{ translateY: d.value }] }));\nconst lip = useAnimatedStyle(() => ({ height: 4 - d.value }));\nonPressIn:  d.value = withTiming(4, { duration: 120 });\n            Haptics.performAndroidHapticsAsync(AndroidHaptics.Virtual_Key);\nonPressOut: d.value = withSpring(0, { stiffness: 500, damping: 26 });\n            Haptics.performAndroidHapticsAsync(AndroidHaptics.Virtual_Key_Release);",
+          build: function (ctx) {
+            var b = buttonScene(ctx, 'relieve');
+            ctx.press = function (p) { pressRelieve(ctx, b, p, 4, '--accent-lip'); };
+          },
+          reset: function (ctx) { setNow(ctx.btn, { y: 0 }); ctx.btn.style.boxShadow = ''; },
+          play: simulatePress
+        },
+        {
+          id: 'boton-capsula', name: 'Cápsula que se hunde', family: 'Dimensión', combo: true, spec: 'forma de cápsula + el hundido de “Se hunde” · 120 ms y muelle 500/26',
+          recipe: "// Igual que \"Se hunde\", con radio de cápsula en la cara y en el canto (26)\nconst face = useAnimatedStyle(() => ({ transform: [{ translateY: d.value }] }));\nonPressIn:  d.value = withTiming(4, { duration: 120 });\n            Haptics.performAndroidHapticsAsync(AndroidHaptics.Virtual_Key);\nonPressOut: d.value = withSpring(0, { stiffness: 500, damping: 26 });\n            Haptics.performAndroidHapticsAsync(AndroidHaptics.Virtual_Key_Release);",
+          build: function (ctx) {
+            var b = buttonScene(ctx, 'relieve cap');
+            ctx.press = function (p) { pressRelieve(ctx, b, p, 4, '--accent-lip'); };
+          },
+          reset: function (ctx) { setNow(ctx.btn, { y: 0 }); ctx.btn.style.boxShadow = ''; },
+          play: simulatePress
+        },
+        {
+          id: 'boton-control', name: 'Estilo control', family: 'Dimensión', combo: true, spec: 'todo lo que se toca con canto: botón principal y botones redondos de ícono',
+          recipe: "// Un solo componente con canto para todo lo que se toca:\n// botón principal en cápsula y botones redondos de ícono, como los de un control\n<PressableRelieve shape=\"circle\" size={48} lip={4}><Bookmark /></PressableRelieve>\n// Hunde 4 px en 120 ms, vuelve con muelle 500/26.\n// Háptica: Virtual_Key al hundir, Virtual_Key_Release al soltar",
+          build: function (ctx) {
+            var cta = h('button', { class: 'u-btn relieve cap', type: 'button' }, icon('external'), h('span', { text: 'Ir a Steam' }));
+            var skip = h('button', { class: 'u-ibtn', type: 'button', 'aria-label': 'No me interesa' }, icon('x'));
+            var save = h('button', { class: 'u-ibtn', type: 'button', 'aria-label': 'Guardar' }, icon('bookmark'));
+            ctx.stage.appendChild(h('div', { class: 'ctl' }, cta, h('div', { class: 'ctl-row' }, skip, save)));
+            ctx.cta = cta; ctx.skip = skip; ctx.save = save;
+            wirePress(ctx, cta, function (p) { pressRelieve(ctx, cta, p, 4, '--accent-lip'); });
+            wirePress(ctx, skip, function (p) { pressRelieve(ctx, skip, p, 4, '--raised-lip'); });
+            wirePress(ctx, save, function (p) { pressRelieve(ctx, save, p, 4, '--raised-lip'); if (!p) toggleSave(ctx); });
+          },
+          reset: function (ctx) {
+            [ctx.cta, ctx.skip, ctx.save].forEach(function (b) { setNow(b, { y: 0 }); b.style.boxShadow = ''; });
+            ctx.save.classList.remove('on');
+            ctx.save.querySelector('svg').classList.remove('filled');
+          },
+          play: async function (ctx, alive) {
+            var seq = [[ctx.cta, '--accent-lip'], [ctx.skip, '--raised-lip'], [ctx.save, '--raised-lip']];
+            for (var i = 0; i < seq.length; i++) {
+              pressRelieve(ctx, seq[i][0], true, 4, seq[i][1]);
+              await wait(ctx, 240);
+              if (!alive()) return;
+              pressRelieve(ctx, seq[i][0], false, 4, seq[i][1]);
+              if (seq[i][0] === ctx.save) toggleSave(ctx);
+              await wait(ctx, 300);
+              if (!alive()) return;
+            }
+          }
+        }
+      ]
+    },
+    {
+      id: 'barra', name: 'Barra de navegación', goal: 'Mostrar dónde estás y a dónde fuiste al cambiar de pestaña.',
+      demos: [
+        {
+          id: 'barra-desliza', name: 'Círculo que se desliza', family: 'Desliza', current: true, spec: 'translateX · muelle 420/32',
+          recipe: "const x = useSharedValue(0);\nconst st = useAnimatedStyle(() => ({ transform: [{ translateX: x.value }] }));\nonTab(i): x.value = withSpring(i * 56, { stiffness: 420, damping: 32 });",
+          build: function (ctx) { ctx.nav = nav(0); ctx.stage.appendChild(ctx.nav.el); },
+          reset: function (ctx) { setNow(ctx.nav.ind, { x: 0, width: '52px', opacity: 1 }); setActive(ctx.nav.items, 0); },
+          play: async function (ctx) { setActive(ctx.nav.items, 2); A(ctx, ctx.nav.ind, { x: [0, 112] }, S(420, 32)); }
+        },
+        {
+          id: 'barra-elastico', name: 'Círculo elástico', family: 'Morph', spec: 'borde delantero 520/36 · el trasero sale 150 ms después con 340/28',
+          recipe: "// Dos bordes con muelles distintos: el que avanza tira, el otro lo sigue\nconst left = useSharedValue(0), right = useSharedValue(52);\nconst st = useAnimatedStyle(() => ({ left: left.value, width: right.value - left.value }));\nonTab(i): const to = i * 56;\n  right.value = withSpring(to + 52, { stiffness: 520, damping: 36 });\n  left.value  = withDelay(150, withSpring(to, { stiffness: 340, damping: 28 }));\n  // hacia la izquierda, al revés: left primero, right después",
+          build: function (ctx) { ctx.nav = nav(0); ctx.stage.appendChild(ctx.nav.el); },
+          reset: function (ctx) { setNow(ctx.nav.ind, { x: 0, width: '52px', opacity: 1 }); setActive(ctx.nav.items, 0); },
+          play: async function (ctx, alive) { setActive(ctx.nav.items, 2); await elastic(ctx, alive, ctx.nav.ind, 52, 164, 112, false); }
+        },
+        {
+          id: 'barra-fundido', name: 'Fundido a través', family: 'Fundido', spec: 'sale 180 ms · entra 220 ms',
+          recipe: "// Material 3 lo usa para la navegación inferior\nonTab(i): o.value = withTiming(0, { duration: 180 }, () => {\n  x.value = i * 56;                              // el círculo salta sin verse\n  o.value = withTiming(1, { duration: 220 });\n});",
+          build: function (ctx) { ctx.nav = nav(0); ctx.stage.appendChild(ctx.nav.el); },
+          reset: function (ctx) { setNow(ctx.nav.ind, { x: 0, width: '52px', opacity: 1 }); setActive(ctx.nav.items, 0); },
+          play: async function (ctx, alive) {
+            await A(ctx, ctx.nav.ind, { opacity: [1, 0] }, T(180));
+            if (!alive()) return;
+            setActive(ctx.nav.items, 2);
+            setNow(ctx.nav.ind, { x: 112 });
+            A(ctx, ctx.nav.ind, { opacity: [0, 1] }, T(220));
+          }
+        },
+        {
+          id: 'barra-icono', name: 'Ícono que se rellena', family: 'Morph', spec: 'sin círculo · se encoge en 120 ms y rebota con 380/16',
+          recipe: "// Sin círculo: el ícono activo se rellena y rebota\nonTab(i): s.value = withSequence(withTiming(0.8, { duration: 120 }),\n                                 withSpring(1, { stiffness: 380, damping: 16 }));\n<Bookmark color={c.ink} fill={active ? c.ink : 'none'} /> // lucide-react-native",
+          build: function (ctx) {
+            ctx.nav = nav(0);
+            ctx.nav.ind.style.display = 'none';
+            ctx.stage.appendChild(ctx.nav.el);
+          },
+          reset: function (ctx) {
+            ctx.nav.items.forEach(function (it, k) { var s = it.querySelector('svg'); s.classList.toggle('filled', k === 0); it.style.color = k === 0 ? 'var(--ink)' : 'var(--ink-3)'; setNow(s, { scale: 1 }); });
+          },
+          play: async function (ctx, alive) {
+            var from = ctx.nav.items[0], to = ctx.nav.items[2];
+            from.style.color = 'var(--ink-3)';
+            from.querySelector('svg').classList.remove('filled');
+            to.style.color = 'var(--ink)';
+            var s = to.querySelector('svg');
+            s.classList.add('filled');
+            await A(ctx, s, { scale: [1, 0.8] }, T(120));
+            if (!alive()) return;
+            A(ctx, s, { scale: [0.8, 1] }, S(380, 16));
+          }
+        },
+        {
+          id: 'barra-elastico-icono', name: 'Elástico e ícono que se rellena', family: 'Morph', combo: true, spec: 'círculo elástico · al llegar, el ícono se rellena y rebota (120 ms + 380/16)',
+          recipe: "right.value = withSpring(to + 52, { stiffness: 520, damping: 36 });\nleft.value = withDelay(150, withSpring(to, { stiffness: 340, damping: 28 }));\n// cuando el círculo llega, el ícono se rellena y rebota\niconScale.value = withDelay(300, withSequence(withTiming(0.8, { duration: 120 }),\n                                              withSpring(1, { stiffness: 380, damping: 16 })));",
+          build: function (ctx) { ctx.nav = nav(0); ctx.stage.appendChild(ctx.nav.el); ctx.nav.items[0].querySelector('svg').classList.add('filled'); },
+          reset: function (ctx) {
+            setNow(ctx.nav.ind, { x: 0, width: '52px', opacity: 1 });
+            setActive(ctx.nav.items, 0);
+            ctx.nav.items.forEach(function (it, k) { var s = it.querySelector('svg'); s.classList.toggle('filled', k === 0); setNow(s, { scale: 1 }); });
+          },
+          play: async function (ctx, alive) {
+            setActive(ctx.nav.items, 2);
+            ctx.nav.items[0].querySelector('svg').classList.remove('filled');
+            elastic(ctx, alive, ctx.nav.ind, 52, 164, 112, false);
+            await wait(ctx, 300);
+            if (!alive()) return;
+            var s = ctx.nav.items[2].querySelector('svg');
+            s.classList.add('filled');
+            await A(ctx, s, { scale: [1, 0.8] }, T(120));
+            if (alive()) A(ctx, s, { scale: [0.8, 1] }, S(380, 16));
+          }
+        }
+      ]
+    },
+    {
+      id: 'aviso', name: 'Aviso', goal: 'Decir qué pasó y ofrecer deshacer, sin tapar la lista ni la navegación.',
+      demos: [
+        {
+          id: 'aviso-morph', name: 'Sale de la barra', family: 'Morph', current: true, spec: 'ancho, alto y radio · muelle 340/28 · mensaje a los 200 ms',
+          recipe: "const open = useSharedValue(0);\nconst panel = useAnimatedStyle(() => ({\n  width: interpolate(open.value, [0, 1], [232, 358]),\n  height: interpolate(open.value, [0, 1], [64, 124]),\n  borderRadius: interpolate(open.value, [0, 1], [32, 28]),\n}));\nshow: open.value = withSpring(1, { stiffness: 340, damping: 28 });\n      msg.value = withDelay(200, withTiming(1, { duration: 260 }));",
+          build: function (ctx) { dockScene(ctx, false); },
+          reset: dockReset,
+          play: dockPlay
+        },
+        {
+          id: 'aviso-desliza', name: 'Flota sobre la barra', family: 'Desliza', spec: 'sube 24 px · muelle 340/26 · sale en 220 ms',
+          recipe: "<Animated.View\n  entering={FadeInDown.springify().stiffness(340).damping(26)}\n  exiting={FadeOut.duration(220)}\n/>",
+          build: function (ctx) {
+            ctx.stage.appendChild(h('div', { class: 'faux' }, h('span', { class: 'bar', style: 'width:62%' }), h('span', { class: 'blk' })));
+            ctx.pill = h('div', { class: 'tpill' }, icon('eyeOff'), h('span', { text: 'Juego oculto' }), h('span', { class: 'mini-btn', text: 'Deshacer' }));
+            ctx.stage.appendChild(h('div', { class: 'ftoast' }, ctx.pill));
+            ctx.stage.appendChild(h('div', { class: 'nav-bottom' }, nav(0).el));
+          },
+          reset: function (ctx) { setNow(ctx.pill, { y: 24, opacity: 0 }); },
+          play: async function (ctx, alive) {
+            A(ctx, ctx.pill, { y: [24, 0], opacity: [0, 1] }, S(340, 26));
+            await wait(ctx, 2600);
+            if (alive()) A(ctx, ctx.pill, { opacity: [1, 0] }, T(220));
+          }
+        },
+        {
+          id: 'aviso-isla', name: 'Isla de arriba', family: 'Morph', spec: '64×22 → 248×44 · muelle 340/28',
+          recipe: "// Sobre el contenido, arriba: crece desde una pastilla chica\nconst st = useAnimatedStyle(() => ({\n  width: interpolate(open.value, [0, 1], [64, 280]),\n  height: interpolate(open.value, [0, 1], [22, 44]),\n  borderRadius: interpolate(open.value, [0, 1], [11, 22]),\n}));\nshow: open.value = withSpring(1, { stiffness: 340, damping: 28 });",
+          build: function (ctx) {
+            ctx.stage.appendChild(h('div', { class: 'faux', style: 'top:48px' }, h('span', { class: 'bar', style: 'width:62%' }), h('span', { class: 'blk' })));
+            ctx.inner = h('div', { class: 'isla-in' }, icon('eyeOff'), h('span', { text: 'Juego oculto' }), h('b', { text: 'Deshacer' }));
+            ctx.isla = h('div', { class: 'isla' }, ctx.inner);
+            ctx.stage.appendChild(ctx.isla);
+            ctx.stage.appendChild(h('div', { class: 'nav-bottom' }, nav(0).el));
+          },
+          reset: function (ctx) { setNow(ctx.isla, { width: '64px', height: '22px', borderRadius: '11px' }); setNow(ctx.inner, { opacity: 0 }); },
+          play: async function (ctx, alive) {
+            var W = Math.min(ctx.stage.clientWidth - 24, 248);
+            A(ctx, ctx.isla, { width: ['64px', W + 'px'], height: ['22px', '44px'], borderRadius: ['11px', '22px'] }, S(340, 28));
+            A(ctx, ctx.inner, { opacity: [0, 1] }, T(240, 'easeOut', { delay: 0.18 }));
+            await wait(ctx, 2600);
+            if (!alive()) return;
+            A(ctx, ctx.inner, { opacity: [1, 0] }, T(180));
+            A(ctx, ctx.isla, { width: [W + 'px', '64px'], height: ['44px', '22px'], borderRadius: ['22px', '11px'] }, S(340, 28, { delay: 0.1 }));
+          }
+        },
+        {
+          id: 'aviso-tiempo', name: 'Sale de la barra, con tiempo', family: 'Morph', combo: true, spec: 'como “Sale de la barra” · línea que se vacía (aquí 2,4 s; en la app, 5 s)',
+          recipe: "// Igual que el morph, más una línea que muestra cuánto queda para deshacer\nconst t = useSharedValue(1);\nconst bar = useAnimatedStyle(() => ({ transform: [{ scaleX: t.value }], transformOrigin: 'left' }));\nshow: t.value = 1; t.value = withTiming(0, { duration: 5000, easing: Easing.linear });",
+          build: function (ctx) { dockScene(ctx, true); },
+          reset: dockReset,
+          play: dockPlay
+        }
+      ]
+    },
+    {
+      id: 'guardar', name: 'Guardar', goal: 'Confirmar que se guardó y mostrar dónde quedó.',
+      demos: [
+        {
+          id: 'guardar-pop', name: 'Salta y late Guardados', family: 'Escala', current: true, spec: 'ícono .6 → 1 con 360/22 · Guardados 1,3 → 1',
+          recipe: "s.value = 0.6;\ns.value = withSpring(1, { stiffness: 360, damping: 22 });\ntab.value = withSequence(withTiming(1.3, { duration: 180 }),\n                         withSpring(1, { stiffness: 380, damping: 14 })); // Guardados en la barra\nHaptics.performAndroidHapticsAsync(AndroidHaptics.Confirm);",
+          build: saveScene, reset: saveReset,
+          play: async function (ctx) {
+            sync(function () {
+              ctx.gbtn.classList.add('on');
+              ctx.outline.classList.add('filled');
+              ctx.nav.items[2].querySelector('svg').classList.add('filled');
+            });
+            A(ctx, ctx.outline, { scale: [0.6, 1] }, S(360, 22));
+            bump(ctx, ctx.nav.items[2]);
+          }
+        },
+        {
+          id: 'guardar-relleno', name: 'Se llena desde abajo', family: 'Máscara', spec: 'recorte 100% → 0 · 480 ms',
+          recipe: "// Ícono relleno encima del contorno, dentro de una View que crece desde abajo\nconst f = useSharedValue(0);\nconst clip = useAnimatedStyle(() => ({ height: f.value * 24 })); // overflow: 'hidden', bottom: 0\nonSave: f.value = withTiming(1, { duration: 480, easing: Easing.out(Easing.cubic) });",
+          build: saveScene, reset: saveReset,
+          play: async function (ctx) {
+            ctx.gbtn.classList.add('on');
+            A(ctx, ctx.filled, { clipPath: ['inset(100% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'] }, T(480, [0.33, 1, 0.68, 1]));
+          }
+        },
+        {
+          id: 'guardar-estallido', name: 'Se aplasta y estalla', family: 'Morph', spec: 'aplasta 140 ms · rebota 420/14 · 8 puntos en 600 ms',
+          recipe: "s.value = withSequence(withTiming(0.72, { duration: 140 }),   // aplaste en Y\n                       withSpring(1, { stiffness: 420, damping: 14 }));\n// 8 puntos: cada uno va hacia afuera y se apaga\ndots.forEach((d) => { d.value = 0; d.value = withTiming(1, { duration: 600, easing: Easing.out(Easing.quad) }); });",
+          build: saveScene, reset: saveReset,
+          play: async function (ctx, alive) {
+            await A(ctx, ctx.outline, { scaleX: [1, 1.22], scaleY: [1, 0.72] }, T(140, 'easeIn'));
+            if (!alive()) return;
+            ctx.gbtn.classList.add('on');
+            ctx.outline.classList.add('filled');
+            A(ctx, ctx.outline, { scaleX: [1.22, 1], scaleY: [0.72, 1] }, S(420, 14));
+            ctx.dots.forEach(function (d, i) {
+              var ang = (Math.PI * 2 * i) / 8;
+              A(ctx, d, { x: [0, Math.cos(ang) * 48], y: [0, Math.sin(ang) * 48], opacity: [1, 0], scale: [1, 0.4] }, T(600, 'easeOut'));
+            });
+          }
+        },
+        {
+          id: 'guardar-clon', name: 'Vuela a Guardados', family: 'Clonado', spec: 'copia en arco 700 ms · Guardados late al llegar',
+          recipe: "// Una copia del ícono vuela hasta la pestaña Guardados\nconst a = measure(saveRef), b = measure(tabRef); // en un worklet\nx.value = withTiming(b.pageX - a.pageX, { duration: 700, easing: Easing.out(Easing.quad) });\ny.value = withTiming(b.pageY - a.pageY, { duration: 700, easing: Easing.in(Easing.quad) });\n// x e y con curvas distintas dibujan el arco",
+          build: saveScene, reset: saveReset,
+          play: async function (ctx, alive) {
+            ctx.gbtn.classList.add('on');
+            ctx.outline.classList.add('filled');
+            var from = rel(ctx.outline, ctx.stage), to = rel(ctx.nav.items[2], ctx.stage);
+            ctx.clone.style.left = (from.cx - 14) + 'px';
+            ctx.clone.style.top = (from.cy - 14) + 'px';
+            setNow(ctx.clone, { opacity: 1, x: 0, y: 0, scale: 1 });
+            A(ctx, ctx.clone, { x: [0, to.cx - from.cx] }, T(700, 'easeOut'));
+            A(ctx, ctx.clone, { scale: [1, 0.55] }, T(700, 'easeIn'));
+            await A(ctx, ctx.clone, { y: [0, to.cy - from.cy] }, T(700, [0.55, 0, 0.85, 0.35]));
+            if (!alive()) return;
+            setNow(ctx.clone, { opacity: 0 });
+            ctx.nav.items[2].querySelector('svg').classList.add('filled');
+            bump(ctx, ctx.nav.items[2]);
+          }
+        },
+        {
+          id: 'guardar-combo', name: 'Se aplasta, estalla y vuela', family: 'Clonado', combo: true, spec: 'aplasta 140 ms · estalla 600 ms · a los 180 ms sale la copia (700 ms) · Guardados late y chispea',
+          recipe: "// 1) se aplasta  2) rebota, se rellena y estalla  3) una copia vuela a Guardados\ns.value = withSequence(withTiming(0.72, { duration: 140 }),\n                       withSpring(1, { stiffness: 420, damping: 14 }));\ndots.forEach((d) => (d.value = withDelay(140, withTiming(1, { duration: 600 }))));\nx.value = withDelay(320, withTiming(dx, { duration: 700, easing: Easing.out(Easing.quad) }));\ny.value = withDelay(320, withTiming(dy, { duration: 700, easing: Easing.in(Easing.quad) }));\ntab.value = withDelay(1020, withSequence(withTiming(1.3, { duration: 180 }),\n                                        withSpring(1, { stiffness: 380, damping: 14 })));\nHaptics.performAndroidHapticsAsync(AndroidHaptics.Confirm);",
+          build: saveScene, reset: saveReset,
+          play: function (ctx, alive) {
+            return squashBurstFly(ctx, alive, { icon: ctx.outline, btn: ctx.gbtn, dots: ctx.dots, clone: ctx.clone, target: ctx.nav.items[2], navDots: ctx.navDots, reach: 48 });
+          }
+        }
+      ]
+    },
+    {
+      id: 'descartar', name: 'Descartar', goal: 'Mostrar que la tarjeta se fue y cerrar el hueco que deja.',
+      demos: [
+        {
+          id: 'descartar-desliza', name: 'Sale a la izquierda', family: 'Desliza', current: true, spec: 'sale en 300 ms · el hueco se cierra en 340 ms',
+          recipe: "<Animated.View\n  exiting={SlideOutLeft.duration(300)}\n  layout={LinearTransition.duration(340)}  // la lista que queda se acomoda\n/>",
+          build: function (ctx) { dismissScene(ctx); }, reset: dismissReset,
+          play: async function (ctx, alive) {
+            await A(ctx, ctx.a, { x: [0, -260], opacity: [1, 0] }, T(300, [0.4, 0, 1, 1]));
+            if (alive()) collapse(ctx);
+          }
+        },
+        {
+          id: 'descartar-encoge', name: 'Se achica y se va', family: 'Escala', spec: 'escala .9 y fundido en 280 ms · cierre 340 ms',
+          recipe: "<Animated.View\n  exiting={ZoomOut.duration(280)}\n  layout={LinearTransition.duration(340)}\n/>",
+          build: function (ctx) { dismissScene(ctx); }, reset: dismissReset,
+          play: async function (ctx, alive) {
+            await A(ctx, ctx.a, { scale: [1, 0.9], opacity: [1, 0] }, T(280, 'easeIn'));
+            if (alive()) collapse(ctx);
+          }
+        },
+        {
+          id: 'descartar-arrastre', name: 'Arrastre y lanzamiento', family: 'Desliza', spec: 'sigue al dedo con resistencia (420 ms) · sale en 320 ms · cierre 340 ms',
+          recipe: "// Gesture Handler 3: sigue al dedo; pasado el umbral, sale sola\n<ReanimatedSwipeable onSwipeableOpen={dismiss}>\n  <OfferCard />\n</ReanimatedSwipeable>",
+          build: function (ctx) { dismissScene(ctx); }, reset: dismissReset,
+          play: function (ctx, alive) { return dragFling(ctx, alive, false); }
+        },
+        {
+          id: 'descartar-pliega', name: 'Se pliega', family: 'Dimensión', spec: 'gira 90° sobre su borde superior · 360 ms',
+          recipe: "const r = useSharedValue(0);\nconst st = useAnimatedStyle(() => ({\n  transform: [{ perspective: 600 }, { rotateX: `${r.value}deg` }],\n  transformOrigin: 'top',\n}));\nonDismiss: r.value = withTiming(-90, { duration: 360, easing: Easing.in(Easing.quad) });",
+          build: function (ctx) { dismissScene(ctx); }, reset: dismissReset,
+          play: async function (ctx) {
+            ctx.slotA.style.perspective = '600px';
+            ctx.a.style.transformOrigin = 'top center';
+            A(ctx, ctx.a, { rotateX: [0, -90], opacity: [1, 0] }, T(360, 'easeIn'));
+            collapse(ctx);
+          }
+        },
+        {
+          id: 'descartar-levanta', name: 'Se levanta y se lanza', family: 'Desliza', combo: true, spec: 'al agarrarla sube a 1,03 con más sombra · se lanza achicándose a .92',
+          recipe: "// Al empezar a arrastrar, la tarjeta se levanta; al soltar, se lanza y se achica\nonStart: lift.value = withSpring(1, { stiffness: 420, damping: 30 }); // scale 1 → 1.03 y sombra mayor\nonEnd:   x.value = withTiming(-width * 1.2, { duration: 320 });\n         s.value = withTiming(0.92, { duration: 320 });",
+          build: function (ctx) { dismissScene(ctx); }, reset: dismissReset,
+          play: function (ctx, alive) { return dragFling(ctx, alive, true); }
+        }
+      ]
+    },
+    {
+      id: 'detalle', name: 'Abrir y cerrar el detalle', goal: 'Que se entienda de dónde viene el detalle y a dónde vuelve.',
+      demos: [
+        {
+          id: 'detalle-escala', name: 'Crece desde la tarjeta', family: 'Escala', current: true, spec: 'escala .9 → 1 y fundido · muelle 240/28 · cierra en 260 ms',
+          recipe: "const p = useSharedValue(0);\nconst st = useAnimatedStyle(() => ({\n  opacity: p.value,\n  transform: [{ scale: interpolate(p.value, [0, 1], [0.9, 1]) }],\n  transformOrigin: origin, // centro de la tarjeta tocada, medido con measure()\n}));\nopen:  p.value = withSpring(1, { stiffness: 240, damping: 28 });\nclose: p.value = withTiming(0, { duration: 260 });",
+          build: phoneScene,
+          reset: function (ctx) { ctx.det.style.transformOrigin = '50% 34%'; setNow(ctx.det, { opacity: 0, scale: 0.9 }); },
+          play: async function (ctx, alive) {
+            A(ctx, ctx.det, { opacity: [0, 1] }, T(260));
+            A(ctx, ctx.det, { scale: [0.9, 1] }, S(240, 28));
+            await wait(ctx, 1500);
+            if (!alive()) return;
+            A(ctx, ctx.det, { opacity: [1, 0], scale: [1, 0.94] }, T(260, 'easeIn'));
+          }
+        },
+        {
+          id: 'detalle-contenedor', name: 'Contenedor que se transforma', family: 'Morph', spec: 'caja de la tarjeta → pantalla · muelle 240/28 · contenido cruzado',
+          recipe: "// Material: container transform\nconst r = measure(cardRef);\nconst box = useAnimatedStyle(() => ({\n  left: interpolate(p.value, [0, 1], [r.pageX, 0]),\n  top: interpolate(p.value, [0, 1], [r.pageY, 0]),\n  width: interpolate(p.value, [0, 1], [r.width, W]),\n  height: interpolate(p.value, [0, 1], [r.height, H]),\n  borderRadius: interpolate(p.value, [0, 1], [16, 0]),\n}));\nopen: p.value = withSpring(1, { stiffness: 240, damping: 28 });\n// tarjeta: opacity 1 → 0 al principio; detalle: 0 → 1 al final",
+          build: function (ctx) { phoneScene(ctx); addContainer(ctx, false); },
+          reset: containerReset,
+          play: function (ctx, alive) { return containerPlay(ctx, alive, false); }
+        },
+        {
+          id: 'detalle-ejez', name: 'Eje Z', family: 'Escala', spec: 'lista 1 → 1,08 y se va · detalle .85 → 1 · muelle 240/28',
+          recipe: "// Material: eje compartido Z. La lista se acerca y se va; el detalle llega desde atrás\nlist.value = withTiming(1, { duration: 240 });   // opacity 1 − v, scale 1 + 0.08·v\ndetail.value = withDelay(80, withSpring(1, { stiffness: 240, damping: 28 })); // opacity v, scale 0.85 + 0.15·v",
+          build: phoneScene,
+          reset: function (ctx) { setNow(ctx.list, { opacity: 1, scale: 1 }); setNow(ctx.det, { opacity: 0, scale: 0.85 }); },
+          play: async function (ctx, alive) {
+            A(ctx, ctx.list, { scale: [1, 1.08], opacity: [1, 0] }, T(240));
+            A(ctx, ctx.det, { opacity: [0, 1] }, T(260, 'easeOut', { delay: 0.08 }));
+            A(ctx, ctx.det, { scale: [0.85, 1] }, S(240, 28, { delay: 0.08 }));
+            await wait(ctx, 1500);
+            if (!alive()) return;
+            A(ctx, ctx.det, { scale: [1, 0.85], opacity: [1, 0] }, T(240, 'easeIn'));
+            A(ctx, ctx.list, { opacity: [0, 1] }, T(260, 'easeOut', { delay: 0.08 }));
+            A(ctx, ctx.list, { scale: [1.08, 1] }, S(240, 28, { delay: 0.08 }));
+          }
+        },
+        {
+          id: 'detalle-hoja', name: 'Sube como hoja', family: 'Desliza', spec: 'translateY 100% → 0 · muelle 240/28 · baja en 300 ms',
+          recipe: "// expo-router: el detalle como hoja nativa\n<Stack.Screen name=\"oferta/[appid]\" options={{ presentation: 'formSheet' }} />",
+          build: phoneScene,
+          reset: function (ctx) { setNow(ctx.det, { y: '100%', opacity: 1 }); },
+          play: async function (ctx, alive) {
+            A(ctx, ctx.det, { y: ['100%', '0%'] }, S(240, 28));
+            await wait(ctx, 1500);
+            if (!alive()) return;
+            A(ctx, ctx.det, { y: ['0%', '100%'] }, T(300, 'easeIn'));
+          }
+        },
+        {
+          id: 'detalle-contenedor-fondo', name: 'Contenedor y fondo que se aleja', family: 'Morph', combo: true, spec: 'contenedor que se transforma · la lista de atrás baja a .94 y se oscurece',
+          recipe: "// Contenedor que se transforma, y la lista de atrás se aleja\nconst back = useAnimatedStyle(() => ({\n  transform: [{ scale: interpolate(p.value, [0, 1], [1, 0.94]) }],\n}));\nconst dim = useAnimatedStyle(() => ({ opacity: p.value * 0.6 })); // velo encima de la lista\nopen: p.value = withSpring(1, { stiffness: 240, damping: 28 });",
+          build: function (ctx) { phoneScene(ctx); addContainer(ctx, true); },
+          reset: containerReset,
+          play: function (ctx, alive) { return containerPlay(ctx, alive, true); }
+        }
+      ]
+    },
+    {
+      id: 'esqueleto', name: 'Esqueleto → tarjeta', goal: 'Pasar de “cargando” a la tarjeta sin corte seco.',
+      demos: [
+        {
+          id: 'esqueleto-fundido', name: 'Fundido escalonado', family: 'Escalonado', current: true, spec: 'esqueleto se va en 320 ms · piezas suben 12 px, 380 ms, cada 90 ms',
+          recipe: "<Animated.View entering={FadeInDown.duration(380).delay(index * 90)}>\n  <OfferCard />\n</Animated.View>\n// El esqueleto: exiting={FadeOut.duration(320)}. Solo en la primera página.",
+          build: skelScene,
+          reset: function (ctx) { hideParts(ctx); buildSkeleton(ctx); ctx.parts.forEach(function (p) { setNow(p, { y: 12 }); }); },
+          play: async function (ctx) {
+            ctx.sk.forEach(function (s) { A(ctx, s, { opacity: [1, 0] }, T(320)); });
+            ctx.parts.forEach(function (p, i) { A(ctx, p, { opacity: [0, 1], y: [12, 0] }, T(380, 'easeOut', { delay: 0.09 * i })); });
+          }
+        },
+        {
+          id: 'esqueleto-morph', name: 'Los bloques se vuelven la tarjeta', family: 'Morph', spec: 'uno tras otro (cada 120 ms) · cada bloque toma su tamaño con 260/26 y se cruza en 220 ms',
+          recipe: "// Uno tras otro: cada bloque toma el tamaño de su pieza (onLayout) y se cruza con ella\nblocks.forEach((b, i) => {\n  b.w.value = withDelay(i * 120, withSpring(b.targetW, { stiffness: 260, damping: 26 }));\n  b.h.value = withDelay(i * 120, withSpring(b.targetH, { stiffness: 260, damping: 26 }));\n  b.o.value = withDelay(i * 120 + 260, withTiming(0, { duration: 220 })); // bloque\n  b.t.value = withDelay(i * 120 + 260, withTiming(1, { duration: 220 })); // pieza real\n});",
+          build: skelScene,
+          reset: function (ctx) { hideParts(ctx); ctx.blocks = buildSkeleton(ctx); },
+          play: async function (ctx, alive) {
+            await wait(ctx, 300);
+            if (!alive()) return;
+            ctx.blocks.forEach(function (b, i) { morphBlock(ctx, b, ctx.groups[i], 0.12 * i); });
+          }
+        },
+        {
+          id: 'esqueleto-barrido', name: 'Barrido', family: 'Máscara', spec: 'recorte de izquierda a derecha · 760 ms',
+          recipe: "// MaskedView (@react-native-masked-view/masked-view 0.3.2, fijado por el SDK 58)\n<MaskedView maskElement={<Animated.View style={[{ height: '100%', backgroundColor: '#000' }, mask]} />}>\n  <OfferCard />\n</MaskedView>\nw.value = withTiming(cardWidth, { duration: 760, easing: Easing.bezier(0.2, 0.8, 0.2, 1) }); // mask: width",
+          build: skelScene,
+          reset: function (ctx) { buildSkeleton(ctx); ctx.parts.forEach(function (p) { setNow(p, { opacity: 1, y: 0 }); }); setNow(ctx.content, { clipPath: 'inset(0% 100% 0% 0%)' }); ctx.content.style.position = 'relative'; ctx.content.style.zIndex = '3'; ctx.content.style.background = 'var(--surface)'; },
+          play: async function (ctx, alive) {
+            await A(ctx, ctx.content, { clipPath: ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)'] }, T(760, [0.2, 0.8, 0.2, 1]));
+            if (alive()) ctx.sk.forEach(function (s) { s.style.opacity = '0'; });
+          }
+        },
+        {
+          id: 'esqueleto-nitido', name: 'De borroso a nítido', family: 'Fundido', spec: 'desenfoque 14 px → 0 y fundido · 600 ms',
+          recipe: "// expo-image: el thumbhash hace de borroso y la imagen entra encima\n<Image\n  source={{ uri }}\n  placeholder={{ thumbhash }}\n  transition={{ duration: 600, effect: 'cross-dissolve' }}\n/>",
+          build: skelScene,
+          reset: function (ctx) { buildSkeleton(ctx); ctx.parts.forEach(function (p) { setNow(p, { opacity: 1, y: 0 }); }); setNow(ctx.content, { opacity: 0, filter: 'blur(14px)' }); ctx.content.style.position = 'relative'; ctx.content.style.zIndex = '3'; },
+          play: async function (ctx) {
+            ctx.sk.forEach(function (s) { A(ctx, s, { opacity: [1, 0] }, T(320)); });
+            A(ctx, ctx.content, { opacity: [0, 1], filter: ['blur(14px)', 'blur(0px)'] }, T(600, 'easeOut'));
+          }
+        },
+        {
+          id: 'esqueleto-brillo', name: 'El brillo va formando la tarjeta', family: 'Morph', combo: true, spec: 'un brillo cruza en 900 ms · cada bloque se transforma cuando el brillo lo alcanza',
+          recipe: "// Un brillo cruza la tarjeta; cada bloque se forma cuando el brillo llega a su x\nsweep.value = withTiming(cardWidth, { duration: 900, easing: Easing.linear });\nblocks.forEach((b) => {\n  const at = (b.x / cardWidth) * 900;\n  b.w.value = withDelay(at, withSpring(b.targetW, { stiffness: 260, damping: 26 }));\n});",
+          build: function (ctx) { skelScene(ctx); ctx.shine = h('span', { class: 'shine' }); ctx.card.appendChild(ctx.shine); },
+          reset: function (ctx) { hideParts(ctx); ctx.blocks = buildSkeleton(ctx); setNow(ctx.shine, { x: -80, opacity: 0 }); },
+          play: async function (ctx, alive) {
+            await wait(ctx, 250);
+            if (!alive()) return;
+            var W = ctx.card.clientWidth;
+            A(ctx, ctx.shine, { opacity: [0, 1] }, T(120));
+            A(ctx, ctx.shine, { x: [-80, W] }, T(900, 'linear'));
+            ctx.blocks.forEach(function (b, i) {
+              var at = 0.9 * (Math.min(b.r.x + Math.min(b.r.w, 120) / 2, W) + 40) / (W + 80);
+              if (i === 1) at += 0.06;
+              if (i === 4) at += 0.12;
+              morphBlock(ctx, b, ctx.groups[i], at);
+            });
+            await wait(ctx, 900);
+            if (alive()) A(ctx, ctx.shine, { opacity: [1, 0] }, T(160));
+          }
+        }
+      ]
+    },
+    {
+      id: 'segmentado', name: 'Segmentado', goal: 'Mostrar qué vista está activa al cambiar entre Para ti y Terminan pronto.',
+      demos: [
+        {
+          id: 'seg-desliza', name: 'Pastilla que se desliza', family: 'Desliza', current: true, spec: 'muelle 420/32 · apretón vertical 420/16',
+          recipe: "x.value = withSpring(i * w, { stiffness: 420, damping: 32 });\nsy.value = withSequence(withTiming(0.86, { duration: 90 }),\n                        withSpring(1, { stiffness: 420, damping: 16 }));",
+          build: function (ctx) { segScene(ctx); },
+          reset: segReset,
+          play: async function (ctx) {
+            segLabels(ctx, 1);
+            A(ctx, ctx.pl, { x: [0, 116] }, S(420, 32));
+            A(ctx, ctx.pl, { scaleY: [0.86, 1] }, S(420, 16));
+          }
+        },
+        {
+          id: 'seg-elastico', name: 'Pastilla elástica', family: 'Morph', spec: 'borde delantero 520/36 · el trasero sale 150 ms después con 340/28',
+          recipe: "// Igual que el círculo elástico de la barra: dos bordes, dos muelles\nright.value = withSpring(to + w, { stiffness: 520, damping: 36 });\nleft.value = withDelay(150, withSpring(to, { stiffness: 340, damping: 28 }));",
+          build: function (ctx) { segScene(ctx); },
+          reset: segReset,
+          play: async function (ctx, alive) { segLabels(ctx, 1); await elastic(ctx, alive, ctx.pl, 116, 232, 116, false); }
+        },
+        {
+          id: 'seg-fundido', name: 'Fundido', family: 'Fundido', spec: 'sale 180 ms · entra 220 ms',
+          recipe: "o.value = withTiming(0, { duration: 180 }, () => {\n  x.value = i * w;\n  o.value = withTiming(1, { duration: 220 });\n});",
+          build: function (ctx) { segScene(ctx); },
+          reset: segReset,
+          play: async function (ctx, alive) {
+            await A(ctx, ctx.pl, { opacity: [1, 0] }, T(180));
+            if (!alive()) return;
+            segLabels(ctx, 1);
+            setNow(ctx.pl, { x: 116 });
+            A(ctx, ctx.pl, { opacity: [0, 1] }, T(220));
+          }
+        },
+        {
+          id: 'seg-elastico-apreton', name: 'Elástica con apretón', family: 'Morph', combo: true, spec: 'pastilla elástica · al soltarse, se aprieta en vertical (.86 → 1, 420/16)',
+          recipe: "right.value = withSpring(to + w, { stiffness: 520, damping: 36 });\nleft.value = withDelay(150, withSpring(to, { stiffness: 340, damping: 28 }));\nsy.value = withDelay(150, withSequence(withTiming(0.86, { duration: 90 }),\n                                      withSpring(1, { stiffness: 420, damping: 16 })));",
+          build: function (ctx) { segScene(ctx); },
+          reset: segReset,
+          play: async function (ctx, alive) { segLabels(ctx, 1); await elastic(ctx, alive, ctx.pl, 116, 232, 116, true); }
+        }
+      ]
+    },
+    {
+      id: 'calcomania', name: 'Calcomanía', goal: 'Que el descuento sea lo primero que se note.',
+      demos: [
+        {
+          id: 'calco-escala', name: 'Aparece', family: 'Escala', current: true, spec: 'escala .7 → 1 · muelle 360/24',
+          recipe: "const s = useSharedValue(0.7);\nuseEffect(() => { s.value = withSpring(1, { stiffness: 360, damping: 24 }); }, []);\nconst st = useAnimatedStyle(() => ({\n  opacity: interpolate(s.value, [0.7, 1], [0, 1]),\n  transform: [{ rotate: '-3deg' }, { scale: s.value }],\n}));",
+          build: calcoScene, reset: calcoReset,
+          play: async function (ctx) { A(ctx, ctx.st, { scale: [0.7, 1], opacity: [0, 1], rotate: [-3, -3] }, S(360, 24)); }
+        },
+        {
+          id: 'calco-sello', name: 'Sello', family: 'Escala', spec: 'escala 1,8 → 1 · giro 12° → −3° · 340/26 · golpe en la tarjeta',
+          recipe: "s.value = 1.8; r.value = 12;\ns.value = withSpring(1, { stiffness: 340, damping: 26 });\nr.value = withSpring(-3, { stiffness: 340, damping: 26 });\ncard.value = withDelay(140, withSequence(withTiming(4, { duration: 80 }),\n                                        withTiming(0, { duration: 180 }))); // golpe",
+          build: calcoScene, reset: calcoReset,
+          play: async function (ctx) {
+            A(ctx, ctx.st, { scale: [1.8, 1], rotate: [12, -3] }, S(340, 26));
+            A(ctx, ctx.st, { opacity: [0, 1] }, T(120));
+            A(ctx, ctx.media, { y: [0, 4, 0] }, T(260, 'easeOut', { delay: 0.14 }));
+          }
+        },
+        {
+          id: 'calco-volteo', name: 'Volteo', family: 'Dimensión', spec: 'gira 90° → 0 en Y · muelle 240/20',
+          recipe: "<Animated.View entering={FlipInEasyY.springify().stiffness(240).damping(20)}>\n  <DealSticker pct={50} />\n</Animated.View>",
+          build: calcoScene, reset: calcoReset,
+          play: async function (ctx) {
+            A(ctx, ctx.st, { rotateY: [90, 0], rotate: [-3, -3] }, S(240, 20));
+            A(ctx, ctx.st, { opacity: [0, 1] }, T(160));
+          }
+        },
+        {
+          id: 'calco-bamboleo', name: 'Bamboleo', family: 'Escala', spec: 'giro 14° → −3° · muelle 260/8, poco amortiguado',
+          recipe: "r.value = 14;\nr.value = withSpring(-3, { stiffness: 260, damping: 8 }); // oscila y se asienta",
+          build: calcoScene, reset: calcoReset,
+          play: async function (ctx) {
+            A(ctx, ctx.st, { rotate: [14, -3], scale: [1.1, 1] }, S(260, 8));
+            A(ctx, ctx.st, { opacity: [0, 1] }, T(160));
+          }
+        },
+        {
+          id: 'calco-sello-bamboleo', name: 'Sello que se asienta', family: 'Escala', combo: true, spec: 'baja como sello (340/26) · el giro se asienta bamboleando (260/9) · golpe en la tarjeta',
+          recipe: "s.value = 1.8; r.value = 16;\ns.value = withSpring(1, { stiffness: 340, damping: 26 });\nr.value = withSpring(-3, { stiffness: 260, damping: 9 });   // se asienta bamboleando\ncard.value = withDelay(140, withSequence(withTiming(4, { duration: 80 }),\n                                        withTiming(0, { duration: 180 })));",
+          build: calcoScene, reset: calcoReset,
+          play: async function (ctx) {
+            A(ctx, ctx.st, { scale: [1.8, 1] }, S(340, 26));
+            A(ctx, ctx.st, { rotate: [16, -3] }, S(260, 9));
+            A(ctx, ctx.st, { opacity: [0, 1] }, T(120));
+            A(ctx, ctx.media, { y: [0, 4, 0] }, T(260, 'easeOut', { delay: 0.14 }));
+          }
+        }
+      ]
+    },
+    {
+      id: 'cifras', name: 'Precio y ahorro', goal: 'Que la baja de precio se lea como un cambio, no como un número nuevo.',
+      demos: [
+        {
+          id: 'cifras-cuenta', name: 'Cuenta', family: 'Valor', current: true, spec: '1100 ms · curva (.16, 1, .3, 1)',
+          recipe: "// Texto animado: TextInput con animatedProps (patrón ReText)\nv.value = withTiming(0.52, { duration: 1100, easing: Easing.bezier(0.16, 1, 0.3, 1) });\nconst props = useAnimatedProps(() => ({ text: fmt(v.value) })); // 'USD 0,52'",
+          build: function (ctx) { priceScene(ctx, 'plain'); },
+          reset: function (ctx) { ctx.nowEl.textContent = money(5.79); ctx.saveEl.textContent = 'Ahorras ' + money(0); setNow(ctx.wasEl, { opacity: 0 }); },
+          play: async function (ctx) {
+            var ease = bezier(0.16, 1, 0.3, 1);
+            A(ctx, ctx.wasEl, { opacity: [0, 1] }, T(360, 'easeOut', { delay: 0.3 }));
+            await tween(ctx, 1100, ease, function (p) {
+              ctx.nowEl.textContent = money(5.79 + (0.52 - 5.79) * p);
+              ctx.saveEl.textContent = 'Ahorras ' + money(5.27 * p);
+            });
+          }
+        },
+        {
+          id: 'cifras-rodillo', name: 'Rodillo', family: 'Valor', spec: 'cada dígito rueda · muelle 200/24 · 90 ms entre dígitos',
+          recipe: "// Una columna 0–9 por dígito; cada una se corre hasta su dígito\ncol[i].value = withDelay(i * 90, withSpring(-digit[i] * LINE, { stiffness: 200, damping: 24 }));\n// number-flow-react-native (0.5.1) lo trae hecho; falta probar su API",
+          build: function (ctx) { priceScene(ctx, 'odo'); },
+          reset: function (ctx) { ctx.strips.forEach(function (s, i) { setNow(s, { y: -[5, 7, 9][i] * 46 }); }); ctx.saveEl.textContent = 'Ahorras ' + money(5.27); setNow(ctx.wasEl, { opacity: 0 }); },
+          play: async function (ctx) {
+            rollDigits(ctx, [5, 7, 9], [0, 5, 2]);
+            A(ctx, ctx.wasEl, { opacity: [0, 1] }, T(360, 'easeOut', { delay: 0.3 }));
+          }
+        },
+        {
+          id: 'cifras-cruce', name: 'Cruce vertical', family: 'Fundido', spec: 'el viejo sube y se va (260 ms) · el nuevo entra desde abajo (320 ms)',
+          recipe: "<Animated.Text key={price} entering={FadeInDown.duration(320)} exiting={FadeOutUp.duration(260)}>\n  {price}\n</Animated.Text>",
+          build: function (ctx) { priceScene(ctx, 'cross'); },
+          reset: function (ctx) { setNow(ctx.oldV, { y: 0, opacity: 1 }); setNow(ctx.newV, { y: 14, opacity: 0 }); ctx.saveEl.textContent = 'Ahorras ' + money(5.27); setNow(ctx.wasEl, { opacity: 0 }); },
+          play: async function (ctx) {
+            A(ctx, ctx.oldV, { y: [0, -14], opacity: [1, 0] }, T(260, 'easeIn'));
+            A(ctx, ctx.newV, { y: [14, 0], opacity: [0, 1] }, T(320, 'easeOut', { delay: 0.08 }));
+            A(ctx, ctx.wasEl, { opacity: [0, 1] }, T(360, 'easeOut', { delay: 0.3 }));
+          }
+        },
+        {
+          id: 'cifras-rodillo-cuenta', name: 'Rodillo, ahorro que cuenta y tachado', family: 'Valor', combo: true, spec: 'precio en rodillo · el ahorro cuenta en 1100 ms · el precio viejo se tacha en 360 ms',
+          recipe: "// Precio en rodillo, ahorro que cuenta y tachado que se dibuja\ncol[i].value = withDelay(i * 90, withSpring(-digit[i] * LINE, { stiffness: 200, damping: 24 }));\nsaved.value = withTiming(5.27, { duration: 1100, easing: Easing.bezier(0.16, 1, 0.3, 1) });\nstrike.value = withDelay(300, withTiming(1, { duration: 360 })); // scaleX, transformOrigin: 'left'",
+          build: function (ctx) { priceScene(ctx, 'odo', true); },
+          reset: function (ctx) { ctx.strips.forEach(function (s, i) { setNow(s, { y: -[5, 7, 9][i] * 46 }); }); ctx.saveEl.textContent = 'Ahorras ' + money(0); setNow(ctx.wasEl, { opacity: 0 }); setNow(ctx.strike, { scaleX: 0 }); },
+          play: async function (ctx) {
+            rollDigits(ctx, [5, 7, 9], [0, 5, 2]);
+            A(ctx, ctx.wasEl, { opacity: [0, 1] }, T(240, 'easeOut', { delay: 0.1 }));
+            A(ctx, ctx.strike, { scaleX: [0, 1] }, T(360, 'easeInOut', { delay: 0.3 }));
+            var ease = bezier(0.16, 1, 0.3, 1);
+            await tween(ctx, 1100, ease, function (p) { ctx.saveEl.textContent = 'Ahorras ' + money(5.27 * p); });
+          }
+        }
+      ]
+    },
+    {
+      id: 'filtros', name: 'Filtros', goal: 'Mostrar qué filtro está activo y cómo cambia la lista.',
+      demos: [
+        {
+          id: 'filtro-invierte', name: 'Se invierte', family: 'Fundido', current: true, spec: 'fondo y texto en 280 ms · la lista cambia de golpe',
+          recipe: "const on = useSharedValue(0);\nconst st = useAnimatedStyle(() => ({\n  backgroundColor: interpolateColor(on.value, [0, 1], [c.surface, c.ink]),\n}));\ntoggle: on.value = withTiming(active ? 1 : 0, { duration: 280 });",
+          build: filterScene, reset: filterReset,
+          play: async function (ctx) { ctx.chip.classList.add('on'); ctx.gone.style.display = 'none'; }
+        },
+        {
+          id: 'filtro-check', name: 'Crece con un check', family: 'Morph', spec: 'el chip se ensancha para el check · muelle 400/30',
+          recipe: "<Animated.View layout={LinearTransition.springify().stiffness(400).damping(30)}>\n  {active && <Animated.View entering={ZoomIn.duration(200)}><Check size={14} /></Animated.View>}\n  <Text>Roguelike</Text>\n</Animated.View>",
+          build: filterScene, reset: filterReset,
+          play: async function (ctx) {
+            ctx.chip.classList.add('on');
+            A(ctx, ctx.ck, { width: ['0px', '18px'], opacity: [0, 1] }, S(400, 30));
+            ctx.gone.style.display = 'none';
+          }
+        },
+        {
+          id: 'filtro-rebote', name: 'Rebote', family: 'Escala', spec: 'escala 1,08 en 140 ms · vuelve con 380/14',
+          recipe: "s.value = withSequence(withTiming(1.08, { duration: 140 }),\n                       withSpring(1, { stiffness: 380, damping: 14 }));",
+          build: filterScene, reset: filterReset,
+          play: async function (ctx, alive) {
+            ctx.chip.classList.add('on');
+            ctx.gone.style.display = 'none';
+            await A(ctx, ctx.chip, { scale: [1, 1.08] }, T(140));
+            if (alive()) A(ctx, ctx.chip, { scale: [1.08, 1] }, S(380, 14));
+          }
+        },
+        {
+          id: 'filtro-lista', name: 'La lista se reacomoda', family: 'Escalonado', spec: 'la fila sale en 240 ms · las otras se corren con muelle 320/30',
+          recipe: "// Cada fila: layout anima el reacomodo y exiting la salida\n<Animated.View\n  layout={LinearTransition.springify().stiffness(320).damping(30)}\n  exiting={FadeOut.duration(240)}\n/>\n// Con FlashList falta probarlo",
+          build: filterScene, reset: filterReset,
+          play: async function (ctx, alive) { ctx.chip.classList.add('on'); await reflow(ctx, alive); }
+        },
+        {
+          id: 'filtro-combo', name: 'Check, rebote y lista', family: 'Morph', combo: true, spec: 'el chip rebota y crece para el check · la lista se reacomoda',
+          recipe: "s.value = withSequence(withTiming(1.08, { duration: 140 }),\n                       withSpring(1, { stiffness: 380, damping: 14 }));\n<Animated.View layout={LinearTransition.springify().stiffness(400).damping(30)}>…chip…</Animated.View>\n<Animated.View layout={LinearTransition.springify().stiffness(320).damping(30)}\n               exiting={FadeOut.duration(240)} />",
+          build: filterScene, reset: filterReset,
+          play: async function (ctx, alive) {
+            ctx.chip.classList.add('on');
+            A(ctx, ctx.ck, { width: ['0px', '18px'], opacity: [0, 1] }, S(400, 30));
+            A(ctx, ctx.chip, { scale: [1, 1.08] }, T(140)).then(function () { if (alive()) A(ctx, ctx.chip, { scale: [1.08, 1] }, S(380, 14)); });
+            await wait(ctx, 120);
+            if (alive()) await reflow(ctx, alive);
+          }
+        }
+      ]
+    },
+    {
+      id: 'tema', name: 'Cambio de tema', goal: 'Pasar de oscuro a claro sin parpadeo.',
+      demos: [
+        {
+          id: 'tema-fundido', name: 'Fundido', family: 'Fundido', current: true, spec: 'la pantalla clara aparece encima en 400 ms',
+          recipe: "// Captura la pantalla, cambia el tema y apaga la captura\nconst uri = await captureScreen({ format: 'png' }); // react-native-view-shot 6.1.1 (fijado por el SDK 58)\nsetSnapshot(uri);\nUnistylesRuntime.setTheme('light');\no.value = withTiming(0, { duration: 400 });\nsetTimeout(() => setSnapshot(null), 420);",
+          build: themeScene, reset: themeReset,
+          play: async function (ctx, alive) {
+            A(ctx, ctx.over, { opacity: [0, 1] }, T(400));
+            await wait(ctx, 1500);
+            if (alive()) A(ctx, ctx.over, { opacity: [1, 0] }, T(400));
+          }
+        },
+        {
+          id: 'tema-circular', name: 'Círculo desde el botón', family: 'Máscara', spec: 'círculo de 0 a toda la pantalla · 760 ms',
+          recipe: "// Captura + máscara: la captura del tema viejo se recorta con un círculo que crece\nconst uri = await captureScreen({ format: 'png' });\nsetSnapshot(uri); UnistylesRuntime.setTheme('light');\nr.value = withTiming(diagonal, { duration: 760, easing: Easing.bezier(0.4, 0, 0.2, 1) });\n// MaskedView (@react-native-masked-view/masked-view 0.3.2). Es el más caro: una captura por cambio",
+          build: themeScene, reset: function (ctx) { themeReset(ctx); setNow(ctx.over, { opacity: 1, clipPath: CIRCLE_0 }); },
+          play: async function (ctx, alive) {
+            await A(ctx, ctx.over, { clipPath: [CIRCLE_0, CIRCLE_1] }, T(760, [0.4, 0, 0.2, 1]));
+            await wait(ctx, 1300);
+            if (alive()) A(ctx, ctx.over, { clipPath: [CIRCLE_1, CIRCLE_0] }, T(760, [0.4, 0, 0.2, 1]));
+          }
+        },
+        {
+          id: 'tema-barrido', name: 'Barrido de arriba abajo', family: 'Máscara', spec: 'recorte vertical · 640 ms',
+          recipe: "// Misma captura, con una máscara rectangular que baja\nh.value = withTiming(screenHeight, { duration: 640, easing: Easing.bezier(0.4, 0, 0.2, 1) });",
+          build: themeScene, reset: function (ctx) { themeReset(ctx); setNow(ctx.over, { opacity: 1, clipPath: 'inset(0% 0% 100% 0%)' }); },
+          play: async function (ctx, alive) {
+            await A(ctx, ctx.over, { clipPath: ['inset(0% 0% 100% 0%)', 'inset(0% 0% 0% 0%)'] }, T(640, [0.4, 0, 0.2, 1]));
+            await wait(ctx, 1300);
+            if (alive()) A(ctx, ctx.over, { clipPath: ['inset(0% 0% 0% 0%)', 'inset(100% 0% 0% 0%)'] }, T(640, [0.4, 0, 0.2, 1]));
+          }
+        },
+        {
+          id: 'tema-circulo-icono', name: 'Círculo e ícono que gira', family: 'Máscara', combo: true, spec: 'círculo de 760 ms · la luna gira 180° y se vuelve sol (500 ms)',
+          recipe: "// Círculo desde el botón (captura + máscara) y el ícono gira de luna a sol\nr.value = withTiming(diagonal, { duration: 760, easing: Easing.bezier(0.4, 0, 0.2, 1) });\nrot.value = withTiming(180, { duration: 500 });\n// luna: rotate 0 → 180 y opacity 1 → 0; sol: rotate −180 → 0",
+          build: themeScene, reset: function (ctx) { themeReset(ctx); setNow(ctx.over, { opacity: 1, clipPath: CIRCLE_0 }); setNow(ctx.lightIcon, { rotate: -180 }); },
+          play: async function (ctx, alive) {
+            A(ctx, ctx.darkIcon, { rotate: [0, 180], opacity: [1, 0] }, T(500, 'easeInOut'));
+            A(ctx, ctx.lightIcon, { rotate: [-180, 0] }, T(500, 'easeInOut'));
+            await A(ctx, ctx.over, { clipPath: [CIRCLE_0, CIRCLE_1] }, T(760, [0.4, 0, 0.2, 1]));
+            await wait(ctx, 1300);
+            if (!alive()) return;
+            A(ctx, ctx.lightIcon, { rotate: [0, -180] }, T(500, 'easeInOut'));
+            A(ctx, ctx.darkIcon, { rotate: [180, 0], opacity: [0, 1] }, T(500, 'easeInOut'));
+            A(ctx, ctx.over, { clipPath: [CIRCLE_1, CIRCLE_0] }, T(760, [0.4, 0, 0.2, 1]));
+          }
+        }
+      ]
+    },
+    {
+      id: 'hoja', name: 'Hoja de filtros', goal: 'Mostrar de dónde salen los filtros y volver al mismo lugar.',
+      demos: [
+        {
+          id: 'hoja-sube', name: 'Sube desde abajo', family: 'Desliza', current: true, spec: 'muelle 240/28 · el fondo oscurece en 280 ms',
+          recipe: "<Stack.Screen\n  name=\"filtros\"\n  options={{ presentation: 'formSheet', sheetAllowedDetents: [0.5, 1] }}\n/>",
+          build: sheetScene, reset: sheetReset,
+          play: async function (ctx, alive) {
+            A(ctx, ctx.scrim, { opacity: [0, 1] }, T(280));
+            A(ctx, ctx.sheet, { y: ['100%', '0%'] }, S(240, 28));
+            await wait(ctx, 1500);
+            if (!alive()) return;
+            A(ctx, ctx.sheet, { y: ['0%', '100%'] }, T(300, 'easeIn'));
+            A(ctx, ctx.scrim, { opacity: [1, 0] }, T(280));
+          }
+        },
+        {
+          id: 'hoja-contenedor', name: 'Crece desde el chip', family: 'Morph', spec: 'caja del chip → hoja · muelle 240/28',
+          recipe: "// La misma receta del contenedor que se transforma, desde la pastilla \"Filtros\"\nconst r = measure(chipRef);\nopen: p.value = withSpring(1, { stiffness: 240, damping: 28 });\n// left/top/width/height/borderRadius interpolados de la pastilla a la hoja",
+          build: function (ctx) { sheetScene(ctx); addChipContainer(ctx); },
+          reset: chipContainerReset,
+          play: function (ctx, alive) { return chipContainerPlay(ctx, alive, false); }
+        },
+        {
+          id: 'hoja-fondo', name: 'El fondo se achica', family: 'Escala', spec: 'pantalla de atrás .92 y radio 14 · hoja con muelle 240/28',
+          recipe: "const back = useAnimatedStyle(() => ({\n  transform: [{ scale: interpolate(p.value, [0, 1], [1, 0.92]) }],\n  borderRadius: interpolate(p.value, [0, 1], [0, 14]),\n}));\nopen: p.value = withSpring(1, { stiffness: 240, damping: 28 });",
+          build: sheetScene, reset: sheetReset,
+          play: async function (ctx, alive) {
+            A(ctx, ctx.scrim, { opacity: [0, 1] }, T(280));
+            A(ctx, ctx.screen, { scale: [1, 0.92], y: [0, 4], borderRadius: ['0px', '14px'] }, S(240, 28));
+            A(ctx, ctx.sheet, { y: ['100%', '0%'] }, S(240, 28));
+            await wait(ctx, 1500);
+            if (!alive()) return;
+            A(ctx, ctx.sheet, { y: ['0%', '100%'] }, T(300, 'easeIn'));
+            A(ctx, ctx.scrim, { opacity: [1, 0] }, T(280));
+            A(ctx, ctx.screen, { scale: [0.92, 1], y: [4, 0], borderRadius: ['14px', '0px'] }, S(240, 28));
+          }
+        },
+        {
+          id: 'hoja-chip-fondo', name: 'Crece desde el chip y el fondo se achica', family: 'Morph', combo: true, spec: 'caja del chip → hoja · la pantalla de atrás baja a .92 · muelle 240/28',
+          recipe: "// La hoja crece desde la pastilla \"Filtros\" y la pantalla de atrás se achica\nopen: p.value = withSpring(1, { stiffness: 240, damping: 28 });\n// caja: de measure(chipRef) a la hoja; atrás: scale 1 → 0.92 y borderRadius 0 → 14",
+          build: function (ctx) { sheetScene(ctx); addChipContainer(ctx); },
+          reset: chipContainerReset,
+          play: function (ctx, alive) { return chipContainerPlay(ctx, alive, true); }
+        }
+      ]
+    },
+    {
+      id: 'bienvenida', name: 'Bienvenida', goal: 'La primera impresión: que el descuento mande desde el primer segundo.',
+      demos: [
+        {
+          id: 'bienv-secuencia', name: 'Se acomoda y se pega', family: 'Escalonado', current: true, spec: 'tarjetas 240/22 cada 120 ms · calcomanías desde 1,8 con 340/26 · texto a los 1,3 s',
+          recipe: "cards.forEach((v, i) => (v.value = withDelay(i * 120, withSpring(1, { stiffness: 240, damping: 22 }))));\nstickers.forEach((v, i) => (v.value = withDelay([700, 860, 1040][i], withSpring(1, { stiffness: 340, damping: 26 }))));\ntext.value = withDelay(1300, withTiming(1, { duration: 520 }));",
+          build: function (ctx) { welcomeScene(ctx, false); },
+          reset: welcomeReset,
+          play: function (ctx) { return welcomeSequence(ctx); }
+        },
+        {
+          id: 'bienv-calma', name: 'Todo sube en orden', family: 'Escalonado', spec: 'cada pieza sube 10 px y aparece · 420 ms · cada 100 ms',
+          recipe: "// Cada pieza, en orden\n<Animated.View entering={FadeInDown.duration(420).delay(i * 100)} />",
+          build: function (ctx) { welcomeScene(ctx, false); },
+          reset: welcomeReset,
+          play: async function (ctx) {
+            ctx.order.forEach(function (o, i) {
+              A(ctx, o.el, { opacity: [0, 1], y: [10, 0], rotate: [o.rot, o.rot], scale: [1, 1] }, T(420, 'easeOut', { delay: 0.1 * i }));
+            });
+          }
+        },
+        {
+          id: 'bienv-morph', name: 'La calcomanía se vuelve el botón', family: 'Morph', spec: 'después de pegarse, la −91% toma la caja, el radio y el color del botón · muelle 220/26',
+          recipe: "// Misma View: cambian caja, radio, color y giro\nconst st = useAnimatedStyle(() => ({\n  width: interpolate(p.value, [0, 1], [96, 300]),\n  borderRadius: interpolate(p.value, [0, 1], [6, 26]),\n  backgroundColor: interpolateColor(p.value, [0, 1], [c.deal, c.ink]),\n  transform: [{ rotate: `${interpolate(p.value, [0, 1], [-3, 0])}deg` }],\n}));\np.value = withDelay(2600, withSpring(1, { stiffness: 220, damping: 26 }));",
+          build: function (ctx) { welcomeScene(ctx, true); },
+          reset: welcomeReset,
+          play: function (ctx, alive) { return stickerToButton(ctx, alive, false); }
+        },
+        {
+          id: 'bienv-morph-relieve', name: 'La calcomanía se vuelve un botón en relieve', family: 'Morph', combo: true, spec: 'el morph termina mostrando el canto del botón y se hunde una vez',
+          recipe: "// Al terminar el morph, el botón muestra su canto y se hunde una vez\np.value = withDelay(2600, withSpring(1, { stiffness: 220, damping: 26 }));\nlip.value = withDelay(3100, withTiming(4, { duration: 200 }));\npress.value = withDelay(3800, withSequence(withTiming(4, { duration: 120 }),\n                                          withSpring(0, { stiffness: 500, damping: 26 })));",
+          build: function (ctx) { welcomeScene(ctx, true); },
+          reset: welcomeReset,
+          play: function (ctx, alive) { return stickerToButton(ctx, alive, true); }
+        }
+      ]
+    }
+  ];
+
+  function toggleSave(ctx) {
+    var on = !ctx.save.classList.contains('on');
+    var s = ctx.save.querySelector('svg');
+    sync(function () { ctx.save.classList.toggle('on', on); s.classList.toggle('filled', on); });
+    if (on) A(ctx, s, { scale: [0.6, 1] }, S(360, 22));
+  }
+
+  /* ---------- Tus elecciones, encadenadas ---------- */
+  var CHAINS = [
+    {
+      id: 'cadena-descartar', name: 'Descartar y deshacer', uses: 'Usa: Arrastre y lanzamiento · Sale de la barra, con tiempo · Se hunde (en Deshacer)',
+      build: function (ctx) { dismissScene(ctx, true); dockScene(ctx, true, false); },
+      reset: function (ctx) { dismissReset(ctx); dockReset(ctx); },
+      play: async function (ctx, alive) {
+        var ok = await dragFling(ctx, alive, false);
+        if (!ok || !alive()) return;
+        dockOpen(ctx);
+        await wait(ctx, 1500);
+        if (!alive()) return;
+        pressRelieve(ctx, ctx.undoBtn, true, 3, '--accent-lip');
+        await wait(ctx, 220);
+        if (!alive()) return;
+        pressRelieve(ctx, ctx.undoBtn, false, 3, '--accent-lip');
+        await wait(ctx, 160);
+        if (!alive()) return;
+        dockClose(ctx);
+        await A(ctx, ctx.slotA, { height: ['0px', ctx.slotH + 'px'], marginBottom: ['-10px', '0px'] }, T(340, [0.2, 0, 0, 1]));
+        if (!alive()) return;
+        ctx.slotA.style.overflow = '';
+        A(ctx, ctx.a, { x: [-320, 0], rotate: [-10, 0], opacity: [0, 1] }, S(300, 30));
+      }
+    },
+    {
+      id: 'cadena-guardar', name: 'Guardar', uses: 'Usa: Se hunde (en un botón redondo) · Se aplasta, estalla y vuela',
+      build: function (ctx) {
+        var sv = h('button', { class: 'u-ibtn sm', type: 'button', 'aria-label': 'Guardar' }, icon('bookmark'));
+        var dots = [];
+        for (var i = 0; i < 8; i++) { var d = h('span', { class: 'dot-p' }); sv.appendChild(d); dots.push(d); }
+        var card = row('Dead Cells', 'USD 6,24', 50, sv);
+        card.style.width = '236px';
+        ctx.stage.appendChild(h('div', { style: 'position:absolute;top:44px;left:0;right:0;display:flex;justify-content:center' }, card));
+        var n = nav(0);
+        ctx.stage.appendChild(h('div', { class: 'nav-bottom' }, n.el));
+        var clone = icon('bookmark', 'filled clone');
+        ctx.stage.appendChild(clone);
+        var navDots = [];
+        for (var j = 0; j < 5; j++) { var nd = h('span', { class: 'ndot' }); ctx.stage.appendChild(nd); navDots.push(nd); }
+        ctx.sv = sv; ctx.svIcon = sv.querySelector('svg'); ctx.dots = dots; ctx.nav = n; ctx.clone = clone; ctx.navDots = navDots;
+      },
+      reset: function (ctx) {
+        ctx.sv.classList.remove('on');
+        ctx.svIcon.classList.remove('filled');
+        setNow(ctx.sv, { y: 0 }); ctx.sv.style.boxShadow = '';
+        setNow(ctx.svIcon, { scaleX: 1, scaleY: 1, scale: 1 });
+        ctx.dots.forEach(function (d) { setNow(d, { x: 0, y: 0, opacity: 0, scale: 1 }); });
+        ctx.navDots.forEach(function (d) { setNow(d, { x: 0, y: 0, opacity: 0 }); });
+        setNow(ctx.clone, { opacity: 0, x: 0, y: 0, scale: 1 });
+        setNow(ctx.nav.items[2], { scale: 1 });
+        ctx.nav.items[2].querySelector('svg').classList.remove('filled');
+      },
+      play: async function (ctx, alive) {
+        await wait(ctx, 200);
+        if (!alive()) return;
+        pressRelieve(ctx, ctx.sv, true, 4, '--raised-lip');
+        await wait(ctx, 200);
+        if (!alive()) return;
+        pressRelieve(ctx, ctx.sv, false, 4, '--raised-lip');
+        await squashBurstFly(ctx, alive, { icon: ctx.svIcon, btn: ctx.sv, dots: ctx.dots, clone: ctx.clone, target: ctx.nav.items[2], navDots: ctx.navDots, reach: 34, cloneScale: 0.75 });
+      }
+    },
+    {
+      id: 'cadena-detalle', name: 'Abrir el detalle y volver', uses: 'Usa: la tarjeta se aprieta al tocarla · Contenedor que se transforma',
+      build: function (ctx) { phoneScene(ctx); addContainer(ctx, false); },
+      reset: containerReset,
+      play: async function (ctx, alive) {
+        await wait(ctx, 200);
+        if (!alive()) return;
+        await A(ctx, ctx.c1, { scale: [1, 0.96] }, T(120));
+        if (!alive()) return;
+        await wait(ctx, 80);
+        if (!alive()) return;
+        await containerPlay(ctx, alive, false, true);
+      }
+    }
+  ];
+
   /* ---------- Montaje ---------- */
-  var cards = {};      // id de demo -> { card, pickBtn }
+  var cards = {};      // id de demo -> { card, pick }
   var demoIndex = {};  // id de demo -> { detail, demo }
+  var players = [];
+  var initials = [];
   var observer = null;
 
+  function stageFor(tall) { return h('div', { class: 'stage' + (tall ? ' tall' : ''), title: 'Toca para repetir' }); }
+  function newCtx(stage) { return { stage: stage, anims: [], timers: [], run: 0 }; }
+
   function mountDemo(detail, demo) {
-    var stage = h('div', { class: 'stage', title: 'Toca para repetir' });
-    var ctx = { stage: stage, anims: [], timers: [], run: 0, isDown: false };
+    var stage = stageFor(false);
+    var ctx = newCtx(stage);
     demo.build(ctx);
-    var nowTag = demo.current ? h('span', { class: 'tag now', text: 'Actual' }) : null;
     var replay = h('button', { class: 'btn', type: 'button', 'aria-label': 'Repetir: ' + demo.name }, icon('replay'), 'Repetir');
     var pick = h('button', { class: 'btn pick', type: 'button', 'aria-pressed': 'false' }, icon('check'), h('span', { text: 'Elegir' }));
     var pre = h('pre', {}, h('code', { text: demo.recipe }));
-    var recipe = h('details', { class: 'recipe' }, h('summary', { text: 'Receta en Reanimated' }), pre);
     var card = h('article', { class: 'demo', id: 'demo-' + demo.id },
       stage,
       h('div', { class: 'meta' },
-        h('div', { class: 'meta-top' }, h('h3', { text: demo.name }), h('span', { class: 'tag', text: demo.family }), nowTag),
+        h('div', { class: 'meta-top' }, h('h3', { text: demo.name }), h('span', { class: 'tag', text: demo.family }),
+          demo.combo ? h('span', { class: 'tag combo', text: 'Combinada' }) : null,
+          demo.current ? h('span', { class: 'tag now', text: 'Actual' }) : null),
         h('p', { class: 'spec', text: demo.spec })),
       h('div', { class: 'actions' }, replay, pick),
-      recipe);
-    function play() { runDemo(demo, ctx); }
+      h('details', { class: 'recipe' }, h('summary', { text: 'Receta en Reanimated' }), pre));
+    var play = function () { if (observer) observer.unobserve(card); runDemo(demo, ctx); };
     stage.addEventListener('click', play);
     replay.addEventListener('click', play);
     pick.addEventListener('click', function () { choose(detail, demo); });
     card._play = play;
     cards[demo.id] = { card: card, pick: pick };
     demoIndex[demo.id] = { detail: detail, demo: demo };
-    if (demo.reset) { try { demo.reset(ctx); } catch (e) { /* la demo queda en su estado base */ } }
+    players.push(card);
+    initials.push({ demo: demo, ctx: ctx });
     return card;
+  }
+  function mountChain(chain) {
+    var stage = stageFor(true);
+    var ctx = newCtx(stage);
+    chain.build(ctx);
+    var replay = h('button', { class: 'btn', type: 'button', 'aria-label': 'Repetir: ' + chain.name }, icon('replay'), 'Repetir');
+    var card = h('article', { class: 'demo', id: 'demo-' + chain.id },
+      stage,
+      h('div', { class: 'meta' }, h('div', { class: 'meta-top' }, h('h3', { text: chain.name })), h('p', { class: 'uses', text: chain.uses })),
+      h('div', { class: 'actions' }, replay));
+    var play = function () { if (observer) observer.unobserve(card); runDemo(chain, ctx); };
+    stage.addEventListener('click', play);
+    replay.addEventListener('click', play);
+    card._play = play;
+    players.push(card);
+    initials.push({ demo: chain, ctx: ctx });
+    return card;
+  }
+  /* Estado inicial de cada demo que todavía no se reprodujo; mide, así que va con todo ya en la página */
+  function initialResets() {
+    initials.forEach(function (it) {
+      if (it.ctx.run !== 0 || !it.demo.reset) return;
+      try { it.demo.reset(it.ctx); } catch (e) { /* queda en su estado base */ }
+    });
   }
   function runDemo(demo, ctx) {
     ctx.run += 1;
@@ -1497,14 +1926,13 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     ctx.anims = [];
     ctx.timers.forEach(clearTimeout);
     ctx.timers = [];
-    ctx.isDown = false;
     try { if (demo.reset) demo.reset(ctx); } catch (e) { /* sigue igual */ }
     if (!M) return;
     var alive = function () { return ctx.run === id; };
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         if (!alive()) return;
-        try { demo.play(ctx, alive); } catch (e) { /* una demo rota no frena al resto */ }
+        try { var r = demo.play(ctx, alive); if (r && r.catch) r.catch(function () { /* una demo rota no frena al resto */ }); } catch (e) { /* idem */ }
       });
     });
   }
@@ -1517,16 +1945,44 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     d.demos.forEach(function (demo) { grid.appendChild(mountDemo(d, demo)); });
     var all = h('button', { class: 'btn ghost', type: 'button' }, icon('replay'), 'Repetir las ' + d.demos.length);
     all.addEventListener('click', function () { d.demos.forEach(function (demo) { cards[demo.id].card._play(); }); });
-    var section = h('section', { class: 'detail', id: d.id, 'aria-labelledby': 'h-' + d.id },
+    detailsEl.appendChild(h('section', { class: 'detail', id: d.id, 'aria-labelledby': 'h-' + d.id },
       h('div', { class: 'detail-head' },
         h('div', {}, h('h2', { id: 'h-' + d.id, text: d.name }), h('p', { class: 'goal', text: d.goal })),
         all),
-      grid);
-    detailsEl.appendChild(section);
+      grid));
   });
+  (function () {
+    indexEl.appendChild(h('a', { href: '#encadenadas' }, 'Encadenadas'));
+    var grid = h('div', { class: 'grid wide' });
+    var chainCards = CHAINS.map(mountChain);
+    chainCards.forEach(function (c) { grid.appendChild(c); });
+    var all = h('button', { class: 'btn ghost', type: 'button' }, icon('replay'), 'Repetir las 3');
+    all.addEventListener('click', function () { chainCards.forEach(function (c) { c._play(); }); });
+    detailsEl.appendChild(h('section', { class: 'detail', id: 'encadenadas', 'aria-labelledby': 'h-encadenadas' },
+      h('div', { class: 'detail-head' },
+        h('div', {}, h('h2', { id: 'h-encadenadas', text: 'Tus elecciones, encadenadas' }), h('p', { class: 'goal', text: 'Armadas con lo que elegiste hasta ahora y la combinación de Guardar que pediste, en el orden en que pasan en la app.' })),
+        all),
+      grid));
+  })();
+
+  initialResets();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(initialResets, function () { /* sin fuentes, queda lo medido */ });
 
   if (!M) document.getElementById('lib-note').hidden = false;
   if (REDUCED) document.getElementById('motion-note').hidden = false;
+
+  /* Velocidad */
+  var speedBtns = Array.prototype.slice.call(document.querySelectorAll('.speed button'));
+  function renderSpeed() { speedBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(parseInt(b.getAttribute('data-k'), 10) === K)); }); }
+  speedBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      K = parseInt(b.getAttribute('data-k'), 10) || 1;
+      applyK();
+      renderSpeed();
+      try { window.localStorage.setItem('ot-velocidad', String(K)); } catch (e) { /* sin guardado local */ }
+    });
+  });
+  renderSpeed();
 
   /* Autoplay: cada demo se reproduce una vez al entrar en pantalla */
   if (M && !REDUCED && 'IntersectionObserver' in window) {
@@ -1539,12 +1995,12 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
         }
       });
     }, { threshold: [0.6] });
-    Object.keys(cards).forEach(function (k) { observer.observe(cards[k].card); });
+    players.forEach(function (c) { observer.observe(c); });
   }
 
   /* ---------- Elecciones ---------- */
   var picks = {};
-  var store = null;      // namespace db
+  var store = null;
   var mode = 'starting'; // 'db' | 'local' | 'readonly'
   var writes = {};
   var statusEl = document.getElementById('store-status');
@@ -1565,7 +2021,7 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     DETAILS.forEach(function (d) {
       var id = picks[d.id];
       var a = document.getElementById('idx-' + d.id);
-      if (a) a.classList.toggle('has-pick', !!id);
+      if (a) a.classList.toggle('has-pick', !!(id && demoIndex[id]));
       if (!id || !demoIndex[id]) return;
       n += 1;
       list.appendChild(h('a', { class: 'pill', href: '#demo-' + id }, d.name + ': ', h('strong', { text: demoIndex[id].demo.name })));
@@ -1589,7 +2045,7 @@ pre{margin:8px 0 0;padding:12px;border-radius:10px;background:var(--bg);border:1
     renderPicks();
     if (mode !== 'db') { saveLocal(); return; }
     var ref = store.doc('elecciones/' + detail.id);
-    var body = { detalle: detail.id, detalleNombre: detail.name, estilo: demo.id, estiloNombre: demo.name, familia: demo.family, en: new Date().toISOString() };
+    var body = { detalle: detail.id, detalleNombre: detail.name, estilo: demo.id, estiloNombre: demo.name, familia: demo.family, combinada: !!demo.combo, en: new Date().toISOString() };
     writes[detail.id] = (writes[detail.id] || Promise.resolve()).then(function () {
       return same ? ref.delete() : ref.set(body);
     }).catch(function (e) {
